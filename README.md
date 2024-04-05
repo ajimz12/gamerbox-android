@@ -19,4 +19,4 @@ Kotlin: Lenguaje de programación principal utilizado para el desarrollo de la a
 
 Android Studio: Entorno de desarrollo integrado (IDE) utilizado para el desarrollo de aplicaciones Android.
 
-MongoDB.
+MongoDB: Base de datos NoSQL.
