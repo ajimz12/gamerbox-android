@@ -7,6 +7,6 @@ data class GameList(
     val id: Int,
     @SerializedName("name")
     val name: String,
-    @SerializedName("background_iage")
+    @SerializedName("background_image")
     val image: String
 )
