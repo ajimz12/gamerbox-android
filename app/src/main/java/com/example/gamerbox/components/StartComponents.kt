@@ -21,8 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.gamerbox.models.GameList
-import com.example.gamerbox.utils.Constants
-import com.example.gamerbox.views.StartView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -43,8 +44,11 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/native-image/org.mongodb/bson/native-image.properties"
+
         }
     }
+
 }
 
 dependencies {
@@ -72,12 +76,13 @@ dependencies {
     implementation("io.coil-kt:coil-compose:1.4.0")
     implementation ("com.android.volley:volley:1.2.1")
     implementation ("androidx.recyclerview:recyclerview:1.3.2")
-    implementation ("com.google.dagger:hilt-android:2.48") // Agrega la dependencia de Dagger Hilt
-    kapt ("com.google.dagger:hilt-compiler:2.48") // Agrega la dependencia de Dagger Hilt Compiler
-    implementation ("com.squareup.okhttp3:okhttp:4.11.0") // Dependencia de OkHttpClient para Retrofit
+    implementation ("com.google.dagger:hilt-android:2.48")
+    kapt ("com.google.dagger:hilt-compiler:2.48")
+    implementation ("com.squareup.okhttp3:okhttp:4.11.0")
 
-
-
-
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.firebaseui:firebase-ui-auth:7.2.0")
 
 }

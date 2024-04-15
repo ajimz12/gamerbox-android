@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1027149475405",
+    "project_id": "gamerbox-2024",
+    "storage_bucket": "gamerbox-2024.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027149475405:android:343eac461ed4fd04c37604",
+        "android_client_info": {
+          "package_name": "com.example.gamerbox"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyJAA4r2_k9_Re0e8HOYV_4roc_TthTdc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import com.example.gamerbox.navigation.NavManager
 import com.example.gamerbox.ui.theme.GamerboxTheme
 import com.example.gamerbox.viewmodels.GameViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,19 +19,24 @@ class MainActivity : ComponentActivity() {
 
         val viewModel: GameViewModel by viewModels()
 
-        setContent{
+        setContent {
             GamerboxTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
-                ){
+                ) {
                     NavManager(viewModel = viewModel)
                 }
             }
         }
 
+        val analytics = FirebaseAnalytics.getInstance(this)
+        val bundle = Bundle()
+        bundle.putString("message", "Integracion de Firebase Completa")
+        analytics.logEvent("InitScreen", bundle)
     }
 }
+
 
 
 

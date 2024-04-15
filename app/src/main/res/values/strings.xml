@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Gamerbox</string>
-    <string name="user_text">Usuario</string>
+    <string name="email_text">Correo electrónico</string>
     <string name="login_text">Iniciar sesión</string>
     <string name="password_text">Contraseña</string>
-    <string name="register_text">¿No tienes una cuenta? Regístrate!</string>
+    <string name="register_text">Registrarse</string>
 </resources>
