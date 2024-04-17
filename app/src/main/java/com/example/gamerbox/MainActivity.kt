@@ -17,7 +17,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val viewModel: GameViewModel by viewModels()
+        setContentView(R.layout.activity_main)
+
+        /*val viewModel: GameViewModel by viewModels()
 
         setContent {
             GamerboxTheme {
@@ -28,12 +30,8 @@ class MainActivity : ComponentActivity() {
                     NavManager(viewModel = viewModel)
                 }
             }
-        }
+        }*/
 
-        val analytics = FirebaseAnalytics.getInstance(this)
-        val bundle = Bundle()
-        bundle.putString("message", "Integracion de Firebase Completa")
-        analytics.logEvent("InitScreen", bundle)
     }
 }
 
