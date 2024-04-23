@@ -29,6 +29,11 @@
             android:exported="true"
             android:theme="@style/Theme.Gamerbox">
         </activity>
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Gamerbox">
+        </activity>
     </application>
 
 </manifest>

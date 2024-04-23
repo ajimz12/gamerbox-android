@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/editprofile"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="90dp"
+        android:fontFamily="@font/montserratblack"
+        android:text="@string/welcome"
+        android:textColor="@color/blue"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/usernameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleTextView"
+        android:textColor="@color/blue"
+        android:layout_marginBottom="70dp"
+        android:hint="@string/username"
+        android:textColorHint="@color/darkBlue"
+        android:inputType="text"
+        android:backgroundTint="@color/darkBlue"/>
+
+    <ImageView
+        android:id="@+id/selectedImageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@id/usernameEditText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/circle_bg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user_image" />
+
+    <Button
+        android:id="@+id/chooseImageButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectedImageView"
+        android:layout_centerHorizontal="true"
+        android:background="@color/blue"
+        android:fontFamily="@font/montserratbold"
+        android:text="@string/select_image_btn" />
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="7dp"
+        android:background="@color/blue"
+        android:fontFamily="@font/montserratbold"
+        android:text="@string/continue_btn" />
+
+</RelativeLayout>
