@@ -10,8 +10,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthActivity : ComponentActivity() {
 
@@ -20,6 +20,12 @@ class AuthActivity : ComponentActivity() {
     lateinit var emailEditText: EditText
     lateinit var passwordEditText: EditText
     lateinit var passwordErrorTextView: TextView
+
+    // Instancia de FirebaseAuth
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+
+    // Instancia de FirebaseFirestore
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,13 +46,14 @@ class AuthActivity : ComponentActivity() {
 
         registerButton.setOnClickListener {
             if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
-
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                auth.createUserWithEmailAndPassword(
                     emailEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Se creó el usuario correctamente, ahora creamos el documento de usuario en Firestore
+                            createUserDocument(auth.currentUser?.uid)
                             showHome()
                         } else {
                             showAlert()
@@ -57,8 +64,7 @@ class AuthActivity : ComponentActivity() {
 
         loginButton.setOnClickListener {
             if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
-
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                auth.signInWithEmailAndPassword(
                     emailEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
@@ -90,6 +96,28 @@ class AuthActivity : ComponentActivity() {
         })
     }
 
+    private fun createUserDocument(userId: String?) {
+        userId?.let {
+            // Creamos un nuevo documento de usuario con el ID de usuario como identificador
+            val userDocument = firestore.collection("user").document(userId)
+
+            // Define los datos que deseas almacenar para el nuevo usuario
+            val userData = hashMapOf(
+                "email" to emailEditText.text.toString(),
+                "password" to passwordEditText.text.toString()
+            )
+
+            // Escribe los datos del nuevo usuario en el documento de usuario recién creado
+            userDocument.set(userData)
+                .addOnSuccessListener {
+
+                }
+                .addOnFailureListener { e ->
+                    // Ocurrió un error al intentar crear el documento de usuario
+               }
+        }
+    }
+
     private fun showAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Ups!")
@@ -100,9 +128,9 @@ class AuthActivity : ComponentActivity() {
     }
 
     private fun showHome() {
-
-        val homeIntent = Intent(this, MainActivity::class.java).apply { }
+        val homeIntent = Intent(this, MainActivity::class.java)
         startActivity(homeIntent)
+        finish() // Finaliza la actividad actual
     }
 }
 
