@@ -3,6 +3,7 @@ package com.example.gamerbox
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -10,6 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
 class EditProfileActivity : ComponentActivity() {
 
@@ -21,15 +23,16 @@ class EditProfileActivity : ComponentActivity() {
     private lateinit var selectedImageView: ImageView
     private lateinit var continueButton: Button
 
-    private var imageUri: Uri? = null
+    private lateinit var imageUri: Uri
 
     // Activity Result Launcher for picking an image
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            selectedImageView.setImageURI(it)
-            imageUri = it
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                selectedImageView.setImageURI(it)
+                imageUri = it
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,21 +63,39 @@ class EditProfileActivity : ComponentActivity() {
                         if (task.isSuccessful) {
                             val userId = auth.currentUser?.uid
 
-                            val user = hashMapOf(
-                                "username" to username,
-                                "email" to email,
-                                "password" to password
-                            )
+                            // Subir imagen a Firebase Storage
+                            val storageRef =
+                                FirebaseStorage.getInstance().reference.child("profile_images")
+                                    .child("$userId.jpg")
+                            storageRef.putFile(imageUri)
+                                .addOnSuccessListener { uploadTask ->
+                                    storageRef.downloadUrl.addOnSuccessListener { uri ->
+                                        // Obtener la URL de la imagen
+                                        val imageUrl = uri.toString()
 
-                            if (userId != null) {
-                                db.collection("users").document(userId).set(user)
-                                    .addOnSuccessListener {
-                                        showHome()
+                                        val user = hashMapOf(
+                                            "username" to username,
+                                            "email" to email,
+                                            "password" to password,
+                                            "imageUrl" to imageUrl // Guardar la URL de la imagen en Firestore
+                                        )
+
+                                        if (userId != null) {
+                                            db.collection("users").document(userId).set(user)
+                                                .addOnSuccessListener {
+                                                    showHome()
+                                                }
+                                                .addOnFailureListener { e ->
+                                                    // Error saving user details to Firestore
+                                                    Log.e("Firestore", "Error saving user details", e)
+                                                }
+                                        }
                                     }
-                                    .addOnFailureListener { e ->
-                                        // Error saving user details to Firestore
-                                    }
-                            }
+                                }
+                                .addOnFailureListener { e ->
+                                    // Error uploading image to Firebase Storage
+                                    Log.e("Storage", "Error uploading image", e)
+                                }
                         } else {
                             // Error creating user in Firebase Authentication
                         }
@@ -83,7 +104,9 @@ class EditProfileActivity : ComponentActivity() {
                 // Username is empty
             }
         }
+
     }
+
 
     private fun pickImage() {
         pickImageLauncher.launch("image/*")

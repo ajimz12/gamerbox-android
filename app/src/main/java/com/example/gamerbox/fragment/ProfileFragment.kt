@@ -36,10 +36,12 @@ class ProfileFragment : Fragment() {
                     // TODO: Implementar la lógica para editar el perfil
                     true
                 }
+
                 R.id.action_logout -> {
                     showLogoutConfirmationDialog()
                     true
                 }
+
                 else -> false
             }
         }
@@ -65,5 +67,4 @@ class ProfileFragment : Fragment() {
         val loginIntent = Intent(requireContext(), AuthActivity::class.java)
         startActivity(loginIntent)
     }
-
 }
