@@ -3,20 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileFragment">
+    app:startDestination="@id/homeFragment">
 
+    <!-- HomeFragment -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.gamerbox.fragment.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/activity_home" />
+
+    <!-- SearchFragment -->
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.gamerbox.fragment.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/activity_search" />
+
+    <!-- ProfileFragment -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.gamerbox.fragment.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile">
-        <action
-            android:id="@+id/action_profileFragment_to_authActivity"
-            app:destination="@id/authActivity" />
-    </fragment>
+        android:label="ProfileFragment"
+        tools:layout="@layout/activity_profile" />
 
-    <activity
-        android:id="@+id/authActivity"
-        android:name="com.example.gamerbox.AuthActivity" />
+    <!-- EditProfileFragment -->
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.gamerbox.fragment.EditProfileFragment"
+        android:label="EditProfileFragment"
+        tools:layout="@layout/activity_editprofile" />
+
+    <!-- Actions -->
+    <action
+        android:id="@+id/action_home_to_search"
+        app:destination="@id/searchFragment" />
+
+    <action
+        android:id="@+id/action_home_to_profile"
+        app:destination="@id/profileFragment" />
+
+    <action
+        android:id="@+id/action_profile_to_edit_profile"
+        app:destination="@id/editProfileFragment" />
 
 </navigation>

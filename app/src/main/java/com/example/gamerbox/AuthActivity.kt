@@ -5,13 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Patterns
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthActivity : ComponentActivity() {
 
@@ -41,10 +41,10 @@ class AuthActivity : ComponentActivity() {
     private fun setUp() {
 
         registerButton.setOnClickListener {
-            if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
-                val email = emailEditText.text.toString()
-                val password = passwordEditText.text.toString()
+            val email = emailEditText.text.toString()
+            val password = passwordEditText.text.toString()
 
+            if (isEmailValid(email) && password.isNotEmpty()) {
                 // Intentar iniciar sesión para verificar si el usuario ya existe
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
@@ -52,13 +52,15 @@ class AuthActivity : ComponentActivity() {
                             showAlert()
                         } else {
                             // El usuario no existe, proceder con el registro
-                            val intent = Intent(this, EditProfileActivity::class.java).apply {
+                            val intent = Intent(this, CreateProfileActivity::class.java).apply {
                                 putExtra("email", email)
                                 putExtra("password", password)
                             }
                             startActivity(intent)
                         }
                     }
+            } else {
+                showInvalidEmailAlert()
             }
         }
 
@@ -103,6 +105,19 @@ class AuthActivity : ComponentActivity() {
                 }
             }
         })
+    }
+
+    private fun isEmailValid(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun showInvalidEmailAlert() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("¿Y ese correo?")
+        builder.setMessage("Por favor, introduce un correo electrónico válido.")
+        builder.setPositiveButton("Aceptar", null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
 

@@ -30,7 +30,7 @@
             android:theme="@style/Theme.Gamerbox">
         </activity>
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".CreateProfileActivity"
             android:exported="true"
             android:theme="@style/Theme.Gamerbox">
         </activity>

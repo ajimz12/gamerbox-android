@@ -8,19 +8,30 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.AuthActivity
 import com.example.gamerbox.MainActivity
 import com.example.gamerbox.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class ProfileFragment : Fragment() {
 
-
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+
+    private lateinit var profileImage: ImageView
+    private lateinit var usernameText: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,24 +39,66 @@ class ProfileFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.activity_profile, container, false)
         auth = FirebaseAuth.getInstance()
+        db = Firebase.firestore
 
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_edit_profile -> {
-                    // TODO: Implementar la lógica para editar el perfil
+                    // Navegar a EditProfileFragment
+                    findNavController().navigate(R.id.action_profile_to_edit_profile)
                     true
                 }
-
                 R.id.action_logout -> {
                     showLogoutConfirmationDialog()
                     true
                 }
-
                 else -> false
             }
         }
+
+        profileImage = view.findViewById(R.id.profileImage)
+        usernameText = view.findViewById(R.id.usernameText)
+
+        // Mostrar los datos del usuario
+        showUserData()
+
         return view
+    }
+
+    private fun showUserData() {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            db.collection("users").document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        val username = document.getString("username")
+                        val imageUrl = document.getString("imageUrl")
+
+                        // Mostrar el nombre de usuario
+                        usernameText.text = username
+
+                        // Cargar la imagen del usuario con Glide
+                        if (!imageUrl.isNullOrEmpty()) {
+                            Glide.with(this)
+                                .load(imageUrl)
+                                .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                                .into(profileImage)
+
+                        } else {
+                            // Si no hay URL de imagen, mostrar una imagen de placeholder
+                            Glide.with(this)
+                                .load(R.drawable.ic_profile)
+                                .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                                .into(profileImage)
+                        }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    // Error al obtener los datos del usuario
+                }
+        }
     }
 
     private fun showLogoutConfirmationDialog() {

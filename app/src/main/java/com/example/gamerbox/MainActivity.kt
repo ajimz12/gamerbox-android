@@ -2,71 +2,58 @@ package com.example.gamerbox
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.gamerbox.fragment.HomeFragment
-import com.example.gamerbox.fragment.ProfileFragment
-import com.example.gamerbox.fragment.SearchFragment
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var navController: NavController
+    private lateinit var bottomNav: BottomNavigationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Inicializar los fragments
-        val homeFragment = HomeFragment()
-        val searchFragment = SearchFragment()
-        val profileFragment = ProfileFragment()
+        // Configurar NavController
+        navController = findNavController(R.id.nav_host_fragment)
 
-        // Mostrar el fragment inicial
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.content, homeFragment)
-            commit()
-        }
-
-        // Manejar la selección de ítems en el BottomNavigationView
-        val bottomNav = findViewById<BottomNavigationView>(R.id.navigator)
-        bottomNav.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.searchPage -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.content, searchFragment)
-                        commit()
-                    }
+        // Configurar BottomNavigationView
+        bottomNav = findViewById(R.id.navigator)
+        bottomNav.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.homeFragment -> {
+                    navController.navigate(R.id.homeFragment)
                     true
                 }
-                R.id.homePage -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.content, homeFragment)
-                        commit()
-                    }
+                R.id.searchFragment -> {
+                    navController.navigate(R.id.searchFragment)
                     true
                 }
-                R.id.profilePage -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.content, profileFragment)
-                        commit()
-                    }
+                R.id.profileFragment -> {
+                    navController.navigate(R.id.profileFragment)
                     true
                 }
                 else -> false
             }
         }
     }
+}
 
-        /*val viewModel: GameViewModel by viewModels()
 
-        setContent {
-            GamerboxTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    NavManager(viewModel = viewModel)
-                }
-            }
-        }*/
+/*val viewModel: GameViewModel by viewModels()
 
+setContent {
+    GamerboxTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            NavManager(viewModel = viewModel)
+        }
     }
+}*/
+
 
 
 

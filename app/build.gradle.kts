@@ -83,11 +83,20 @@ dependencies {
     implementation ("com.google.dagger:hilt-android:2.48")
     kapt ("com.google.dagger:hilt-compiler:2.48")
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
+
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-analytics")
     implementation ("com.firebaseui:firebase-ui-auth:7.2.0")
+
+    // Glide (Carga de imagenes)
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+    implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
+
+
 
 
 }

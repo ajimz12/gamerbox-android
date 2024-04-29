@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="90dp"
-        android:fontFamily="@font/montserratblack"
-        android:text="@string/welcome"
+        android:fontFamily="@font/montserratbolditalic"
+        android:text="@string/welcome_text"
         android:textColor="@color/blue"
         android:textSize="32sp"
         android:textStyle="bold" />
@@ -24,7 +24,7 @@
         android:layout_below="@id/titleTextView"
         android:textColor="@color/blue"
         android:layout_marginBottom="70dp"
-        android:hint="@string/username"
+        android:hint="@string/username_text"
         android:textColorHint="@color/darkBlue"
         android:inputType="text"
         android:backgroundTint="@color/darkBlue"/>
@@ -36,7 +36,6 @@
         android:layout_below="@id/usernameEditText"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:background="@drawable/circle_bg"
         android:scaleType="centerCrop"
         android:src="@drawable/user_image" />
 
