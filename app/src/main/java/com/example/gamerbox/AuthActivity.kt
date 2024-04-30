@@ -22,9 +22,21 @@ class AuthActivity : ComponentActivity() {
     lateinit var passwordErrorTextView: TextView
 
     // Instancia de FirebaseAuth
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+
+        if (currentUser != null) {
+            // Si hay un usuario autenticado, ir directamente a MainActivity
+            val homeIntent = Intent(this, MainActivity::class.java)
+            startActivity(homeIntent)
+            finish() // Finalizar la actividad actual para evitar que el usuario vuelva atrás
+            return // Salir del método onCreate
+        }
+
         setContentView(R.layout.activity_auth)
 
         // Inicializar vistas después de que la actividad haya sido inflada
