@@ -1,23 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/popularGamesTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightBlue"
+        android:fontFamily="@font/montserratbold"
+        android:padding="15dp"
+        android:text="@string/popular_games"
+        android:textSize="20sp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/popularGamesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_below="@id/popularGamesTextView"
+        android:background="@color/lightBlue"
+        android:paddingBottom="20dp"
         android:orientation="horizontal"
         tools:listitem="@layout/item_game" />
+
+    <TextView
+        android:id="@+id/newGamesTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/popularGamesRecyclerView"
+        android:background="@color/blue"
+        android:fontFamily="@font/montserratbold"
+        android:padding="15dp"
+        android:text="@string/new_games"
+        android:textSize="20sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recentGamesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/popularGamesRecyclerView"
-        android:layout_marginTop="16dp"
+        android:layout_below="@id/newGamesTextView"
+        android:background="@color/blue"
+        android:paddingBottom="20dp"
         android:orientation="horizontal"
         tools:listitem="@layout/item_game" />
 

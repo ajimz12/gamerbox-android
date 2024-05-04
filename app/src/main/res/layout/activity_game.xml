@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/gameDetailImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/game_image" />
+
+    <TextView
+        android:id="@+id/gameDetailTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gameDetailImageView"
+        android:text="@string/game_title"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Agrega más TextViews para mostrar otros detalles del juego aquí -->
+
+</RelativeLayout>

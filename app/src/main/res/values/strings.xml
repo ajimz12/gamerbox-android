@@ -16,4 +16,6 @@
     <string name="select_image_btn">Seleccionar imagen</string>
     <string name="confirm_text">Confirmar</string>
     <string name="game_title">Game Title</string>
+    <string name="popular_games">Populares</string>
+    <string name="new_games">Recientes</string>
 </resources>
