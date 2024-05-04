@@ -4,15 +4,14 @@ import com.example.gamerbox.utils.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitClient {
+object RetrofitService {
 
-    val retrofit: RAWGService by lazy {
-        Retrofit
-            .Builder()
+    fun create(): RawgService {
+        val retrofit = Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(RAWGService::class.java)
+
+        return retrofit.create(RawgService::class.java)
     }
 }
-
