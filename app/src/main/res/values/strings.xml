@@ -15,4 +15,5 @@
     <string name="select_image">Selecciona una imagen</string>
     <string name="select_image_btn">Seleccionar imagen</string>
     <string name="confirm_text">Confirmar</string>
+    <string name="game_title">Game Title</string>
 </resources>
