@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gamerbox.R
 
-class GameAdapter(private val gamesList: List<Game>) :
-    RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
+class GameAdapter(
+    private val gamesList: List<Game>,
+    private val onItemClick: (Game) -> Unit
+) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
 
     class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageViewCover: ImageView = itemView.findViewById(R.id.gameImageView)
@@ -29,6 +31,11 @@ class GameAdapter(private val gamesList: List<Game>) :
         Glide.with(holder.itemView.context)
             .load(game.backgroundImageUrl)
             .into(holder.imageViewCover)
+
+        // Agregar navegación al hacer clic en un juego
+        holder.itemView.setOnClickListener {
+            onItemClick(game)
+        }
     }
 
     override fun getItemCount(): Int {

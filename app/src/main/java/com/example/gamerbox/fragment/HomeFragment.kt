@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gamerbox.R
@@ -38,8 +39,12 @@ class HomeFragment : Fragment() {
         popularGamesRecyclerView = view.findViewById(R.id.popularGamesRecyclerView)
         recentGamesRecyclerView = view.findViewById(R.id.recentGamesRecyclerView)
 
-        gamesAdapter = GameAdapter(popularGamesList)
-        recentGamesAdapter = GameAdapter(recentGamesList)
+        gamesAdapter = GameAdapter(popularGamesList) { game ->
+            navigateToGameFragment(game.id)
+        }
+        recentGamesAdapter = GameAdapter(recentGamesList) { game ->
+            navigateToGameFragment(game.id)
+        }
 
         popularGamesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recentGamesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -79,5 +84,14 @@ class HomeFragment : Fragment() {
             }
         }
     }
-}
 
+    private fun navigateToGameFragment(gameId: Int) {
+        val bundle = Bundle().apply {
+            putInt("gameId", gameId)
+        }
+
+        // Navegar al GameFragment pasando el Bundle con el ID del juego
+        findNavController().navigate(R.id.action_home_to_game, bundle)
+    }
+
+}

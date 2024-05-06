@@ -5,21 +5,60 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/gameDetailImageView"
+        android:id="@+id/gameDetailsImageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
         android:src="@drawable/game_image" />
 
     <TextView
-        android:id="@+id/gameDetailTitleTextView"
+        android:id="@+id/gameDetailsTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/gameDetailImageView"
+        android:layout_below="@id/gameDetailsImageView"
+        android:layout_marginTop="15dp"
         android:text="@string/game_title"
-        android:textSize="24sp"
+        android:fontFamily="@font/montserratmedium"
+        android:textSize="28sp"
         android:textStyle="bold" />
 
-    <!-- Agrega más TextViews para mostrar otros detalles del juego aquí -->
+    <TextView
+        android:id="@+id/gameDetailsDeveloperTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gameDetailsTitleTextView"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="@font/montserratregular"
+        android:text="@string/game_developer"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/gameDetailsDatetextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gameDetailsDeveloperTextView"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="@font/montserratregular"
+        android:text="@string/game_date"
+        android:textSize="20sp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gameDetailsDatetextView"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:id="@+id/gameDetailsDescriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserratregular"
+            android:text="@string/game_description"
+            android:textSize="20sp" />
+    </ScrollView>
 
 </RelativeLayout>
+

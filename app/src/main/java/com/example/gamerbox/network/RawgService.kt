@@ -1,22 +1,46 @@
 package com.example.gamerbox.network
 
-import com.example.gamerbox.models.Game
+import com.example.gamerbox.models.GameDetails
 import com.example.gamerbox.models.GameList
-import com.example.gamerbox.utils.Constants
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 interface RawgService {
-
     @GET("games")
     suspend fun getPopularGames(
         @Query("key") apiKey: String
     ): Response<GameList>
 
-    @GET("https://api.rawg.io/api/games?dates=2024-05-01,2024-05-04&ordering=-added&key=" + Constants.API_KEY)
+    @GET("games")
     suspend fun getPopularRecentGames(
+        @Query("dates") dates: String,
+        @Query("ordering") ordering: String,
         @Query("key") apiKey: String
     ): Response<GameList>
 
+    @GET("games/{id}")
+    suspend fun getGameDetails(
+        @Path("id") gameId: Int,
+        @Query("key") apiKey: String
+    ): Response<GameDetails>
+
+    companion object {
+        fun getDatesForLastTwoWeeks(): String {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_YEAR, -14) // Restar 14 días (2 semanas)
+
+            val endDate = Date()
+            val startDate = calendar.time
+
+            return "${dateFormat.format(startDate)},${dateFormat.format(endDate)}"
+        }
+    }
 }
+
