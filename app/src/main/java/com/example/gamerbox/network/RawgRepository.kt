@@ -2,7 +2,6 @@ package com.example.gamerbox.network
 
 import com.example.gamerbox.models.Game
 import com.example.gamerbox.models.GameDetails
-import com.example.gamerbox.network.RawgService
 
 class RawgRepository(private val rawgAPI: RawgService) {
 
@@ -12,7 +11,7 @@ class RawgRepository(private val rawgAPI: RawgService) {
         return if (response.isSuccessful) {
             response.body()?.results
         } else {
-            // Manejar el error
+            // Handle error
             null
         }
     }
@@ -25,7 +24,7 @@ class RawgRepository(private val rawgAPI: RawgService) {
         return if (response.isSuccessful) {
             response.body()?.results
         } else {
-            // Manejar el error
+            // Handle error
             null
         }
     }
@@ -38,6 +37,15 @@ class RawgRepository(private val rawgAPI: RawgService) {
             null
         }
     }
+
+    suspend fun searchGamesByTitle(title: String, apiKey: String): List<Game>? {
+        val response = rawgAPI.searchGamesByTitle(title, apiKey)
+
+        return if (response.isSuccessful) {
+            response.body()?.results
+        } else {
+            // Handle error
+            null
+        }
+    }
 }
-
-

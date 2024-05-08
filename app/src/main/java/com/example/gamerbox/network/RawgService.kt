@@ -30,6 +30,12 @@ interface RawgService {
         @Query("key") apiKey: String
     ): Response<GameDetails>
 
+    @GET("games")
+    suspend fun searchGamesByTitle(
+        @Query("search") title: String,
+        @Query("key") apiKey: String
+    ): Response<GameList>
+
     companion object {
         fun getDatesForLastTwoWeeks(): String {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -43,4 +49,3 @@ interface RawgService {
         }
     }
 }
-

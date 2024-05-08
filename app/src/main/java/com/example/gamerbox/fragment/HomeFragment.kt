@@ -39,12 +39,18 @@ class HomeFragment : Fragment() {
         popularGamesRecyclerView = view.findViewById(R.id.popularGamesRecyclerView)
         recentGamesRecyclerView = view.findViewById(R.id.recentGamesRecyclerView)
 
-        gamesAdapter = GameAdapter(popularGamesList) { game ->
+        gamesAdapter = GameAdapter { game ->
             navigateToGameFragment(game.id)
+        }.apply {
+            submitList(popularGamesList)
         }
-        recentGamesAdapter = GameAdapter(recentGamesList) { game ->
+
+        recentGamesAdapter = GameAdapter { game ->
             navigateToGameFragment(game.id)
+        }.apply {
+            submitList(recentGamesList)
         }
+
 
         popularGamesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recentGamesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)

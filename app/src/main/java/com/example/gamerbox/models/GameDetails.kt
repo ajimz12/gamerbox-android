@@ -7,5 +7,7 @@ data class GameDetails(
     @SerializedName("name") val name: String,
     @SerializedName("background_image") val backgroundImageUrl: String,
     @SerializedName("released") val releaseDate: String,
-    @SerializedName("description") val description: String
+    @SerializedName("description") val description: String,
+    @SerializedName("background_image_additional") val backgroundAdditionalImageUrl: String,
+    @SerializedName("metacritic") val metacritic: Int
 )

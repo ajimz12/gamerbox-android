@@ -12,4 +12,7 @@
     <color name="blue">#3A5F97</color>
     <color name="lightBlue">#8697AF</color>
     <color name="darkBlue">#12366C</color>
+    <color name="red">#D11D1D</color>
+    <color name="lightRed">#DD4848</color>
+    <color name="green">#41D81F</color>
 </resources>

@@ -8,11 +8,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gamerbox.R
+import com.example.gamerbox.models.Game
 
 class GameAdapter(
-    private val gamesList: List<Game>,
     private val onItemClick: (Game) -> Unit
 ) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
+
+    private var gamesList: List<Game> = emptyList()
+
+    fun submitList(games: List<Game>) {
+        gamesList = games
+        notifyDataSetChanged()
+    }
 
     class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageViewCover: ImageView = itemView.findViewById(R.id.gameImageView)
@@ -41,4 +48,10 @@ class GameAdapter(
     override fun getItemCount(): Int {
         return gamesList.size
     }
+
+    fun updateData(newGamesList: List<Game>) {
+        gamesList = newGamesList
+        notifyDataSetChanged()
+    }
 }
+

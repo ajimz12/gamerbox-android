@@ -34,7 +34,6 @@
         android:fontFamily="@font/montserratregular"
         android:gravity="center_horizontal"
         android:maxLines="3"
-        android:text="@string/game_title"
         android:textColor="@android:color/white"
         android:textSize="12sp"
         android:textStyle="bold" />

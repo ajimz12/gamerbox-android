@@ -41,20 +41,6 @@ class MainActivity : AppCompatActivity() {
 }
 
 
-/*val viewModel: GameViewModel by viewModels()
-
-setContent {
-    GamerboxTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            NavManager(viewModel = viewModel)
-        }
-    }
-}*/
-
-
 
 
 
