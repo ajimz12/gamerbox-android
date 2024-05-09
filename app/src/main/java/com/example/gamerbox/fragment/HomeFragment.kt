@@ -1,5 +1,6 @@
 package com.example.gamerbox.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gamerbox.R
 import com.example.gamerbox.models.Game
-import com.example.gamerbox.models.GameAdapter
+import com.example.gamerbox.adapter.GameAdapter
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
@@ -61,6 +62,7 @@ class HomeFragment : Fragment() {
         return view
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -85,8 +87,7 @@ class HomeFragment : Fragment() {
                 recentGames?.let { recentGamesList.addAll(it) }
                 recentGamesAdapter.notifyDataSetChanged()
             } catch (e: Exception) {
-                // Manejar el error al obtener los juegos
-                e.printStackTrace()
+                println(e.message)
             }
         }
     }
@@ -96,7 +97,7 @@ class HomeFragment : Fragment() {
             putInt("gameId", gameId)
         }
 
-        // Navegar al GameFragment pasando el Bundle con el ID del juego
+        // Navegar al GameFragment
         findNavController().navigate(R.id.action_home_to_game, bundle)
     }
 

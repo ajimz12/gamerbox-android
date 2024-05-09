@@ -12,10 +12,20 @@
         android:label="HomeFragment"
         tools:layout="@layout/activity_home" >
 
-        <!-- Action to navigate from HomeFragment to GameFragment -->
+        <!-- Navegar de HomeFragment a GameFragment -->
         <action
             android:id="@+id/action_home_to_game"
             app:destination="@id/gameFragment" />
+
+        <!-- Navegar de HomeFragment a SearchFragment -->
+        <action
+            android:id="@+id/action_home_to_search"
+            app:destination="@id/searchFragment" />
+
+        <!-- Navegar de HomeFragment de ProfileFragment -->
+        <action
+            android:id="@+id/action_home_to_profile"
+            app:destination="@id/profileFragment" />
 
     </fragment>
 
@@ -31,7 +41,14 @@
         android:id="@+id/searchFragment"
         android:name="com.example.gamerbox.fragment.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/activity_search" />
+        tools:layout="@layout/activity_search" >
+
+        <!-- Navegar de SearchFragment a GameFragment -->
+        <action
+            android:id="@+id/action_search_to_game"
+            app:destination="@id/gameFragment" />
+
+    </fragment>
 
     <!-- ProfileFragment -->
     <fragment
@@ -48,14 +65,6 @@
         tools:layout="@layout/activity_editprofile" />
 
     <!-- Actions -->
-    <action
-        android:id="@+id/action_home_to_search"
-        app:destination="@id/searchFragment" />
-
-    <action
-        android:id="@+id/action_home_to_profile"
-        app:destination="@id/profileFragment" />
-
     <action
         android:id="@+id/action_profile_to_edit_profile"
         app:destination="@id/editProfileFragment" />

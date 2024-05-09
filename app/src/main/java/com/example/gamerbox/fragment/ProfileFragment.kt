@@ -4,8 +4,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -16,11 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
-import com.example.gamerbox.AuthActivity
-import com.example.gamerbox.MainActivity
+import com.example.gamerbox.activity.AuthActivity
 import com.example.gamerbox.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -96,7 +92,7 @@ class ProfileFragment : Fragment() {
                     }
                 }
                 .addOnFailureListener { e ->
-                    // Error al obtener los datos del usuario
+                    // Error
                 }
         }
     }

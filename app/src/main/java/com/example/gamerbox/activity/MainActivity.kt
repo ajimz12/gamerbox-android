@@ -1,9 +1,10 @@
-package com.example.gamerbox
+package com.example.gamerbox.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.example.gamerbox.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -15,12 +16,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Configurar NavController
+        // NavController
         navController = findNavController(R.id.nav_host_fragment)
 
-        // Configurar BottomNavigationView
+        // BottomNavigationView
         bottomNav = findViewById(R.id.navigator)
-        bottomNav.setOnNavigationItemSelectedListener { item ->
+        bottomNav.setOnItemSelectedListener  { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
                     navController.navigate(R.id.homeFragment)

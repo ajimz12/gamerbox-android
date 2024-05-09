@@ -57,7 +57,7 @@ class GameFragment : Fragment() {
 
         val gameId = arguments?.getInt("gameId") ?: -1
         if (gameId != -1) {
-            // Inicializar el servicio y el repositorio
+            // Inicializar el servicio y repositorio
             val rawgService = RetrofitService.create()
             rawgRepository = RawgRepository(rawgService)
 
@@ -71,12 +71,9 @@ class GameFragment : Fragment() {
                         updateUI(gameDetails)
                     }
                 } catch (e: Exception) {
-                    e.printStackTrace()
-                    // Manejar el error al obtener los detalles del juego
+                    println(e.message)
                 }
             }
-        } else {
-            // Manejar el caso donde no se proporciona un ID de juego válido
         }
     }
 
@@ -108,7 +105,7 @@ class GameFragment : Fragment() {
             else -> gamemetacriticTextView.setBackgroundResource(R.color.green)
         }
 
-        // Cargar la imagen del juego utilizando Glide
+        // Cargar la imagen del juego
         Glide.with(requireContext())
             .load(gameDetails.backgroundImageUrl)
             .into(gameAdditionalImageView)

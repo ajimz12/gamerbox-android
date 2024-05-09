@@ -19,7 +19,7 @@
         android:layout_height="60dp"
         android:paddingTop="10dp"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/black"
+        android:background="@android:color/background_dark"
         app:itemIconSize="32dp"
         app:itemIconTint="@color/bottom_nav_colors"
         app:menu="@menu/bottom_navigation_menu" />

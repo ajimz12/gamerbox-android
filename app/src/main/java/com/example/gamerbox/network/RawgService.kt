@@ -37,10 +37,10 @@ interface RawgService {
     ): Response<GameList>
 
     companion object {
-        fun getDatesForLastTwoWeeks(): String {
+        fun getDatesForLastWeek(): String {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val calendar = Calendar.getInstance()
-            calendar.add(Calendar.DAY_OF_YEAR, -14) // Restar 14 días (2 semanas)
+            calendar.add(Calendar.DAY_OF_YEAR, -7) // Restar una semana
 
             val endDate = Date()
             val startDate = calendar.time

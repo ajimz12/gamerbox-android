@@ -11,7 +11,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:hint="Buscar juegos..." />
+        android:hint="@string/hint_search_text" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResultsRecyclerView"
@@ -19,16 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/searchEditText"
         android:layout_marginTop="8dp"
-        android:visibility="gone"
         tools:listitem="@layout/item_game" />
-
-    <TextView
-        android:id="@+id/noResultsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="No se encontraron resultados"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:visibility="gone" />
 
 </RelativeLayout>

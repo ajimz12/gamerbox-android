@@ -1,4 +1,4 @@
-package com.example.gamerbox
+package com.example.gamerbox.activity
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import com.example.gamerbox.R
 import com.google.firebase.auth.FirebaseAuth
 
 class AuthActivity : ComponentActivity() {
@@ -33,8 +34,10 @@ class AuthActivity : ComponentActivity() {
             // Si hay un usuario autenticado, ir directamente a MainActivity
             val homeIntent = Intent(this, MainActivity::class.java)
             startActivity(homeIntent)
-            finish() // Finalizar la actividad actual para evitar que el usuario vuelva atrás
-            return // Salir del método onCreate
+
+            // Finalizar la actividad actual
+            finish()
+            return
         }
 
         setContentView(R.layout.activity_auth)
@@ -63,7 +66,7 @@ class AuthActivity : ComponentActivity() {
                         if (task.isSuccessful) {
                             showAlert()
                         } else {
-                            // El usuario no existe, proceder con el registro
+                            // El usuario no existe, pasa a registro
                             val intent = Intent(this, CreateProfileActivity::class.java).apply {
                                 putExtra("email", email)
                                 putExtra("password", password)

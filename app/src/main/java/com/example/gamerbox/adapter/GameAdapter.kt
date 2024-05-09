@@ -1,4 +1,4 @@
-package com.example.gamerbox.models
+package com.example.gamerbox.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +18,6 @@ class GameAdapter(
 
     fun submitList(games: List<Game>) {
         gamesList = games
-        notifyDataSetChanged()
     }
 
     class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -39,7 +38,7 @@ class GameAdapter(
             .load(game.backgroundImageUrl)
             .into(holder.imageViewCover)
 
-        // Agregar navegación al hacer clic en un juego
+        // Navegación al hacer clic en un juego
         holder.itemView.setOnClickListener {
             onItemClick(game)
         }
@@ -53,5 +52,6 @@ class GameAdapter(
         gamesList = newGamesList
         notifyDataSetChanged()
     }
+
 }
 

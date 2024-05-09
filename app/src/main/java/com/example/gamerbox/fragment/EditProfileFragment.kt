@@ -32,6 +32,7 @@ class EditProfileFragment : Fragment() {
     private lateinit var usernameEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var updateButton: Button
+    private lateinit var chooseImageButton: Button
 
     private var imageUri: Uri? = null
 
@@ -59,12 +60,13 @@ class EditProfileFragment : Fragment() {
         usernameEditText = view.findViewById(R.id.usernameEditText)
         emailEditText = view.findViewById(R.id.emailEditText)
         updateButton = view.findViewById(R.id.updateButton)
+        chooseImageButton = view.findViewById(R.id.chooseImageButton)
 
         updateButton.setOnClickListener { updateProfile() }
 
         loadUserData()
 
-        profileImage.setOnClickListener { pickImage() }
+        chooseImageButton.setOnClickListener { pickImage() }
 
         return view
     }

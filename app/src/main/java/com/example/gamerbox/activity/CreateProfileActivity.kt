@@ -1,4 +1,4 @@
-package com.example.gamerbox
+package com.example.gamerbox.activity
 
 import android.content.Intent
 import android.net.Uri
@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.gamerbox.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -25,7 +26,6 @@ class CreateProfileActivity : ComponentActivity() {
 
     private var imageUri: Uri? = null
 
-    // Activity Result Launcher for picking an image
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
@@ -46,12 +46,10 @@ class CreateProfileActivity : ComponentActivity() {
         selectedImageView = findViewById(R.id.selectedImageView)
         continueButton = findViewById(R.id.continueButton)
 
-        // Choose Image Button Click Listener
         chooseImageButton.setOnClickListener {
             pickImage()
         }
 
-        // Continue Button Click Listener
         continueButton.setOnClickListener {
             val username = usernameEditText.text.toString().trim()
             val email = intent.getStringExtra("email") ?: ""
@@ -66,11 +64,10 @@ class CreateProfileActivity : ComponentActivity() {
                             "username" to username,
                             "email" to email,
                             "password" to password
-                            // Add more fields as needed
                         )
 
                         userId?.let { uid ->
-                            // If an image is selected, upload it to Firebase Storage
+                            // Subir imagen a Firebase Storage
                             imageUri?.let { uri ->
                                 val storageRef =
                                     FirebaseStorage.getInstance().reference.child("profile_images")
@@ -78,9 +75,7 @@ class CreateProfileActivity : ComponentActivity() {
                                 storageRef.putFile(uri)
                                     .addOnSuccessListener { _ ->
                                         storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                                            // Save the image URL to Firestore
                                             user["imageUrl"] = downloadUri.toString()
-
                                             saveUserDataToFirestore(userId, user)
                                         }
                                     }
@@ -89,12 +84,10 @@ class CreateProfileActivity : ComponentActivity() {
                                         saveUserDataToFirestore(userId, user)
                                     }
                             } ?: run {
-                                // If no image is selected, save user data to Firestore directly
                                 saveUserDataToFirestore(userId, user)
                             }
                         }
                     } else {
-                        // Error creating user in Firebase Authentication
                         Log.e("Auth", "Error creating user", task.exception)
                     }
                 }
@@ -111,8 +104,7 @@ class CreateProfileActivity : ComponentActivity() {
                 showHome()
             }
             .addOnFailureListener { e ->
-                // Error saving user details to Firestore
-                Log.e("Firestore", "Error saving user details", e)
+                Log.e("Firestore", "Error al guardar datos", e)
             }
     }
 

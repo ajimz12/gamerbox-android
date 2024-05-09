@@ -11,20 +11,18 @@ class RawgRepository(private val rawgAPI: RawgService) {
         return if (response.isSuccessful) {
             response.body()?.results
         } else {
-            // Handle error
             null
         }
     }
 
     suspend fun getRecentPopularGames(apiKey: String): List<Game>? {
-        val dates = RawgService.getDatesForLastTwoWeeks()
+        val dates = RawgService.getDatesForLastWeek()
         val ordering = "-added"
         val response = rawgAPI.getPopularRecentGames(dates, ordering, apiKey)
 
         return if (response.isSuccessful) {
             response.body()?.results
         } else {
-            // Handle error
             null
         }
     }
@@ -40,12 +38,11 @@ class RawgRepository(private val rawgAPI: RawgService) {
 
     suspend fun searchGamesByTitle(title: String, apiKey: String): List<Game>? {
         val response = rawgAPI.searchGamesByTitle(title, apiKey)
-
         return if (response.isSuccessful) {
             response.body()?.results
         } else {
-            // Handle error
             null
         }
     }
+
 }
