@@ -102,12 +102,13 @@
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/actionGameFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="16dp"
+        app:fabSize="auto"
         android:layout_marginEnd="16dp"
         app:srcCompat="@drawable/ic_add_review"
         app:backgroundTint="@color/blue" />

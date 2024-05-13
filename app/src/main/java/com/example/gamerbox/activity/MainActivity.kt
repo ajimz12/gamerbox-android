@@ -1,6 +1,7 @@
 package com.example.gamerbox.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -36,6 +37,16 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 else -> false
+            }
+        }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.gameFragment) {
+                // Ocultar el BottomNavigationView
+                bottomNav.visibility = View.GONE
+            } else {
+                // Mostrar el BottomNavigationView
+                bottomNav.visibility = View.VISIBLE
             }
         }
     }

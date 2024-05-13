@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -16,6 +17,8 @@ import com.example.gamerbox.models.GameDetails
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,8 +34,7 @@ class GameFragment : Fragment() {
     private lateinit var gameImageView: ImageView
     private lateinit var gameAdditionalImageView: ImageView
     private lateinit var gamemetacriticTextView: TextView
-
-
+    private lateinit var fab: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +54,11 @@ class GameFragment : Fragment() {
         gameAdditionalImageView = view.findViewById(R.id.gameDetailsAdditionalImageView)
         gamemetacriticTextView = view.findViewById(R.id.gameDetailsMetacriticTextView)
 
+        fab = view.findViewById(R.id.actionGameFab)
+
+        fab.setOnClickListener {
+            showBottomSheetMenu()
+        }
 
         val gameId = arguments?.getInt("gameId") ?: -1
         if (gameId != -1) {
@@ -111,5 +118,13 @@ class GameFragment : Fragment() {
         Glide.with(requireContext())
             .load(gameDetails.backgroundAdditionalImageUrl)
             .into(gameImageView)
+    }
+
+    private fun showBottomSheetMenu() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_menu, null)
+        bottomSheetDialog.setContentView(bottomSheetView)
+
+        bottomSheetDialog.show()
     }
 }

@@ -19,4 +19,6 @@
     <string name="new_games">Recientes</string>
     <string name="hint_search_text">Buscar juegos…</string>
     <string name="metacritic_text">Metacritic</string>
+    <string name="review_text">Reseña</string>
+    <string name="review_user_text">Escribe aquí tu reseña</string>
 </resources>

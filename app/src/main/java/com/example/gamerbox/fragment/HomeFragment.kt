@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import com.example.gamerbox.adapter.GameAdapter
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,6 +31,7 @@ class HomeFragment : Fragment() {
     private val popularGamesList = mutableListOf<Game>()
     private val recentGamesList = mutableListOf<Game>()
     private lateinit var rawgRepository: RawgRepository
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,5 +103,4 @@ class HomeFragment : Fragment() {
         // Navegar al GameFragment
         findNavController().navigate(R.id.action_home_to_game, bundle)
     }
-
 }
