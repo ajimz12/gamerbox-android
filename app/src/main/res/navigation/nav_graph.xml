@@ -10,7 +10,7 @@
         android:id="@+id/homeFragment"
         android:name="com.example.gamerbox.fragment.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/activity_home" >
+        tools:layout="@layout/fragment_home" >
 
         <!-- Navegar de HomeFragment a GameFragment -->
         <action
@@ -34,14 +34,14 @@
         android:id="@+id/gameFragment"
         android:name="com.example.gamerbox.fragment.GameFragment"
         android:label="GameFragment"
-        tools:layout="@layout/activity_game" />
+        tools:layout="@layout/fragment_game" />
 
     <!-- SearchFragment -->
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.example.gamerbox.fragment.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/activity_search" >
+        tools:layout="@layout/fragment_search" >
 
         <!-- Navegar de SearchFragment a GameFragment -->
         <action
@@ -55,14 +55,14 @@
         android:id="@+id/profileFragment"
         android:name="com.example.gamerbox.fragment.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/activity_profile" />
+        tools:layout="@layout/fragment_profile" />
 
     <!-- EditProfileFragment -->
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.gamerbox.fragment.EditProfileFragment"
         android:label="EditProfileFragment"
-        tools:layout="@layout/activity_editprofile" />
+        tools:layout="@layout/fragment_editprofile" />
 
     <!-- Actions -->
     <action

@@ -18,4 +18,5 @@
     <string name="popular_games">Populares</string>
     <string name="new_games">Recientes</string>
     <string name="hint_search_text">Buscar juegos…</string>
+    <string name="metacritic_text">Metacritic</string>
 </resources>

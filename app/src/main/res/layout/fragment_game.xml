@@ -8,6 +8,7 @@
         android:id="@+id/gameDetailsImageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:foreground="@drawable/gradient_image_bottom"
         android:scaleType="centerCrop"
         android:src="@drawable/game_image" />
 
@@ -17,7 +18,7 @@
         android:layout_height="210dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="210dp"
         android:layout_marginEnd="16dp"
         android:elevation="4dp"
         app:cardCornerRadius="16dp">
@@ -36,22 +37,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/gameDetailsAdditionalImageViewCardView"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="420dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="28dp"
         android:fontFamily="@font/montserratbold"
-        android:layout_marginEnd="25dp"
-        android:padding="5dp"
+        android:padding="2dp"
         android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/metacriticLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gameDetailsAdditionalImageViewCardView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="60dp"
+        android:fontFamily="@font/montserratregular"
+        android:text="@string/metacritic_text"
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/gameDetailsTitleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/gameDetailsImageView"
-        android:layout_marginTop="15dp"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
         android:layout_toStartOf="@id/gameDetailsAdditionalImageViewCardView"
         android:fontFamily="@font/montserratmedium"
         android:textSize="25sp"
@@ -62,8 +74,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/gameDetailsTitleTextView"
-        android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:layout_toStartOf="@id/gameDetailsAdditionalImageViewCardView"
         android:fontFamily="@font/montserratregular"
         android:textSize="20sp" />
@@ -71,11 +83,11 @@
     <ScrollView
         android:id="@+id/descriptionScrollView"
         android:layout_width="229dp"
-        android:layout_height="240dp"
+        android:layout_height="220dp"
         android:layout_below="@id/gameDetailsDatetextView"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="27dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="16dp"
         android:layout_toStartOf="@id/gameDetailsAdditionalImageViewCardView"
         android:background="#2E2C2C"
@@ -86,7 +98,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserratregular"
-            android:textSize="20sp" />
+            android:textSize="17sp" />
     </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        app:srcCompat="@drawable/ic_add_review"
+        app:backgroundTint="@color/blue" />
 
 </RelativeLayout>

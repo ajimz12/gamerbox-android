@@ -8,6 +8,7 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:screenOrientation="portrait"
         android:icon="@mipmap/gamerboxicon"
         android:label="@string/app_name"
         android:supportsRtl="true"
