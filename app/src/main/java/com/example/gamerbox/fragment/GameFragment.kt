@@ -11,6 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.gamerbox.R
 import com.example.gamerbox.models.GameDetails
@@ -125,6 +127,17 @@ class GameFragment : Fragment() {
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_menu, null)
         bottomSheetDialog.setContentView(bottomSheetView)
 
+        // Obtener la vista del botón de reseña del menú de la hoja inferior
+        val reviewButton = bottomSheetView.findViewById<View>(R.id.menuReview)
+
+        // Agregar un OnClickListener al botón de reseña
+        reviewButton.setOnClickListener {
+            // Navegar a ReviewFragment cuando se hace clic en el botón de reseña
+            findNavController().navigate(R.id.action_game_to_review)
+            bottomSheetDialog.dismiss() // Cerrar la hoja inferior después de la navegación
+        }
+
         bottomSheetDialog.show()
     }
+
 }
