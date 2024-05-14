@@ -61,8 +61,14 @@
     <fragment
         android:id="@+id/reviewFragment"
         android:name="com.example.gamerbox.fragment.ReviewFragment"
-        android:label="ReviewFragment"
-        tools:layout="@layout/fragment_review" />
+        android:label="fragment_review"
+        tools:layout="@layout/fragment_review">
+        <argument
+            android:name="gameId"
+            app:argType="integer" />
+    </fragment>
+
+
 
     <!-- ProfileFragment -->
     <fragment

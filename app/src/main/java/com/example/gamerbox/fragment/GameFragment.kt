@@ -38,6 +38,8 @@ class GameFragment : Fragment() {
     private lateinit var gamemetacriticTextView: TextView
     private lateinit var fab: FloatingActionButton
 
+    private var gameId: Int = -1
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,7 +64,7 @@ class GameFragment : Fragment() {
             showBottomSheetMenu()
         }
 
-        val gameId = arguments?.getInt("gameId") ?: -1
+        gameId = arguments?.getInt("gameId") ?: -1
         if (gameId != -1) {
             // Inicializar el servicio y repositorio
             val rawgService = RetrofitService.create()
@@ -127,17 +129,22 @@ class GameFragment : Fragment() {
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_menu, null)
         bottomSheetDialog.setContentView(bottomSheetView)
 
-        // Obtener la vista del botón de reseña del menú de la hoja inferior
         val reviewButton = bottomSheetView.findViewById<View>(R.id.menuReview)
 
-        // Agregar un OnClickListener al botón de reseña
         reviewButton.setOnClickListener {
-            // Navegar a ReviewFragment cuando se hace clic en el botón de reseña
-            findNavController().navigate(R.id.action_game_to_review)
-            bottomSheetDialog.dismiss() // Cerrar la hoja inferior después de la navegación
+            if (gameId != -1) {
+                findNavController().navigate(R.id.action_game_to_review, Bundle().apply {
+                    putInt("gameId", gameId)
+                })
+
+            } else {
+                Toast.makeText(requireContext(), "GameId no encontrado", Toast.LENGTH_SHORT).show()
+            }
+            bottomSheetDialog.dismiss()
         }
 
         bottomSheetDialog.show()
     }
+
 
 }
