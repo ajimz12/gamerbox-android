@@ -11,5 +11,11 @@ data class Review(
     val reviewText: String,
     val rating: Float,
     val date: Date,
-    val isFavorite: Boolean
+    val isFavorite: Boolean,
+    val userId: String
 )
+{
+    constructor() : this(0, 0, "", 0.0f, Date(), false, "")
+}
+
+

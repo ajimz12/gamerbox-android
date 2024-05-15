@@ -11,16 +11,20 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gamerbox.R
+import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.GameDetails
+import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,7 +41,8 @@ class GameFragment : Fragment() {
     private lateinit var gameAdditionalImageView: ImageView
     private lateinit var gamemetacriticTextView: TextView
     private lateinit var fab: FloatingActionButton
-
+    private lateinit var reviewRecyclerView: RecyclerView
+    private lateinit var reviewAdapter: ReviewAdapter
     private var gameId: Int = -1
 
     override fun onCreateView(
@@ -57,18 +62,19 @@ class GameFragment : Fragment() {
         gameImageView = view.findViewById(R.id.gameDetailsImageView)
         gameAdditionalImageView = view.findViewById(R.id.gameDetailsAdditionalImageView)
         gamemetacriticTextView = view.findViewById(R.id.gameDetailsMetacriticTextView)
-
         fab = view.findViewById(R.id.actionGameFab)
-
-        fab.setOnClickListener {
-            showBottomSheetMenu()
-        }
+        reviewRecyclerView = view.findViewById(R.id.reviewsRecyclerView)
 
         gameId = arguments?.getInt("gameId") ?: -1
         if (gameId != -1) {
             // Inicializar el servicio y repositorio
             val rawgService = RetrofitService.create()
             rawgRepository = RawgRepository(rawgService)
+
+            // Configurar el RecyclerView para mostrar las reseñas
+            reviewAdapter = ReviewAdapter()
+            reviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            reviewRecyclerView.adapter = reviewAdapter
 
             // Obtener los detalles del juego desde la API
             lifecycleScope.launch {
@@ -78,12 +84,23 @@ class GameFragment : Fragment() {
                     }
                     if (gameDetails != null) {
                         updateUI(gameDetails)
+                        loadReviews()
                     }
                 } catch (e: Exception) {
                     println(e.message)
                 }
             }
         }
+
+        fab.setOnClickListener {
+            showBottomSheetMenu()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Limpiar el RecyclerView
+        reviewRecyclerView.adapter = null
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -124,6 +141,23 @@ class GameFragment : Fragment() {
             .into(gameImageView)
     }
 
+    private fun loadReviews() {
+        FirebaseFirestore.getInstance().collection("reviews")
+            .whereEqualTo("gameId", gameId)
+            .get()
+            .addOnSuccessListener { documents ->
+                val reviewList = mutableListOf<Review>()
+                for (document in documents) {
+                    val review = document.toObject(Review::class.java)
+                    reviewList.add(review)
+                }
+                reviewAdapter.submitList(reviewList)
+            }
+            .addOnFailureListener { exception ->
+                println("Error al recibir documentos de BD: $exception")
+            }
+    }
+
     private fun showBottomSheetMenu() {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_menu, null)
@@ -145,6 +179,4 @@ class GameFragment : Fragment() {
 
         bottomSheetDialog.show()
     }
-
-
 }
