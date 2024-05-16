@@ -42,6 +42,7 @@ class GameFragment : Fragment() {
     private lateinit var gamemetacriticTextView: TextView
     private lateinit var fab: FloatingActionButton
     private lateinit var reviewRecyclerView: RecyclerView
+    private lateinit var noReviewsTextView: TextView
     private lateinit var reviewAdapter: ReviewAdapter
     private var gameId: Int = -1
 
@@ -64,6 +65,7 @@ class GameFragment : Fragment() {
         gamemetacriticTextView = view.findViewById(R.id.gameDetailsMetacriticTextView)
         fab = view.findViewById(R.id.actionGameFab)
         reviewRecyclerView = view.findViewById(R.id.reviewsRecyclerView)
+        noReviewsTextView = view.findViewById(R.id.noReviewsTextView)
 
         gameId = arguments?.getInt("gameId") ?: -1
         if (gameId != -1) {
@@ -151,7 +153,14 @@ class GameFragment : Fragment() {
                     val review = document.toObject(Review::class.java)
                     reviewList.add(review)
                 }
-                reviewAdapter.submitList(reviewList)
+                if (reviewList.isEmpty()) {
+                    noReviewsTextView.visibility = View.VISIBLE
+                    reviewRecyclerView.visibility = View.GONE
+                } else {
+                    noReviewsTextView.visibility = View.GONE
+                    reviewRecyclerView.visibility = View.VISIBLE
+                    reviewAdapter.submitList(reviewList)
+                }
             }
             .addOnFailureListener { exception ->
                 println("Error al recibir documentos de BD: $exception")

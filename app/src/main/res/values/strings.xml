@@ -21,4 +21,5 @@
     <string name="metacritic_text">Metacritic</string>
     <string name="review_text">Reseña</string>
     <string name="review_user_text">Escribe aquí tu reseña</string>
+    <string name="no_reviews_text">No hay reviews, ¡por ahora!</string>
 </resources>
