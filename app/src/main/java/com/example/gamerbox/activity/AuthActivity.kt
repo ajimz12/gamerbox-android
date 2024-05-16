@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import com.example.gamerbox.R
 import com.google.firebase.auth.FirebaseAuth
+import org.mindrot.jbcrypt.BCrypt
 
 class AuthActivity : ComponentActivity() {
 
@@ -66,10 +67,11 @@ class AuthActivity : ComponentActivity() {
                         if (task.isSuccessful) {
                             showAlert()
                         } else {
-                            // El usuario no existe, pasa a registro
+                            // Encriptar contraseña
+                            val encryptedPassword = encryptPassword(password)
                             val intent = Intent(this, CreateProfileActivity::class.java).apply {
                                 putExtra("email", email)
-                                putExtra("password", password)
+                                putExtra("password", encryptedPassword)
                             }
                             startActivity(intent)
                         }
@@ -78,6 +80,7 @@ class AuthActivity : ComponentActivity() {
                 showInvalidEmailAlert()
             }
         }
+
 
 
         loginButton.setOnClickListener {
@@ -148,6 +151,10 @@ class AuthActivity : ComponentActivity() {
         val homeIntent = Intent(this, MainActivity::class.java)
         startActivity(homeIntent)
         finish()
+    }
+
+    fun encryptPassword(password: String): String {
+        return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 }
 

@@ -98,7 +98,6 @@ dependencies {
 
     implementation ("androidx.navigation:navigation-ui-ktx:2.7.7")
 
-
-
+    implementation ("org.mindrot:jbcrypt:0.4")
 
 }
