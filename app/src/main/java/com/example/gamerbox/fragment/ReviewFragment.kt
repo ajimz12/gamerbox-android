@@ -4,31 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.example.gamerbox.R
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import java.util.*
+import java.util.Date
 
 class ReviewFragment : Fragment() {
 
-    private lateinit var editTextReview: EditText
+    private lateinit var userNameTextView: TextView
+    private lateinit var userProfileImageView: ImageView
+    private lateinit var reviewDateTextView: TextView
+    private lateinit var reviewTextView: TextView
     private lateinit var ratingBar: RatingBar
-    private lateinit var imageViewFavorite: ImageView
-    private lateinit var datePicker: DatePicker
-    private lateinit var btnSendReview: Button
-    private var isFavorite: Boolean = false
-    private var gameId: Int = -1
+    private lateinit var gameImageView: ImageView
+    private lateinit var gameNameTextView: TextView
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_review, container, false)
@@ -37,64 +33,63 @@ class ReviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        editTextReview = view.findViewById(R.id.editTextReview)
-        ratingBar = view.findViewById(R.id.ratingBar)
-        imageViewFavorite = view.findViewById(R.id.imageViewFavorite)
-        datePicker = view.findViewById(R.id.datePicker1)
-        btnSendReview = view.findViewById(R.id.btnSendReview)
+        userNameTextView = view.findViewById(R.id.userNameTextView)
+        userProfileImageView = view.findViewById(R.id.userImageView)
+        reviewDateTextView = view.findViewById(R.id.reviewDateTextView)
+        reviewTextView = view.findViewById(R.id.reviewTextTextView)
+        ratingBar = view.findViewById(R.id.reviewRatingBar)
+        gameImageView = view.findViewById(R.id.gameImageView)
+        gameNameTextView = view.findViewById(R.id.gameTitleTextView)
 
-        gameId = arguments?.getInt("gameId") ?: -1
-        if (gameId == -1) {
-            Toast.makeText(requireContext(), "GameId no encontrado", Toast.LENGTH_SHORT).show()
-            requireActivity().onBackPressed()
-        }
+        val reviewText = arguments?.getString("reviewText")
+        val rating = arguments?.getFloat("rating")
+        val date = arguments?.getLong("date")
+        val userId = arguments?.getString("userId")
+        val gameId = arguments?.getInt("gameId")
 
-        imageViewFavorite.setOnClickListener {
-            isFavorite = !isFavorite
-            imageViewFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart_selected else R.drawable.ic_heart)
-        }
+        reviewTextView.text = reviewText
+        ratingBar.rating = rating ?: 0f
+        reviewDateTextView.text = Date(date ?: 0).toString()
 
-        btnSendReview.setOnClickListener {
-            saveReview()
-        }
-    }
+        // Cargar datos del usuario desde Firestore
+        userId?.let {
+            val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(it)
+            userProfileRef.get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    val userName = documentSnapshot.getString("username")
+                    userNameTextView.text = userName
 
-
-    private fun saveReview() {
-        val reviewText = editTextReview.text.toString()
-        val rating = ratingBar.rating
-        val calendar = Calendar.getInstance().apply {
-            set(datePicker.year, datePicker.month, datePicker.dayOfMonth)
-        }
-        val date = calendar.time
-
-        if (reviewText.isBlank()) {
-            Toast.makeText(requireContext(), "Introduce una reseña", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val currentUser = FirebaseAuth.getInstance().currentUser
-
-        val review = hashMapOf(
-            "gameId" to gameId,
-            "reviewText" to reviewText,
-            "rating" to rating,
-            "date" to date,
-            "isFavorite" to isFavorite,
-            "userId" to currentUser?.uid,
-            "userEmail" to currentUser?.email
-        )
-
-        lifecycleScope.launch {
-            try {
-                withContext(Dispatchers.IO) {
-                    FirebaseFirestore.getInstance().collection("reviews").add(review).await()
+                    val userProfileImageUrl = documentSnapshot.getString("imageUrl")
+                    if (!userProfileImageUrl.isNullOrEmpty()) {
+                        Glide.with(userProfileImageView.context)
+                            .load(userProfileImageUrl)
+                            .into(userProfileImageView)
+                    } else {
+                        userProfileImageView.setImageResource(R.drawable.ic_profile)
+                    }
                 }
-                Toast.makeText(requireContext(), "Review guardada", Toast.LENGTH_SHORT).show()
-                requireActivity().onBackPressed()
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error al guardar review: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        // Cargar datos del juego desde Firestore
+        gameId?.let {
+            val gameRef = FirebaseFirestore.getInstance().collection("games").document(it.toString())
+            gameRef.get().addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    val gameName = documentSnapshot.getString("name")
+                    gameNameTextView.text = gameName
+
+                    val gameImageUrl = documentSnapshot.getString("imageUrl")
+                    if (!gameImageUrl.isNullOrEmpty()) {
+                        Glide.with(gameImageView.context)
+                            .load(gameImageUrl)
+                            .into(gameImageView)
+                    } else {
+                        gameImageView.setImageResource(R.drawable.game_image)
+                    }
+                }
             }
         }
     }
 }
+

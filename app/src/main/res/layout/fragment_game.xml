@@ -20,6 +20,19 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/game_image" />
 
+            <!-- Back button -->
+            <ImageButton
+                android:id="@+id/backArrowImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@android:color/white" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/gameDetailsAdditionalImageViewCardView"
                 android:layout_width="135dp"
@@ -88,7 +101,7 @@
                 android:fontFamily="@font/montserratregular"
                 android:textSize="20sp" />
 
-            <ScrollView
+            <com.example.gamerbox.view.NestedScrollView
                 android:id="@+id/descriptionScrollView"
                 android:layout_width="229dp"
                 android:layout_height="220dp"
@@ -99,7 +112,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_toStartOf="@id/gameDetailsAdditionalImageViewCardView"
                 android:background="#2E2C2C"
-                android:fadeScrollbars="false">
+                android:fadeScrollbars="true">
 
                 <TextView
                     android:id="@+id/gameDetailsDescriptionTextView"
@@ -107,7 +120,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratregular"
                     android:textSize="17sp" />
-            </ScrollView>
+            </com.example.gamerbox.view.NestedScrollView>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reviewsRecyclerView"
@@ -124,10 +138,21 @@
                 android:layout_below="@id/gameDetailsDatetextView"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="300dp"
-                android:visibility="gone"
-                android:text="@string/no_reviews_text"
                 android:fontFamily="@font/montserratbold"
-                android:textSize="15sp" />
+                android:text="@string/no_reviews_text"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <!-- New Button for more reviews -->
+            <Button
+                android:id="@+id/moreReviewsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/reviewsRecyclerView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:text="Mas reseñas" />
 
         </RelativeLayout>
 

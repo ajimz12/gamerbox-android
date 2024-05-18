@@ -11,22 +11,15 @@
         android:name="com.example.gamerbox.fragment.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
-
-        <!-- Navegar de HomeFragment a GameFragment -->
         <action
             android:id="@+id/action_home_to_game"
             app:destination="@id/gameFragment" />
-
-        <!-- Navegar de HomeFragment a SearchFragment -->
         <action
             android:id="@+id/action_home_to_search"
             app:destination="@id/searchFragment" />
-
-        <!-- Navegar de HomeFragment de ProfileFragment -->
         <action
             android:id="@+id/action_home_to_profile"
             app:destination="@id/profileFragment" />
-
     </fragment>
 
     <!-- GameFragment -->
@@ -35,13 +28,41 @@
         android:name="com.example.gamerbox.fragment.GameFragment"
         android:label="GameFragment"
         tools:layout="@layout/fragment_game">
-
-    <!-- Navegar de GameFragment a ReviewFragment -->
-    <action
-        android:id="@+id/action_game_to_review"
-        app:destination="@id/reviewFragment" />
-
+        <action
+            android:id="@+id/action_game_to_createReview"
+            app:destination="@id/createReviewFragment" />
+        <action
+            android:id="@+id/action_game_to_allReviews"
+            app:destination="@id/allReviewsFragment" />
+        <action
+            android:id="@+id/action_game_to_review"
+            app:destination="@id/reviewFragment" />
     </fragment>
+
+    <!-- AllReviewsFragment -->
+    <fragment
+        android:id="@+id/allReviewsFragment"
+        android:name="com.example.gamerbox.fragment.AllReviewsFragment"
+        android:label="AllReviewsFragment"
+        tools:layout="@layout/fragment_all_reviews">
+        <action
+            android:id="@+id/action_allReviewsFragment_to_reviewFragment"
+            app:destination="@id/reviewFragment" />
+    </fragment>
+
+    <!-- ReviewFragment -->
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.example.gamerbox.fragment.ReviewFragment"
+        android:label="ReviewFragment"
+        tools:layout="@layout/fragment_review" />
+
+    <!-- CreateReviewFragment -->
+    <fragment
+        android:id="@+id/createReviewFragment"
+        android:name="com.example.gamerbox.fragment.CreateReviewFragment"
+        android:label="CreateReviewFragment"
+        tools:layout="@layout/fragment_create_review" />
 
     <!-- SearchFragment -->
     <fragment
@@ -49,33 +70,21 @@
         android:name="com.example.gamerbox.fragment.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/fragment_search">
-
-        <!-- Navegar de SearchFragment a GameFragment -->
         <action
             android:id="@+id/action_search_to_game"
             app:destination="@id/gameFragment" />
-
     </fragment>
-
-    <!-- ReviewFragment -->
-    <fragment
-        android:id="@+id/reviewFragment"
-        android:name="com.example.gamerbox.fragment.ReviewFragment"
-        android:label="fragment_review"
-        tools:layout="@layout/fragment_review">
-        <argument
-            android:name="gameId"
-            app:argType="integer" />
-    </fragment>
-
-
 
     <!-- ProfileFragment -->
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.gamerbox.fragment.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profile_to_edit_profile"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
 
     <!-- EditProfileFragment -->
     <fragment
@@ -83,10 +92,4 @@
         android:name="com.example.gamerbox.fragment.EditProfileFragment"
         android:label="EditProfileFragment"
         tools:layout="@layout/fragment_editprofile" />
-
-    <!-- Actions -->
-    <action
-        android:id="@+id/action_profile_to_edit_profile"
-        app:destination="@id/editProfileFragment" />
-
 </navigation>

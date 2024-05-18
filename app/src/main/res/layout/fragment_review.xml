@@ -1,52 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    tools:context=".fragment.ReviewFragment">
 
-    <EditText
-        android:id="@+id/editTextReview"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="46dp"
-        android:hint="@string/review_user_text"
-        android:inputType="textMultiLine"
-        android:autofillHints="" />
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="56dp"
-        android:numStars="5"
-        android:rating="0"
-        android:stepSize="1" />
-
-    <ImageView
-        android:id="@+id/imageViewFavorite"
-        android:layout_width="63dp"
-        android:layout_height="47dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_heart" />
-
-    <DatePicker
-        android:id="@+id/datePicker1"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="80dp"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner" />
+        android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnSendReview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="20dp"
-        android:text="@string/confirm_text" />
+        <!-- User Info -->
+        <ImageView
+            android:id="@+id/userImageView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/userImageView"
+            android:text="User Name"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Review Info -->
+        <TextView
+            android:id="@+id/reviewDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/userNameTextView"
+            android:layout_toEndOf="@id/userImageView"
+            android:text="Review Date"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray" />
+
+        <RatingBar
+            android:id="@+id/reviewRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reviewDateTextView"
+            android:layout_toEndOf="@id/userImageView"
+            android:layout_marginTop="8dp"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:isIndicator="true" />
+
+        <TextView
+            android:id="@+id/reviewTextTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reviewRatingBar"
+            android:layout_marginTop="16dp"
+            android:text="Review text"
+            android:textSize="16sp" />
+
+        <!-- Game Info -->
+        <ImageView
+            android:id="@+id/gameImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@id/reviewTextTextView"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/game_image" />
+
+        <TextView
+            android:id="@+id/gameTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gameImageView"
+            android:layout_marginTop="8dp"
+            android:text="Game Title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+</ScrollView>

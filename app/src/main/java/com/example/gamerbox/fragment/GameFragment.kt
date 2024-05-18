@@ -1,11 +1,13 @@
 package com.example.gamerbox.fragment
 
+import ReviewAdapter
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -16,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gamerbox.R
-import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.GameDetails
 import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
@@ -43,6 +44,8 @@ class GameFragment : Fragment() {
     private lateinit var fab: FloatingActionButton
     private lateinit var reviewRecyclerView: RecyclerView
     private lateinit var noReviewsTextView: TextView
+    private lateinit var backArrowImage: ImageView
+    private lateinit var moreReviewsButton: Button
     private lateinit var reviewAdapter: ReviewAdapter
     private var gameId: Int = -1
 
@@ -66,6 +69,9 @@ class GameFragment : Fragment() {
         fab = view.findViewById(R.id.actionGameFab)
         reviewRecyclerView = view.findViewById(R.id.reviewsRecyclerView)
         noReviewsTextView = view.findViewById(R.id.noReviewsTextView)
+        backArrowImage = view.findViewById(R.id.backArrowImage)
+        moreReviewsButton = view.findViewById(R.id.moreReviewsButton)
+
 
         gameId = arguments?.getInt("gameId") ?: -1
         if (gameId != -1) {
@@ -74,7 +80,7 @@ class GameFragment : Fragment() {
             rawgRepository = RawgRepository(rawgService)
 
             // Configurar el RecyclerView para mostrar las reseñas
-            reviewAdapter = ReviewAdapter()
+            reviewAdapter = ReviewAdapter("GameFragment")
             reviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
             reviewRecyclerView.adapter = reviewAdapter
 
@@ -94,8 +100,19 @@ class GameFragment : Fragment() {
             }
         }
 
+        moreReviewsButton.setOnClickListener {
+            val bundle = Bundle().apply {
+                putInt("gameId", gameId)
+            }
+            findNavController().navigate(R.id.action_game_to_allReviews, bundle)
+        }
+
         fab.setOnClickListener {
             showBottomSheetMenu()
+        }
+
+        backArrowImage.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
@@ -128,7 +145,6 @@ class GameFragment : Fragment() {
         when {
             metacritic <= 30 -> gamemetacriticTextView.setBackgroundResource(R.color.red)
             metacritic <= 40 -> gamemetacriticTextView.setBackgroundResource(R.color.lightRed)
-            metacritic <= 60 -> gamemetacriticTextView.setBackgroundResource(R.color.red)
             metacritic <= 80 -> gamemetacriticTextView.setBackgroundResource(R.color.yellow)
             else -> gamemetacriticTextView.setBackgroundResource(R.color.green)
         }
@@ -156,10 +172,13 @@ class GameFragment : Fragment() {
                 if (reviewList.isEmpty()) {
                     noReviewsTextView.visibility = View.VISIBLE
                     reviewRecyclerView.visibility = View.GONE
+                    moreReviewsButton.visibility = View.GONE
                 } else {
                     noReviewsTextView.visibility = View.GONE
                     reviewRecyclerView.visibility = View.VISIBLE
-                    reviewAdapter.submitList(reviewList)
+                    reviewAdapter.submitList(reviewList.take(3))
+                    moreReviewsButton.visibility =
+                        if (reviewList.size > 3) View.VISIBLE else View.GONE
                 }
             }
             .addOnFailureListener { exception ->
@@ -176,7 +195,7 @@ class GameFragment : Fragment() {
 
         reviewButton.setOnClickListener {
             if (gameId != -1) {
-                findNavController().navigate(R.id.action_game_to_review, Bundle().apply {
+                findNavController().navigate(R.id.action_game_to_createReview, Bundle().apply {
                     putInt("gameId", gameId)
                 })
 

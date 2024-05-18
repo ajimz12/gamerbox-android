@@ -16,7 +16,7 @@ class RawgRepository(private val rawgAPI: RawgService) {
     }
 
     suspend fun getRecentPopularGames(apiKey: String): List<Game>? {
-        val dates = RawgService.getDatesForLastWeek()
+        val dates = RawgService.getDatesForLasYear()
         val ordering = "-added"
         val response = rawgAPI.getPopularRecentGames(dates, ordering, apiKey)
 
