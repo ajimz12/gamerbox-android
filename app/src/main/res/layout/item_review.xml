@@ -8,8 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/userProfileImageView"
@@ -20,27 +20,26 @@
 
         <TextView
             android:id="@+id/userNameTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_weight="1"
             android:ellipsize="end"
             android:fontFamily="@font/montserratbold"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:textStyle="bold" />
 
         <RatingBar
             android:id="@+id/reviewRatingBar"
             style="@android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:isIndicator="true"
             android:max="5"
             android:scaleX=".5"
             android:scaleY=".5"
             android:transformPivotX="170dp"
-            android:transformPivotY="5dp"
-            android:layout_marginTop="15dp"
-            />
+            android:transformPivotY="5dp" />
 
     </LinearLayout>
 
@@ -48,7 +47,38 @@
         android:id="@+id/reviewTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/montserratregular"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/montserratregular" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/likeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_heart" />
+
+        <TextView
+            android:id="@+id/likeCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/montserratbold" />
+
+        <TextView
+            android:id="@+id/likeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:fontFamily="@font/montserratregular"
+            android:text="@string/like_review" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

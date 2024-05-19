@@ -11,11 +11,12 @@ data class Review(
     val rating: Float,
     val date: Date,
     val isFavorite: Boolean,
+    var likes: Int,
     val userId: String,
     val gameId: Int
     )
 {
-    constructor() : this(0,"", 0.0f, Date(), false, "", 0)
+    constructor() : this(0,"", 0.0f, Date(), false, 0, "", 0)
 }
 
 

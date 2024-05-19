@@ -16,15 +16,19 @@ import com.example.gamerbox.R
 import com.example.gamerbox.models.Review
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ReviewAdapter(private val fromFragment: String) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
+class ReviewAdapter(private val fromFragment: String) :
+    RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
 
     private var reviewsList: List<Review> = listOf()
+    private var isFavorite: Boolean = false
 
     inner class ReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val reviewTextView: TextView = itemView.findViewById(R.id.reviewTextView)
         val ratingBar: RatingBar = itemView.findViewById(R.id.reviewRatingBar)
         val userNameTextView: TextView = itemView.findViewById(R.id.userNameTextView)
         val userProfileImageView: ImageView = itemView.findViewById(R.id.userProfileImageView)
+        val likeButton: ImageView = itemView.findViewById(R.id.likeButton)
+        val likeCountTextView: TextView = itemView.findViewById(R.id.likeCountTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
@@ -52,8 +56,35 @@ class ReviewAdapter(private val fromFragment: String) : RecyclerView.Adapter<Rev
                 putInt("gameId", review.gameId)
             }
             when (fromFragment) {
-                "GameFragment" -> holder.itemView.findNavController().navigate(R.id.action_game_to_review, bundle)
-                "AllReviewsFragment" -> holder.itemView.findNavController().navigate(R.id.action_allReviewsFragment_to_reviewFragment, bundle)
+                "GameFragment" -> holder.itemView.findNavController()
+                    .navigate(R.id.action_game_to_review, bundle)
+
+                "AllReviewsFragment" -> holder.itemView.findNavController()
+                    .navigate(R.id.action_allReviewsFragment_to_reviewFragment, bundle)
+            }
+        }
+
+        holder.likeButton.setOnClickListener {
+
+            if (!isFavorite) {
+
+                isFavorite = true
+
+                review.likes++
+                holder.likeCountTextView.text = review.likes.toString()
+
+                holder.likeButton.setImageResource(if (isFavorite) R.drawable.ic_heart_selected else R.drawable.ic_heart)
+
+                // TODO: Almacenar los likes en la base de datos
+
+            } else {
+
+                isFavorite = false
+
+                review.likes--
+                holder.likeCountTextView.text = review.likes.toString()
+
+                holder.likeButton.setImageResource(if (isFavorite) R.drawable.ic_heart_selected else R.drawable.ic_heart)
             }
         }
 
