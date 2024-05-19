@@ -12,6 +12,7 @@
         android:layout_marginBottom="46dp"
         android:hint="@string/review_user_text"
         android:inputType="textMultiLine"
+        android:maxLength="5000"
         android:autofillHints="" />
 
     <RatingBar

@@ -8,14 +8,37 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="0dp">
+
+        <!-- Game Info -->
+        <ImageView
+            android:id="@+id/gameImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:foreground="@drawable/gradient_image_bottom"
+            android:scaleType="centerCrop"
+            android:src="@drawable/game_image" />
+
+        <TextView
+            android:id="@+id/gameTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gameImageView"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/montserratbold"
+            android:padding="16dp"
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
         <!-- User Info -->
         <ImageView
             android:id="@+id/userImageView"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:layout_below="@id/gameTitleTextView"
             android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_profile" />
@@ -24,8 +47,10 @@
             android:id="@+id/userNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/userImageView"
+            android:layout_marginTop="5dp"
             android:layout_toEndOf="@id/userImageView"
-            android:text="User Name"
+            android:fontFamily="@font/montserratmedium"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -36,49 +61,28 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/userNameTextView"
             android:layout_toEndOf="@id/userImageView"
-            android:text="Review Date"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray" />
+            android:fontFamily="@font/montserratregular"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp" />
 
         <RatingBar
             android:id="@+id/reviewRatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/reviewDateTextView"
+            android:layout_marginBottom="10dp"
             android:layout_toEndOf="@id/userImageView"
-            android:layout_marginTop="8dp"
-            android:numStars="5"
-            android:stepSize="0.5"
-            android:isIndicator="true" />
+            android:isIndicator="true"
+            android:numStars="5" />
 
         <TextView
             android:id="@+id/reviewTextTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/reviewRatingBar"
-            android:layout_marginTop="16dp"
-            android:text="Review text"
-            android:textSize="16sp" />
-
-        <!-- Game Info -->
-        <ImageView
-            android:id="@+id/gameImageView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@id/reviewTextTextView"
-            android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/game_image" />
-
-        <TextView
-            android:id="@+id/gameTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/gameImageView"
-            android:layout_marginTop="8dp"
-            android:text="Game Title"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_margin="18dp"
+            android:fontFamily="@font/montserratregular"
+            android:textSize="20sp" />
 
     </RelativeLayout>
 </ScrollView>

@@ -1,6 +1,5 @@
 package com.example.gamerbox.fragment
 
-import ReviewAdapter
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Html
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gamerbox.R
+import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.GameDetails
 import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository

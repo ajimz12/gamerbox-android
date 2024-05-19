@@ -1,3 +1,5 @@
+package com.example.gamerbox.adapter
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +37,8 @@ class ReviewAdapter(private val fromFragment: String) : RecyclerView.Adapter<Rev
         val review = reviewsList[position]
         holder.reviewTextView.text = review.reviewText
         holder.ratingBar.rating = review.rating
+
+        holder.reviewTextView.text = truncateText(review.reviewText, 100)
 
         val userId = review.userId
         val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(userId)
@@ -79,5 +83,13 @@ class ReviewAdapter(private val fromFragment: String) : RecyclerView.Adapter<Rev
     fun submitList(list: List<Review>) {
         reviewsList = list
         notifyDataSetChanged()
+    }
+
+    private fun truncateText(text: String, maxLength: Int): String {
+        return if (text.length > maxLength) {
+            "${text.substring(0, maxLength)}..."
+        } else {
+            text
+        }
     }
 }

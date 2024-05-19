@@ -1,6 +1,5 @@
 package com.example.gamerbox.fragment
 
-import ReviewAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gamerbox.R
+import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.Review
 import com.google.firebase.firestore.FirebaseFirestore
 

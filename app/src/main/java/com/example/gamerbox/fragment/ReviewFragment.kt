@@ -1,6 +1,7 @@
 package com.example.gamerbox.fragment
 
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +9,22 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
+import com.example.gamerbox.models.GameDetails
+import com.example.gamerbox.network.RawgRepository
+import com.example.gamerbox.network.RetrofitService
+import com.example.gamerbox.utils.Constants
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class ReviewFragment : Fragment() {
 
@@ -22,6 +35,9 @@ class ReviewFragment : Fragment() {
     private lateinit var ratingBar: RatingBar
     private lateinit var gameImageView: ImageView
     private lateinit var gameNameTextView: TextView
+    private var gameId: Int = -1
+
+    private lateinit var rawgRepository: RawgRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,11 +61,16 @@ class ReviewFragment : Fragment() {
         val rating = arguments?.getFloat("rating")
         val date = arguments?.getLong("date")
         val userId = arguments?.getString("userId")
-        val gameId = arguments?.getInt("gameId")
+        gameId = arguments?.getInt("gameId") ?: -1
 
         reviewTextView.text = reviewText
         ratingBar.rating = rating ?: 0f
-        reviewDateTextView.text = Date(date ?: 0).toString()
+
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        reviewDateTextView.text = date?.let { dateFormat.format(Date(it)) } ?: ""
+
+        val rawgService = RetrofitService.create()
+        rawgRepository = RawgRepository(rawgService)
 
         // Cargar datos del usuario desde Firestore
         userId?.let {
@@ -63,6 +84,7 @@ class ReviewFragment : Fragment() {
                     if (!userProfileImageUrl.isNullOrEmpty()) {
                         Glide.with(userProfileImageView.context)
                             .load(userProfileImageUrl)
+                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
                             .into(userProfileImageView)
                     } else {
                         userProfileImageView.setImageResource(R.drawable.ic_profile)
@@ -71,25 +93,33 @@ class ReviewFragment : Fragment() {
             }
         }
 
-        // Cargar datos del juego desde Firestore
-        gameId?.let {
-            val gameRef = FirebaseFirestore.getInstance().collection("games").document(it.toString())
-            gameRef.get().addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot != null && documentSnapshot.exists()) {
-                    val gameName = documentSnapshot.getString("name")
-                    gameNameTextView.text = gameName
+        if (gameId != -1) {
 
-                    val gameImageUrl = documentSnapshot.getString("imageUrl")
-                    if (!gameImageUrl.isNullOrEmpty()) {
-                        Glide.with(gameImageView.context)
-                            .load(gameImageUrl)
-                            .into(gameImageView)
-                    } else {
-                        gameImageView.setImageResource(R.drawable.game_image)
+            lifecycleScope.launch {
+                try {
+                    val gameDetails = withContext(Dispatchers.IO) {
+                        rawgRepository.getGameDetails(gameId, Constants.API_KEY)
                     }
+                    if (gameDetails != null) {
+                        updateUI(gameDetails)
+                    }
+                } catch (e: Exception) {
+                    println(e.message)
                 }
             }
         }
+    }
+
+    private fun updateUI(gameDetails: GameDetails) {
+        // Actualizar la interfaz con los detalles del juego
+        gameNameTextView.text = gameDetails.name
+
+
+        // Cargar la imagen del juego
+        Glide.with(requireContext())
+            .load(gameDetails.backgroundImageUrl)
+            .into(gameImageView)
+
     }
 }
 
