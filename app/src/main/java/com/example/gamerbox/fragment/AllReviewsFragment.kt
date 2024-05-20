@@ -31,7 +31,7 @@ class AllReviewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         allReviewsRecyclerView = view.findViewById(R.id.allReviewsRecyclerView)
-        reviewAdapter = ReviewAdapter("AllReviewsFragment")
+        reviewAdapter = ReviewAdapter(emptyList(), "AllReviewsFragment")
         allReviewsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         allReviewsRecyclerView.adapter = reviewAdapter
 
@@ -51,7 +51,7 @@ class AllReviewsFragment : Fragment() {
                     val review = document.toObject(Review::class.java)
                     reviewList.add(review)
                 }
-                reviewAdapter.submitList(reviewList)
+                reviewAdapter = ReviewAdapter(reviewList, "GameFragment")
             }
             .addOnFailureListener { exception ->
                 println("Error al recibir documentos de BD: $exception")

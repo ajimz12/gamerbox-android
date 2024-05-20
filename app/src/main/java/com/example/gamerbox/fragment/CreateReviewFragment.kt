@@ -61,7 +61,6 @@ class CreateReviewFragment : Fragment() {
                         reviewId = review.id
                         editTextReview.setText(review.reviewText)
                         ratingBar.rating = review.rating
-                        imageViewFavorite.setImageResource(if (review.isFavorite) R.drawable.ic_heart_selected else R.drawable.ic_heart)
 
                         val calendar = Calendar.getInstance()
                         calendar.time = review.date
@@ -70,11 +69,8 @@ class CreateReviewFragment : Fragment() {
                             calendar.get(Calendar.MONTH),
                             calendar.get(Calendar.DAY_OF_MONTH)
                         )
-
                         isFavorite = review.isFavorite
                         imageViewFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart_selected else R.drawable.ic_heart)
-
-
                     }
                 }
             }
@@ -97,8 +93,6 @@ class CreateReviewFragment : Fragment() {
                 Toast.makeText(requireContext(), "Introduce una reseña", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            val currentUser = FirebaseAuth.getInstance().currentUser
 
             if (reviewId != null) {
                 lifecycleScope.launch {

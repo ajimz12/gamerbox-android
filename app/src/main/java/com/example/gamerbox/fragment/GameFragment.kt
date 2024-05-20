@@ -47,7 +47,6 @@ class GameFragment : Fragment() {
     private lateinit var noReviewsTextView: TextView
     private lateinit var backArrowImage: ImageView
     private lateinit var moreReviewsButton: Button
-    private lateinit var reviewAdapter: ReviewAdapter
 
     private var gameId: Int = -1
 
@@ -74,7 +73,6 @@ class GameFragment : Fragment() {
         backArrowImage = view.findViewById(R.id.backArrowImage)
         moreReviewsButton = view.findViewById(R.id.moreReviewsButton)
 
-
         gameId = arguments?.getInt("gameId") ?: -1
         if (gameId != -1) {
             // Inicializar el servicio y repositorio
@@ -82,9 +80,7 @@ class GameFragment : Fragment() {
             rawgRepository = RawgRepository(rawgService)
 
             // Configurar el RecyclerView para mostrar las reseñas
-            reviewAdapter = ReviewAdapter("GameFragment")
             reviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            reviewRecyclerView.adapter = reviewAdapter
 
             // Obtener los detalles del juego desde la API
             lifecycleScope.launch {
@@ -178,7 +174,7 @@ class GameFragment : Fragment() {
                 } else {
                     noReviewsTextView.visibility = View.GONE
                     reviewRecyclerView.visibility = View.VISIBLE
-                    reviewAdapter.submitList(reviewList.take(3))
+                    reviewRecyclerView.adapter = ReviewAdapter(reviewList.take(3), "GameFragment")
                     moreReviewsButton.visibility =
                         if (reviewList.size > 3) View.VISIBLE else View.GONE
                 }

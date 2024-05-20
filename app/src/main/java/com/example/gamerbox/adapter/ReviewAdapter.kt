@@ -16,10 +16,8 @@ import com.example.gamerbox.R
 import com.example.gamerbox.models.Review
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ReviewAdapter(private val fromFragment: String) :
+class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragment: String) :
     RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
-
-    private var reviewsList: List<Review> = listOf()
 
     inner class ReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val reviewTextView: TextView = itemView.findViewById(R.id.reviewTextView)
@@ -56,6 +54,9 @@ class ReviewAdapter(private val fromFragment: String) :
 
                 "AllReviewsFragment" -> holder.itemView.findNavController()
                     .navigate(R.id.action_allReviewsFragment_to_reviewFragment, bundle)
+
+                "ProfileFragment" -> holder.itemView.findNavController()
+                    .navigate(R.id.action_profile_to_reviewFragment, bundle)
             }
         }
 
@@ -82,11 +83,6 @@ class ReviewAdapter(private val fromFragment: String) :
 
     override fun getItemCount() = reviewsList.size
 
-    fun submitList(list: List<Review>) {
-        reviewsList = list
-        notifyDataSetChanged()
-    }
-
     private fun truncateText(text: String, maxLength: Int): String {
         return if (text.length > maxLength) {
             "${text.substring(0, maxLength)}..."
@@ -95,4 +91,3 @@ class ReviewAdapter(private val fromFragment: String) :
         }
     }
 }
-
