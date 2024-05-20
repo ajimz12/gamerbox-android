@@ -50,7 +50,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/montserratregular" />
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -78,7 +78,6 @@
             android:fontFamily="@font/montserratregular"
             android:text="@string/like_review" />
 
-    </LinearLayout>
-
+    </LinearLayout> -->
 
 </LinearLayout>

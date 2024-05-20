@@ -6,7 +6,8 @@ import java.util.*
 
 @Entity(tableName = "reviews")
 data class Review(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    var id: String = "",
     val reviewText: String,
     val rating: Float,
     val date: Date,
@@ -16,7 +17,7 @@ data class Review(
     val gameId: Int
     )
 {
-    constructor() : this(0,"", 0.0f, Date(), false, 0, "", 0)
+    constructor() : this("","", 0.0f, Date(), false, 0, "", 0)
 }
 
 

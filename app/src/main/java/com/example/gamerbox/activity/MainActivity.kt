@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.gameFragment) {
+            if (destination.id == R.id.gameFragment || destination.id == R.id.allReviewsFragment || destination.id == R.id.reviewFragment) {
                 // Ocultar el BottomNavigationView
                 bottomNav.visibility = View.GONE
             } else {

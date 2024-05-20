@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.gamerbox.R
 import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.Review
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AllReviewsFragment : Fragment() {

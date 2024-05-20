@@ -20,15 +20,12 @@ class ReviewAdapter(private val fromFragment: String) :
     RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
 
     private var reviewsList: List<Review> = listOf()
-    private var isFavorite: Boolean = false
 
     inner class ReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val reviewTextView: TextView = itemView.findViewById(R.id.reviewTextView)
         val ratingBar: RatingBar = itemView.findViewById(R.id.reviewRatingBar)
         val userNameTextView: TextView = itemView.findViewById(R.id.userNameTextView)
         val userProfileImageView: ImageView = itemView.findViewById(R.id.userProfileImageView)
-        val likeButton: ImageView = itemView.findViewById(R.id.likeButton)
-        val likeCountTextView: TextView = itemView.findViewById(R.id.likeCountTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
@@ -39,10 +36,8 @@ class ReviewAdapter(private val fromFragment: String) :
 
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         val review = reviewsList[position]
-        holder.reviewTextView.text = review.reviewText
-        holder.ratingBar.rating = review.rating
-
         holder.reviewTextView.text = truncateText(review.reviewText, 100)
+        holder.ratingBar.rating = review.rating
 
         val userId = review.userId
         val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(userId)
@@ -61,30 +56,6 @@ class ReviewAdapter(private val fromFragment: String) :
 
                 "AllReviewsFragment" -> holder.itemView.findNavController()
                     .navigate(R.id.action_allReviewsFragment_to_reviewFragment, bundle)
-            }
-        }
-
-        holder.likeButton.setOnClickListener {
-
-            if (!isFavorite) {
-
-                isFavorite = true
-
-                review.likes++
-                holder.likeCountTextView.text = review.likes.toString()
-
-                holder.likeButton.setImageResource(if (isFavorite) R.drawable.ic_heart_selected else R.drawable.ic_heart)
-
-                // TODO: Almacenar los likes en la base de datos
-
-            } else {
-
-                isFavorite = false
-
-                review.likes--
-                holder.likeCountTextView.text = review.likes.toString()
-
-                holder.likeButton.setImageResource(if (isFavorite) R.drawable.ic_heart_selected else R.drawable.ic_heart)
             }
         }
 
@@ -124,3 +95,4 @@ class ReviewAdapter(private val fromFragment: String) :
         }
     }
 }
+

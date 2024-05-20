@@ -25,6 +25,7 @@ import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,6 +48,7 @@ class GameFragment : Fragment() {
     private lateinit var backArrowImage: ImageView
     private lateinit var moreReviewsButton: Button
     private lateinit var reviewAdapter: ReviewAdapter
+
     private var gameId: Int = -1
 
     override fun onCreateView(
