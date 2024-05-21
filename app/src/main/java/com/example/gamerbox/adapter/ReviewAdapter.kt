@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
 import com.example.gamerbox.models.Review
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragment: String) :
@@ -24,6 +25,7 @@ class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragm
         val ratingBar: RatingBar = itemView.findViewById(R.id.reviewRatingBar)
         val userNameTextView: TextView = itemView.findViewById(R.id.userNameTextView)
         val userProfileImageView: ImageView = itemView.findViewById(R.id.userProfileImageView)
+        val likeCountTextView: TextView = itemView.findViewById(R.id.likeCountTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
@@ -36,6 +38,7 @@ class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragm
         val review = reviewsList[position]
         holder.reviewTextView.text = truncateText(review.reviewText, 100)
         holder.ratingBar.rating = review.rating
+        holder.likeCountTextView.text = review.likes.toString()
 
         val userId = review.userId
         val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(userId)
@@ -79,9 +82,12 @@ class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragm
                 }
             }
         }
+
     }
 
-    override fun getItemCount() = reviewsList.size
+    override fun getItemCount(): Int {
+        return reviewsList.size
+    }
 
     private fun truncateText(text: String, maxLength: Int): String {
         return if (text.length > maxLength) {

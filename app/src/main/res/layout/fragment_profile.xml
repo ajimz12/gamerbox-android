@@ -40,7 +40,19 @@
         android:id="@+id/profileReviewRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:foreground="@drawable/gradient_image_bottom"
         android:layout_weight="1"
         tools:listitem="@layout/item_review" />
+
+    <TextView
+        android:id="@+id/moreReviewsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Más reseñas"
+        android:visibility="visible"
+        android:layout_marginBottom="100dp"
+        android:fontFamily="@font/montserratsemibold"
+        android:clickable="true" />
 
 </LinearLayout>

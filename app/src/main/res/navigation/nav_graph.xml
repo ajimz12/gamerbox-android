@@ -87,6 +87,9 @@
         <action
             android:id="@+id/action_profile_to_reviewFragment"
             app:destination="@id/reviewFragment" />
+        <action
+            android:id="@+id/action_profile_to_userReviews"
+            app:destination="@id/userReviewsFragment" />
     </fragment>
 
     <!-- EditProfileFragment -->
@@ -95,4 +98,16 @@
         android:name="com.example.gamerbox.fragment.EditProfileFragment"
         android:label="EditProfileFragment"
         tools:layout="@layout/fragment_editprofile" />
+
+    <!-- UserReviewFragment -->
+    <fragment
+        android:id="@+id/userReviewsFragment"
+        android:name="com.example.gamerbox.fragment.UserReviewsFragment"
+        android:label="user_reviews_fragment"
+        tools:layout="@layout/fragment_user_reviews">
+        <action
+            android:id="@+id/action_userReviewsFragment_to_reviewFragment"
+            app:destination="@id/reviewFragment" />
+    </fragment>
+
 </navigation>
