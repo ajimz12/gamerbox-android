@@ -58,7 +58,7 @@ class ReviewFragment : Fragment() {
         ratingBar = view.findViewById(R.id.reviewRatingBar)
         gameImageView = view.findViewById(R.id.gameImageView)
         gameNameTextView = view.findViewById(R.id.gameTitleTextView)
-        backArrowImage = view.findViewById(R.id.backArrowImage)
+        backArrowImage = view.findViewById(R.id.reviewBackArrowImage)
 
         val reviewText = arguments?.getString("reviewText")
         val rating = arguments?.getFloat("rating")

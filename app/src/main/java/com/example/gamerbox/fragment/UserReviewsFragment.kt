@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gamerbox.R
@@ -16,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class UserReviewsFragment : Fragment() {
 
     private lateinit var userReviewsRecyclerView: RecyclerView
+    private lateinit var userReviewBackArrow: ImageButton
     private lateinit var reviewAdapter: ReviewAdapter
 
     override fun onCreateView(
@@ -29,9 +32,14 @@ class UserReviewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userReviewsRecyclerView = view.findViewById(R.id.userReviewsRecyclerView)
+        userReviewBackArrow = view.findViewById(R.id.userReviewBackArrowImage)
         userReviewsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         loadAllUserReviews()
+
+        userReviewBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun loadAllUserReviews() {

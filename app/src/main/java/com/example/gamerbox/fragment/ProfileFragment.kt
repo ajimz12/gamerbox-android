@@ -88,7 +88,6 @@ class ProfileFragment : Fragment() {
         favoriteGameSlot3 = view.findViewById(R.id.favoriteGameSlot3)
         favoriteGameSlot4 = view.findViewById(R.id.favoriteGameSlot4)
 
-        // Mostrar los datos del usuario
         showUserData()
 
         return view
@@ -124,7 +123,10 @@ class ProfileFragment : Fragment() {
             ?.observe(viewLifecycleOwner) { gameId ->
                 lifecycleScope.launch {
                     val game = findGameById(gameId)
-                    game?.let { setFavoriteGame(it) }
+                    game?.let {
+                        setFavoriteGame(it)
+                        selectedSlot = null // Reset the selected slot
+                    }
                 }
             }
     }
@@ -289,5 +291,3 @@ class ProfileFragment : Fragment() {
         }
     }
 }
-
-

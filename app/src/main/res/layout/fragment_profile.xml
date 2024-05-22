@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="50dp"
                 android:fontFamily="@font/montserratregular"
                 android:textSize="25sp" />
 
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/montserratregular"
                 android:text="@string/reviews_text"
@@ -128,8 +128,9 @@
                 android:id="@+id/moreReviewsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="90dp"
+                android:layout_gravity="center"
                 android:clickable="true"
                 android:fontFamily="@font/montserratsemibold"
                 android:text="@string/more_reviews_text"

@@ -70,7 +70,7 @@ class GameFragment : Fragment() {
         fab = view.findViewById(R.id.actionGameFab)
         reviewRecyclerView = view.findViewById(R.id.reviewsRecyclerView)
         noReviewsTextView = view.findViewById(R.id.noReviewsTextView)
-        backArrowImage = view.findViewById(R.id.backArrowImage)
+        backArrowImage = view.findViewById(R.id.gameBackArrowImage)
         moreReviewsButton = view.findViewById(R.id.moreReviewsButton)
 
         gameId = arguments?.getInt("gameId") ?: -1

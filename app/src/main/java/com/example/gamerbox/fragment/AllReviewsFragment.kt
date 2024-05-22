@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gamerbox.R
@@ -17,6 +19,7 @@ class AllReviewsFragment : Fragment() {
 
     private lateinit var allReviewsRecyclerView: RecyclerView
     private lateinit var reviewAdapter: ReviewAdapter
+    private lateinit var allReviewBackArrow: ImageButton
     private var gameId: Int = -1
 
     override fun onCreateView(
@@ -31,6 +34,7 @@ class AllReviewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         allReviewsRecyclerView = view.findViewById(R.id.allReviewsRecyclerView)
+        allReviewBackArrow = view.findViewById(R.id.allReviewBackArrowImage)
         reviewAdapter = ReviewAdapter(emptyList(), "AllReviewsFragment")
         allReviewsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         allReviewsRecyclerView.adapter = reviewAdapter
@@ -39,6 +43,11 @@ class AllReviewsFragment : Fragment() {
         if (gameId != -1) {
             loadAllReviews()
         }
+
+        allReviewBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
     }
 
     private fun loadAllReviews() {

@@ -20,9 +20,8 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/game_image" />
 
-            <!-- Back button -->
             <ImageButton
-                android:id="@+id/backArrowImage"
+                android:id="@+id/gameBackArrowImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
