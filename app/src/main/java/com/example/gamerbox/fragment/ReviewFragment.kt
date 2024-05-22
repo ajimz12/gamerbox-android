@@ -1,7 +1,6 @@
 package com.example.gamerbox.fragment
 
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
@@ -35,6 +35,8 @@ class ReviewFragment : Fragment() {
     private lateinit var ratingBar: RatingBar
     private lateinit var gameImageView: ImageView
     private lateinit var gameNameTextView: TextView
+    private lateinit var backArrowImage: ImageView
+
     private var gameId: Int = -1
 
     private lateinit var rawgRepository: RawgRepository
@@ -56,6 +58,7 @@ class ReviewFragment : Fragment() {
         ratingBar = view.findViewById(R.id.reviewRatingBar)
         gameImageView = view.findViewById(R.id.gameImageView)
         gameNameTextView = view.findViewById(R.id.gameTitleTextView)
+        backArrowImage = view.findViewById(R.id.backArrowImage)
 
         val reviewText = arguments?.getString("reviewText")
         val rating = arguments?.getFloat("rating")
@@ -71,6 +74,10 @@ class ReviewFragment : Fragment() {
 
         val rawgService = RetrofitService.create()
         rawgRepository = RawgRepository(rawgService)
+
+        backArrowImage.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         // Cargar datos del usuario desde Firestore
         userId?.let {

@@ -10,20 +10,28 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
 import com.example.gamerbox.activity.AuthActivity
 import com.example.gamerbox.adapter.ReviewAdapter
+import com.example.gamerbox.models.Game
 import com.example.gamerbox.models.Review
+import com.example.gamerbox.network.RawgRepository
+import com.example.gamerbox.network.RetrofitService
+import com.example.gamerbox.utils.Constants
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ProfileFragment : Fragment() {
 
@@ -35,6 +43,15 @@ class ProfileFragment : Fragment() {
     private lateinit var reviewRecyclerView: RecyclerView
     private lateinit var reviewAdapter: ReviewAdapter
     private lateinit var moreReviewsTextView: TextView
+
+    private var selectedSlot: ImageView? = null
+
+    private lateinit var favoriteGameSlot1: ImageView
+    private lateinit var favoriteGameSlot2: ImageView
+    private lateinit var favoriteGameSlot3: ImageView
+    private lateinit var favoriteGameSlot4: ImageView
+
+    private lateinit var rawgRepository: RawgRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,16 +70,23 @@ class ProfileFragment : Fragment() {
                     findNavController().navigate(R.id.action_profile_to_edit_profile)
                     true
                 }
+
                 R.id.action_logout -> {
                     showLogoutConfirmationDialog()
                     true
                 }
+
                 else -> false
             }
         }
 
         profileImage = view.findViewById(R.id.profileImage)
         usernameText = view.findViewById(R.id.usernameText)
+
+        favoriteGameSlot1 = view.findViewById(R.id.favoriteGameSlot1)
+        favoriteGameSlot2 = view.findViewById(R.id.favoriteGameSlot2)
+        favoriteGameSlot3 = view.findViewById(R.id.favoriteGameSlot3)
+        favoriteGameSlot4 = view.findViewById(R.id.favoriteGameSlot4)
 
         // Mostrar los datos del usuario
         showUserData()
@@ -73,16 +97,36 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        reviewRecyclerView = view.findViewById(R.id.profileReviewRecyclerView)
-        moreReviewsTextView = view.findViewById(R.id.moreReviewsTextView)
+        val rawgService = RetrofitService.create()
+        rawgRepository = RawgRepository(rawgService)
 
+        moreReviewsTextView = view.findViewById(R.id.moreReviewsTextView)
+        reviewRecyclerView = view.findViewById(R.id.profileReviewRecyclerView)
+
+        reviewAdapter = ReviewAdapter(emptyList(), "ProfileFragment")
+        reviewRecyclerView.adapter = reviewAdapter
         reviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        favoriteGameSlot1.setOnClickListener { onFavoriteSlotClick(favoriteGameSlot1) }
+        favoriteGameSlot2.setOnClickListener { onFavoriteSlotClick(favoriteGameSlot2) }
+        favoriteGameSlot3.setOnClickListener { onFavoriteSlotClick(favoriteGameSlot3) }
+        favoriteGameSlot4.setOnClickListener { onFavoriteSlotClick(favoriteGameSlot4) }
+
         loadUserReviews()
+        loadFavoriteGames()
 
         moreReviewsTextView.setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_userReviews)
         }
+
+        // Manejar el resultado de la selección del juego
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("selectedGameId")
+            ?.observe(viewLifecycleOwner) { gameId ->
+                lifecycleScope.launch {
+                    val game = findGameById(gameId)
+                    game?.let { setFavoriteGame(it) }
+                }
+            }
     }
 
     private fun showUserData() {
@@ -102,20 +146,20 @@ class ProfileFragment : Fragment() {
                         if (!imageUrl.isNullOrEmpty()) {
                             Glide.with(this)
                                 .load(imageUrl)
-                                .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                                .apply(RequestOptions.circleCropTransform())
                                 .into(profileImage)
-
                         } else {
                             // Si no hay URL de imagen, mostrar una imagen de placeholder
                             Glide.with(this)
                                 .load(R.drawable.ic_profile)
-                                .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                                .apply(RequestOptions.circleCropTransform())
                                 .into(profileImage)
                         }
                     }
                 }
                 .addOnFailureListener { e ->
                     // Error
+                    println("Error al recibir documentos de usuarios: $e")
                 }
         }
     }
@@ -167,4 +211,83 @@ class ProfileFragment : Fragment() {
                 println("Error al recibir documentos de BD: $exception")
             }
     }
+
+    private fun onFavoriteSlotClick(slot: ImageView) {
+        selectedSlot = slot
+        val bundle = Bundle().apply {
+            putBoolean("isSelectingFavorite", true)
+        }
+        findNavController().navigate(R.id.action_profile_to_search, bundle)
+    }
+
+    fun setFavoriteGame(game: Game) {
+        selectedSlot?.let { slot ->
+            Glide.with(this)
+                .load(game.backgroundImageUrl)
+                .into(slot)
+            saveFavoriteGameToFirestore(game)
+        }
+    }
+
+    private fun saveFavoriteGameToFirestore(game: Game) {
+        val userId = auth.currentUser?.uid ?: return
+
+        db.collection("users").document(userId)
+            .update("favoriteGames", FieldValue.arrayUnion(game.id))
+            .addOnSuccessListener {
+                // Juego añadido correctamente
+            }
+            .addOnFailureListener { e ->
+                println("Error al añadir el juego favorito: $e")
+            }
+    }
+
+    private suspend fun findGameById(gameId: Int): Game? {
+        val gameDetails = rawgRepository.getGameDetails(gameId, Constants.API_KEY)
+        return gameDetails?.let {
+            Game(
+                id = it.id,
+                name = it.name,
+                backgroundImageUrl = it.backgroundImageUrl,
+                releaseDate = it.releaseDate
+            )
+        }
+    }
+
+    private fun loadFavoriteGames() {
+        val userId = auth.currentUser?.uid ?: return
+
+        db.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val favoriteGamesIds = document.get("favoriteGames") as? List<Int> ?: emptyList()
+                    if (favoriteGamesIds.isNotEmpty()) {
+                        lifecycleScope.launch {
+                            val favoriteGames = favoriteGamesIds.mapNotNull { findGameById(it) }
+                            withContext(Dispatchers.Main) {
+                                setFavoriteGameSlots(favoriteGames)
+                            }
+                        }
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("Error al recibir documentos de BD: $exception")
+            }
+    }
+
+    private fun setFavoriteGameSlots(favoriteGames: List<Game>) {
+        val slots = listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
+
+        favoriteGames.forEachIndexed { index, game ->
+            if (index < slots.size) {
+                Glide.with(this)
+                    .load(game.backgroundImageUrl)
+                    .into(slots[index])
+            }
+        }
+    }
 }
+
+

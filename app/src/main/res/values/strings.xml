@@ -20,7 +20,11 @@
     <string name="hint_search_text">Buscar juegos…</string>
     <string name="metacritic_text">Metacritic</string>
     <string name="review_text">Reseña</string>
+    <string name="reviews_text">Reseñas</string>
     <string name="review_user_text">Escribe aquí tu reseña</string>
     <string name="no_reviews_text">No hay reseñas, ¡por ahora!</string>
     <string name="like_review">Likes</string>
+    <string name="add_favourite">Añadir a Favoritos</string>
+    <string name="more_reviews_text">Más reseñas</string>
+    <string name="favorite_games_text">Favoritos</string>
 </resources>

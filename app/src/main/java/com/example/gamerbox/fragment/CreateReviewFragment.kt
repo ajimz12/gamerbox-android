@@ -161,12 +161,12 @@ class CreateReviewFragment : Fragment() {
                 withContext(Dispatchers.IO) {
                     FirebaseFirestore.getInstance().collection("reviews").add(review).await()
                 }
-                Toast.makeText(requireContext(), "Review guardada", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Reseña enviada!", Toast.LENGTH_SHORT).show()
                 requireActivity().onBackPressed()
             } catch (e: Exception) {
                 Toast.makeText(
                     requireContext(),
-                    "Error al guardar review: ${e.message}",
+                    "Error al guardar review",
                     Toast.LENGTH_SHORT
                 ).show()
             }

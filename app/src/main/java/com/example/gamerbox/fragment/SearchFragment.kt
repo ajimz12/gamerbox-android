@@ -29,6 +29,8 @@ class SearchFragment : Fragment() {
     private lateinit var searchEditText: EditText
     private lateinit var gamesRecyclerView: RecyclerView
 
+    private var isSelectingFavorite: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,6 +63,9 @@ class SearchFragment : Fragment() {
                 searchGames(query)
             }
         })
+
+        // Recibir el argumento
+        isSelectingFavorite = arguments?.getBoolean("isSelectingFavorite") ?: false
     }
 
     private fun searchGames(query: String) {
@@ -75,9 +80,17 @@ class SearchFragment : Fragment() {
     }
 
     private fun onGameClick(game: Game) {
-        val bundle = Bundle()
-        bundle.putInt("gameId", game.id)
-        findNavController().navigate(R.id.gameFragment, bundle)
+        if (isSelectingFavorite) {
+            // Volver al ProfileFragment con el gameId del juego seleccionado
+            val navController = findNavController()
+            navController.previousBackStackEntry?.savedStateHandle?.set("selectedGameId", game.id)
+            navController.popBackStack()
+        } else {
+            // Navegar al GameFragment
+            val bundle = Bundle()
+            bundle.putInt("gameId", game.id)
+            findNavController().navigate(R.id.gameFragment, bundle)
+        }
     }
-
 }
+

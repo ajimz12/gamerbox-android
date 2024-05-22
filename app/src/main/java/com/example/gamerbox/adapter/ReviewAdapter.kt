@@ -60,6 +60,9 @@ class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragm
 
                 "ProfileFragment" -> holder.itemView.findNavController()
                     .navigate(R.id.action_profile_to_reviewFragment, bundle)
+
+                "UserReviewsFragment" -> holder.itemView.findNavController()
+                    .navigate(R.id.action_userReviewsFragment_to_reviewFragment, bundle)
             }
         }
 

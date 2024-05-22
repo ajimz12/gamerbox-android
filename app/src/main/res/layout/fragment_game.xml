@@ -152,7 +152,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:visibility="gone"
-                android:text="Mas reseñas" />
+                android:text="@string/more_reviews_text" />
 
         </RelativeLayout>
 

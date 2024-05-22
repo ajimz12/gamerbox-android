@@ -90,6 +90,9 @@
         <action
             android:id="@+id/action_profile_to_userReviews"
             app:destination="@id/userReviewsFragment" />
+        <action
+            android:id="@+id/action_profile_to_search"
+            app:destination="@id/searchFragment" />
     </fragment>
 
     <!-- EditProfileFragment -->
@@ -109,5 +112,4 @@
             android:id="@+id/action_userReviewsFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
     </fragment>
-
 </navigation>

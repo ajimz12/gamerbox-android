@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top|center"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -18,41 +17,126 @@
         app:menu="@menu/menu_profile_options"
         tools:ignore="RtlHardcoded" />
 
-    <ImageView
-        android:id="@+id/profileImage"
-        android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="40dp"
-        android:padding="8dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile" />
-
-    <TextView
-        android:id="@+id/usernameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:fontFamily="@font/montserratregular"
-        android:textSize="25sp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/profileReviewRecyclerView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:foreground="@drawable/gradient_image_bottom"
-        android:layout_weight="1"
-        tools:listitem="@layout/item_review" />
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/moreReviewsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Más reseñas"
-        android:visibility="visible"
-        android:layout_marginBottom="100dp"
-        android:fontFamily="@font/montserratsemibold"
-        android:clickable="true" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:padding="8dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile" />
+
+            <TextView
+                android:id="@+id/usernameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/montserratregular"
+                android:textSize="25sp" />
+
+            <!-- Espacios para juegos favoritos -->
+
+            <TextView
+                android:id="@+id/favoriteGamesText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/montserratregular"
+                android:text="@string/favorite_games_text"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/favoriteGamesContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="180dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/favoriteGameSlot1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/game_controller"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/favoriteGameSlot2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/game_controller"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/favoriteGameSlot3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/game_controller"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/favoriteGameSlot4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/game_controller"
+                    android:scaleType="centerCrop" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/reviewsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/montserratregular"
+                android:text="@string/reviews_text"
+                android:textSize="20sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/profileReviewRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foreground="@drawable/gradient_image_bottom"
+                tools:listitem="@layout/item_review" />
+
+            <TextView
+                android:id="@+id/moreReviewsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="90dp"
+                android:clickable="true"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="@string/more_reviews_text"
+                android:textAlignment="center"
+                android:visibility="visible" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

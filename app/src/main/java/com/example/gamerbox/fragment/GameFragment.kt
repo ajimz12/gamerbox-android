@@ -198,11 +198,10 @@ class GameFragment : Fragment() {
                 })
 
             } else {
-                Toast.makeText(requireContext(), "GameId no encontrado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Juego no encontrado", Toast.LENGTH_SHORT).show()
             }
             bottomSheetDialog.dismiss()
         }
-
         bottomSheetDialog.show()
     }
 }
