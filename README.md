@@ -7,7 +7,7 @@ Gamerbox es una aplicación Android desarrollada en Kotlin utilizando Android St
 
 Perfil de Usuario Personalizado: Cada usuario tiene un perfil personalizado donde puede mostrar sus juegos favoritos, reseñas, puntuaciones y otra información relevante.
 
-Exploración de Juegos: Los usuarios pueden explorar una amplia variedad de juegos, con la capacidad de buscar y filtrar por género, plataforma, popularidad y más.
+Exploración de Juegos: Los usuarios pueden explorar una amplia variedad de juegos.
 
 Reseñas y Calificaciones: Los usuarios pueden escribir reseñas detalladas sobre los juegos que han jugado, así como calificarlos para compartir sus opiniones con la comunidad.
 
