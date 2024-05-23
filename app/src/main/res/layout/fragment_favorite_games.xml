@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageButton
+        android:id="@+id/favoriteGamesBackArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_back"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/montserratbold"
+        android:text="@string/edit_favorite_games"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <ImageView
+            android:id="@+id/favoriteGameSlot1"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/game_controller"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/favoriteGameSlot2"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/game_controller"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/favoriteGameSlot3"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/game_controller"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/favoriteGameSlot4"
+            android:layout_width="0dp"
+            android:layout_height="150dp"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/game_controller"
+            android:scaleType="centerCrop" />
+    </LinearLayout>
+
+</LinearLayout>

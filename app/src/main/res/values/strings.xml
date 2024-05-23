@@ -27,4 +27,5 @@
     <string name="add_favourite">Añadir a Favoritos</string>
     <string name="more_reviews_text">Más reseñas</string>
     <string name="favorite_games_text">Favoritos</string>
+    <string name="edit_favorite_games">Tus Juegos Favoritos</string>
 </resources>

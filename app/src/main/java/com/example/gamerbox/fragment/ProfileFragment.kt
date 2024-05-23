@@ -24,11 +24,10 @@ import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -44,14 +43,10 @@ class ProfileFragment : Fragment() {
     private lateinit var reviewAdapter: ReviewAdapter
     private lateinit var moreReviewsTextView: TextView
 
-    private var selectedSlot: ImageView? = null
-
     private lateinit var favoriteGameSlot1: ImageView
     private lateinit var favoriteGameSlot2: ImageView
     private lateinit var favoriteGameSlot3: ImageView
     private lateinit var favoriteGameSlot4: ImageView
-
-    private lateinit var rawgRepository: RawgRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,16 +61,13 @@ class ProfileFragment : Fragment() {
         toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_edit_profile -> {
-                    // Navegar a EditProfileFragment
                     findNavController().navigate(R.id.action_profile_to_edit_profile)
                     true
                 }
-
                 R.id.action_logout -> {
                     showLogoutConfirmationDialog()
                     true
                 }
-
                 else -> false
             }
         }
@@ -89,15 +81,13 @@ class ProfileFragment : Fragment() {
         favoriteGameSlot4 = view.findViewById(R.id.favoriteGameSlot4)
 
         showUserData()
+        setupFavoriteGamesButton(view)
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val rawgService = RetrofitService.create()
-        rawgRepository = RawgRepository(rawgService)
 
         moreReviewsTextView = view.findViewById(R.id.moreReviewsTextView)
         reviewRecyclerView = view.findViewById(R.id.profileReviewRecyclerView)
@@ -106,11 +96,6 @@ class ProfileFragment : Fragment() {
         reviewRecyclerView.adapter = reviewAdapter
         reviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        favoriteGameSlot1.setOnClickListener { onFavoriteSlotClick(favoriteGameSlot1) }
-        favoriteGameSlot2.setOnClickListener { onFavoriteSlotClick(favoriteGameSlot2) }
-        favoriteGameSlot3.setOnClickListener { onFavoriteSlotClick(favoriteGameSlot3) }
-        favoriteGameSlot4.setOnClickListener { onFavoriteSlotClick(favoriteGameSlot4) }
-
         loadUserReviews()
         loadFavoriteGames()
 
@@ -118,15 +103,10 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_profile_to_userReviews)
         }
 
-        // Manejar el resultado de la selección del juego
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Int>("selectedGameId")
-            ?.observe(viewLifecycleOwner) { gameId ->
-                lifecycleScope.launch {
-                    val game = findGameById(gameId)
-                    game?.let {
-                        setFavoriteGame(it)
-                        selectedSlot = null // Reset the selected slot
-                    }
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("favoritesUpdated")
+            ?.observe(viewLifecycleOwner) { updated ->
+                if (updated) {
+                    loadFavoriteGames()
                 }
             }
     }
@@ -141,17 +121,14 @@ class ProfileFragment : Fragment() {
                         val username = document.getString("username")
                         val imageUrl = document.getString("imageUrl")
 
-                        // Mostrar el nombre de usuario
                         usernameText.text = username
 
-                        // Cargar la imagen del usuario con Glide
                         if (!imageUrl.isNullOrEmpty()) {
                             Glide.with(this)
                                 .load(imageUrl)
                                 .apply(RequestOptions.circleCropTransform())
                                 .into(profileImage)
                         } else {
-                            // Si no hay URL de imagen, mostrar una imagen de placeholder
                             Glide.with(this)
                                 .load(R.drawable.ic_profile)
                                 .apply(RequestOptions.circleCropTransform())
@@ -160,7 +137,6 @@ class ProfileFragment : Fragment() {
                     }
                 }
                 .addOnFailureListener { e ->
-                    // Error
                     println("Error al recibir documentos de usuarios: $e")
                 }
         }
@@ -171,9 +147,7 @@ class ProfileFragment : Fragment() {
         builder.setTitle("Cerrar sesión")
         builder.setMessage("¿Estás seguro de que quieres cerrar sesión?")
         builder.setPositiveButton("Aceptar") { _, _ ->
-            // Cerrar la sesión del usuario
             auth.signOut()
-            // Mostrar la pantalla de inicio de sesión
             showLogin()
         }
         builder.setNegativeButton("Cancelar", null)
@@ -214,48 +188,6 @@ class ProfileFragment : Fragment() {
             }
     }
 
-    private fun onFavoriteSlotClick(slot: ImageView) {
-        selectedSlot = slot
-        val bundle = Bundle().apply {
-            putBoolean("isSelectingFavorite", true)
-        }
-        findNavController().navigate(R.id.action_profile_to_search, bundle)
-    }
-
-    fun setFavoriteGame(game: Game) {
-        selectedSlot?.let { slot ->
-            Glide.with(this)
-                .load(game.backgroundImageUrl)
-                .into(slot)
-            saveFavoriteGameToFirestore(game)
-        }
-    }
-
-    private fun saveFavoriteGameToFirestore(game: Game) {
-        val userId = auth.currentUser?.uid ?: return
-
-        db.collection("users").document(userId)
-            .update("favoriteGames", FieldValue.arrayUnion(game.id))
-            .addOnSuccessListener {
-                // Juego añadido correctamente
-            }
-            .addOnFailureListener { e ->
-                println("Error al añadir el juego favorito: $e")
-            }
-    }
-
-    private suspend fun findGameById(gameId: Int): Game? {
-        val gameDetails = rawgRepository.getGameDetails(gameId, Constants.API_KEY)
-        return gameDetails?.let {
-            Game(
-                id = it.id,
-                name = it.name,
-                backgroundImageUrl = it.backgroundImageUrl,
-                releaseDate = it.releaseDate
-            )
-        }
-    }
-
     private fun loadFavoriteGames() {
         val userId = auth.currentUser?.uid ?: return
 
@@ -288,6 +220,27 @@ class ProfileFragment : Fragment() {
                     .load(game.backgroundImageUrl)
                     .into(slots[index])
             }
+        }
+    }
+
+    private suspend fun findGameById(gameId: Int): Game? {
+        val rawgService = RetrofitService.create()
+        val rawgRepository = RawgRepository(rawgService)
+        val gameDetails = rawgRepository.getGameDetails(gameId, Constants.API_KEY)
+        return gameDetails?.let {
+            Game(
+                id = it.id,
+                name = it.name,
+                backgroundImageUrl = it.backgroundImageUrl,
+                releaseDate = it.releaseDate
+            )
+        }
+    }
+
+    private fun setupFavoriteGamesButton(view: View) {
+        val editFavoriteGamesButton = view.findViewById<TextView>(R.id.favoriteGamesButton)
+        editFavoriteGamesButton.setOnClickListener {
+            findNavController().navigate(R.id.action_profile_to_favorite)
         }
     }
 }

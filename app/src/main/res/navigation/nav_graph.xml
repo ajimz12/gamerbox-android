@@ -91,8 +91,8 @@
             android:id="@+id/action_profile_to_userReviews"
             app:destination="@id/userReviewsFragment" />
         <action
-            android:id="@+id/action_profile_to_search"
-            app:destination="@id/searchFragment" />
+            android:id="@+id/action_profile_to_favorite"
+            app:destination="@id/favoriteGamesFragment" />
     </fragment>
 
     <!-- EditProfileFragment -->
@@ -106,10 +106,22 @@
     <fragment
         android:id="@+id/userReviewsFragment"
         android:name="com.example.gamerbox.fragment.UserReviewsFragment"
-        android:label="user_reviews_fragment"
+        android:label="UserReviewsFragment"
         tools:layout="@layout/fragment_user_reviews">
         <action
             android:id="@+id/action_userReviewsFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
     </fragment>
+
+    <!-- FavoriteGamesFragment -->
+    <fragment
+        android:id="@+id/favoriteGamesFragment"
+        android:name="com.example.gamerbox.fragment.FavoriteGamesFragment"
+        android:label="FavoriteGamesFragment"
+        tools:layout="@layout/fragment_favorite_games">
+        <action
+            android:id="@+id/action_favorite_to_search"
+            app:destination="@id/searchFragment" />
+    </fragment>
+
 </navigation>
