@@ -92,7 +92,9 @@ class ProfileFragment : Fragment() {
         moreReviewsTextView = view.findViewById(R.id.moreReviewsTextView)
         reviewRecyclerView = view.findViewById(R.id.profileReviewRecyclerView)
 
-        reviewAdapter = ReviewAdapter(emptyList(), "ProfileFragment")
+        reviewAdapter = ReviewAdapter(emptyList(), "ProfileFragment") { review ->
+            onLikeClicked(review)
+        }
         reviewRecyclerView.adapter = reviewAdapter
         reviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -170,12 +172,14 @@ class ProfileFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 val reviewList = mutableListOf<Review>()
                 for (document in documents) {
-                    val review = document.toObject(Review::class.java)
+                    val review = document.toObject(Review::class.java).copy(id = document.id)
                     reviewList.add(review)
                 }
                 if (reviewList.isNotEmpty()) {
                     val recentReviews = reviewList.take(3)
-                    reviewAdapter = ReviewAdapter(recentReviews, "ProfileFragment")
+                    reviewAdapter = ReviewAdapter(recentReviews, "ProfileFragment") { review ->
+                        onLikeClicked(review)
+                    }
                     reviewRecyclerView.adapter = reviewAdapter
 
                     if (reviewList.size > 3) {
@@ -242,5 +246,25 @@ class ProfileFragment : Fragment() {
         editFavoriteGamesButton.setOnClickListener {
             findNavController().navigate(R.id.action_profile_to_favorite)
         }
+    }
+
+    private fun onLikeClicked(review: Review) {
+        val currentUserId = auth.currentUser?.uid ?: return
+
+        val reviewRef = db.collection("reviews").document(review.id)
+
+        if (currentUserId in review.likes) {
+            review.likes.remove(currentUserId)
+        } else {
+            review.likes.add(currentUserId)
+        }
+
+        reviewRef.update("likes", review.likes)
+            .addOnSuccessListener {
+                reviewAdapter.updateReview(review)
+            }
+            .addOnFailureListener { exception ->
+                println("Error al actualizar 'Me Gusta': $exception")
+            }
     }
 }

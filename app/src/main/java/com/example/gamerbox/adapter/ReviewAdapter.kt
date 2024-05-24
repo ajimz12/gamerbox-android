@@ -13,18 +13,23 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
+import com.example.gamerbox.models.Game
 import com.example.gamerbox.models.Review
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragment: String) :
-    RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
+class ReviewAdapter(
+    private var reviewList: List<Review>,
+    private val fromFragment: String,
+    private val onLikeClicked: (Review) -> Unit
+) : RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder>() {
 
     inner class ReviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val reviewTextView: TextView = itemView.findViewById(R.id.reviewTextView)
         val ratingBar: RatingBar = itemView.findViewById(R.id.reviewRatingBar)
         val userNameTextView: TextView = itemView.findViewById(R.id.userNameTextView)
         val userProfileImageView: ImageView = itemView.findViewById(R.id.userProfileImageView)
+        val likeButton: ImageView = itemView.findViewById(R.id.likeButton)
         val likeCountTextView: TextView = itemView.findViewById(R.id.likeCountTextView)
     }
 
@@ -35,10 +40,9 @@ class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragm
     }
 
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
-        val review = reviewsList[position]
+        val review = reviewList[position]
         holder.reviewTextView.text = truncateText(review.reviewText, 100)
         holder.ratingBar.rating = review.rating
-        holder.likeCountTextView.text = review.likes.toString()
 
         val userId = review.userId
         val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(userId)
@@ -86,10 +90,21 @@ class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragm
             }
         }
 
+        holder.likeCountTextView.text = review.likes.size.toString()
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val isLiked = review.likes.contains(currentUserId)
+        holder.likeButton.setImageResource(
+            if (isLiked) R.drawable.ic_heart_selected else R.drawable.ic_heart
+        )
+
+        holder.likeButton.setOnClickListener {
+            onLikeClicked(review)
+        }
+
     }
 
     override fun getItemCount(): Int {
-        return reviewsList.size
+        return reviewList.size
     }
 
     private fun truncateText(text: String, maxLength: Int): String {
@@ -98,5 +113,20 @@ class ReviewAdapter(private val reviewsList: List<Review>, private val fromFragm
         } else {
             text
         }
+    }
+
+    fun updateReview(updatedReview: Review) {
+        val index = reviewList.indexOfFirst { it.id == updatedReview.id }
+        if (index != -1) {
+            reviewList = reviewList.toMutableList().apply {
+                set(index, updatedReview)
+            }
+            notifyItemChanged(index)
+        }
+    }
+
+    fun updateData(newReviewList: List<Review>) {
+        reviewList = newReviewList
+        notifyDataSetChanged()
     }
 }

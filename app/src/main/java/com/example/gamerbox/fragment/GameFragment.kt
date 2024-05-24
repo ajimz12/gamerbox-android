@@ -34,6 +34,9 @@ import java.text.SimpleDateFormat
 
 class GameFragment : Fragment() {
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+
     private lateinit var rawgRepository: RawgRepository
 
     private lateinit var gameTitleTextView: TextView
@@ -48,6 +51,8 @@ class GameFragment : Fragment() {
     private lateinit var backArrowImage: ImageView
     private lateinit var moreReviewsButton: Button
 
+    private lateinit var reviewAdapter: ReviewAdapter
+
     private var gameId: Int = -1
 
     override fun onCreateView(
@@ -61,6 +66,9 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+
         gameTitleTextView = view.findViewById(R.id.gameDetailsTitleTextView)
         gameDescriptionTextView = view.findViewById(R.id.gameDetailsDescriptionTextView)
         gameDateTextView = view.findViewById(R.id.gameDetailsDatetextView)
@@ -72,6 +80,10 @@ class GameFragment : Fragment() {
         noReviewsTextView = view.findViewById(R.id.noReviewsTextView)
         backArrowImage = view.findViewById(R.id.gameBackArrowImage)
         moreReviewsButton = view.findViewById(R.id.moreReviewsButton)
+
+        reviewAdapter = ReviewAdapter(emptyList(), "GameFragment") { review ->
+            onLikeClicked(review)
+        }
 
         gameId = arguments?.getInt("gameId") ?: -1
         if (gameId != -1) {
@@ -164,7 +176,7 @@ class GameFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 val reviewList = mutableListOf<Review>()
                 for (document in documents) {
-                    val review = document.toObject(Review::class.java)
+                    val review = document.toObject(Review::class.java).copy(id = document.id)
                     reviewList.add(review)
                 }
                 if (reviewList.isEmpty()) {
@@ -174,14 +186,41 @@ class GameFragment : Fragment() {
                 } else {
                     noReviewsTextView.visibility = View.GONE
                     reviewRecyclerView.visibility = View.VISIBLE
-                    reviewRecyclerView.adapter = ReviewAdapter(reviewList.take(3), "GameFragment")
-                    moreReviewsButton.visibility =
-                        if (reviewList.size > 3) View.VISIBLE else View.GONE
+                    reviewAdapter.updateData(reviewList.take(3))
+                    reviewRecyclerView.adapter = reviewAdapter
+                    moreReviewsButton.visibility = if (reviewList.size > 3) View.VISIBLE else View.GONE
                 }
             }
             .addOnFailureListener { exception ->
                 println("Error al recibir documentos de BD: $exception")
             }
+    }
+
+
+    private fun onLikeClicked(review: Review) {
+        val currentUserId = auth.currentUser?.uid ?: return
+
+        val reviewRef = db.collection("reviews").document(review.id)
+
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(reviewRef)
+            val likes = snapshot.get("likes") as? MutableList<String> ?: mutableListOf()
+
+            if (currentUserId in likes) {
+                likes.remove(currentUserId)
+            } else {
+                likes.add(currentUserId)
+            }
+
+            transaction.update(reviewRef, "likes", likes)
+            likes
+        }.addOnSuccessListener { likes ->
+            // Actualizar el objeto review con los nuevos likes
+            review.likes = likes
+            reviewAdapter.updateReview(review)
+        }.addOnFailureListener { exception ->
+            println("Error al actualizar 'Me Gusta': $exception")
+        }
     }
 
     private fun showBottomSheetMenu() {

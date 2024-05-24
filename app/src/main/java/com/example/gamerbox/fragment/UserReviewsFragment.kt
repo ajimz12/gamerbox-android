@@ -17,6 +17,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UserReviewsFragment : Fragment() {
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+
     private lateinit var userReviewsRecyclerView: RecyclerView
     private lateinit var userReviewBackArrow: ImageButton
     private lateinit var reviewAdapter: ReviewAdapter
@@ -25,6 +28,9 @@ class UserReviewsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+
         return inflater.inflate(R.layout.fragment_user_reviews, container, false)
     }
 
@@ -52,16 +58,38 @@ class UserReviewsFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 val reviewList = mutableListOf<Review>()
                 for (document in documents) {
-                    val review = document.toObject(Review::class.java)
+                    val review = document.toObject(Review::class.java).copy(id = document.id)
                     reviewList.add(review)
                 }
                 if (reviewList.isNotEmpty()) {
-                    reviewAdapter = ReviewAdapter(reviewList, "UserReviewsFragment")
+                    reviewAdapter = ReviewAdapter(reviewList, "UserReviewsFragment") { review ->
+                        onLikeClicked(review)
+                    }
                     userReviewsRecyclerView.adapter = reviewAdapter
                 }
             }
             .addOnFailureListener { exception ->
                 println("Error al recibir documentos de BD: $exception")
+            }
+    }
+
+    private fun onLikeClicked(review: Review) {
+        val currentUserId = auth.currentUser?.uid ?: return
+
+        val reviewRef = db.collection("reviews").document(review.id)
+
+        if (currentUserId in review.likes) {
+            review.likes.remove(currentUserId)
+        } else {
+            review.likes.add(currentUserId)
+        }
+
+        reviewRef.update("likes", review.likes)
+            .addOnSuccessListener {
+                reviewAdapter.updateReview(review)
+            }
+            .addOnFailureListener { exception ->
+                println("Error al actualizar 'Me Gusta': $exception")
             }
     }
 }

@@ -17,6 +17,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class AllReviewsFragment : Fragment() {
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+
     private lateinit var allReviewsRecyclerView: RecyclerView
     private lateinit var reviewAdapter: ReviewAdapter
     private lateinit var allReviewBackArrow: ImageButton
@@ -27,6 +30,9 @@ class AllReviewsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+
         return inflater.inflate(R.layout.fragment_all_reviews, container, false)
     }
 
@@ -35,7 +41,9 @@ class AllReviewsFragment : Fragment() {
 
         allReviewsRecyclerView = view.findViewById(R.id.allReviewsRecyclerView)
         allReviewBackArrow = view.findViewById(R.id.allReviewBackArrowImage)
-        reviewAdapter = ReviewAdapter(emptyList(), "AllReviewsFragment")
+        reviewAdapter = ReviewAdapter(emptyList(), "AllReviewsFragment") { review ->
+            onLikeClicked(review)
+        }
         allReviewsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         allReviewsRecyclerView.adapter = reviewAdapter
 
@@ -57,13 +65,35 @@ class AllReviewsFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 val reviewList = mutableListOf<Review>()
                 for (document in documents) {
-                    val review = document.toObject(Review::class.java)
+                    val review = document.toObject(Review::class.java).copy(id = document.id)
                     reviewList.add(review)
                 }
-                reviewAdapter = ReviewAdapter(reviewList, "GameFragment")
+                reviewAdapter = ReviewAdapter(reviewList, "GameFragment") { review ->
+                    onLikeClicked(review)
+                }
             }
             .addOnFailureListener { exception ->
                 println("Error al recibir documentos de BD: $exception")
+            }
+    }
+
+    private fun onLikeClicked(review: Review) {
+        val currentUserId = auth.currentUser?.uid ?: return
+
+        val reviewRef = db.collection("reviews").document(review.id)
+
+        if (currentUserId in review.likes) {
+            review.likes.remove(currentUserId)
+        } else {
+            review.likes.add(currentUserId)
+        }
+
+        reviewRef.update("likes", review.likes)
+            .addOnSuccessListener {
+                reviewAdapter.updateReview(review)
+            }
+            .addOnFailureListener { exception ->
+                println("Error al actualizar 'Me Gusta': $exception")
             }
     }
 }

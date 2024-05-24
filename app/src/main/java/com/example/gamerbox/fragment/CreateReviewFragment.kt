@@ -25,7 +25,7 @@ class CreateReviewFragment : Fragment() {
     private lateinit var datePicker: DatePicker
     private lateinit var btnSendReview: Button
     private var isFavorite: Boolean = false
-    private var likes: Int = 0
+    private var likes: MutableList<String> = mutableListOf()
     private var gameId: Int = -1
     private var reviewId: String? = null
 
