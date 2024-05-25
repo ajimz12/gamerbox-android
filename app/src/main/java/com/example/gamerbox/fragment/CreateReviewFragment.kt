@@ -49,7 +49,6 @@ class CreateReviewFragment : Fragment() {
 
         gameId = arguments?.getInt("gameId") ?: -1
         if (gameId == -1) {
-            Toast.makeText(requireContext(), "GameId no encontrado", Toast.LENGTH_SHORT).show()
             requireActivity().onBackPressed()
         } else {
             // Verificar si el usuario ya ha revisado este juego
@@ -98,12 +97,12 @@ class CreateReviewFragment : Fragment() {
                 lifecycleScope.launch {
                     try {
                         updateReview(reviewId!!, reviewText, rating, date, isFavorite)
-                        Toast.makeText(requireContext(), "Review actualizada", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Reseña actualizada", Toast.LENGTH_SHORT).show()
                         requireActivity().onBackPressed()
                     } catch (e: Exception) {
                         Toast.makeText(
                             requireContext(),
-                            "Error al actualizar review: ${e.message}",
+                            "Error al actualizar reseña: ${e.message}",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -166,7 +165,7 @@ class CreateReviewFragment : Fragment() {
             } catch (e: Exception) {
                 Toast.makeText(
                     requireContext(),
-                    "Error al guardar review",
+                    "Error al guardar reseña",
                     Toast.LENGTH_SHORT
                 ).show()
             }

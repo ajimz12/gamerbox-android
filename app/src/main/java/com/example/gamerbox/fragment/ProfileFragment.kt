@@ -139,7 +139,7 @@ class ProfileFragment : Fragment() {
                     }
                 }
                 .addOnFailureListener { e ->
-                    println("Error al recibir documentos de usuarios: $e")
+                    println(e.message)
                 }
         }
     }
@@ -210,8 +210,8 @@ class ProfileFragment : Fragment() {
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                println("Error al recibir documentos de BD: $exception")
+            .addOnFailureListener { e ->
+                println(e.message)
             }
     }
 
@@ -263,8 +263,8 @@ class ProfileFragment : Fragment() {
             .addOnSuccessListener {
                 reviewAdapter.updateReview(review)
             }
-            .addOnFailureListener { exception ->
-                println("Error al actualizar 'Me Gusta': $exception")
+            .addOnFailureListener { e ->
+                println(e.message)
             }
     }
 }

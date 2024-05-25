@@ -49,6 +49,7 @@ class ReviewAdapter(
 
         holder.itemView.setOnClickListener {
             val bundle = Bundle().apply {
+                putString("reviewId", review.id)
                 putString("reviewText", review.reviewText)
                 putFloat("rating", review.rating)
                 putLong("date", review.date.time)

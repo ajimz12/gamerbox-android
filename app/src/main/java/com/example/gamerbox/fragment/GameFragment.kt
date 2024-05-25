@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -235,10 +234,8 @@ class GameFragment : Fragment() {
                 findNavController().navigate(R.id.action_game_to_createReview, Bundle().apply {
                     putInt("gameId", gameId)
                 })
-
-            } else {
-                Toast.makeText(requireContext(), "Juego no encontrado", Toast.LENGTH_SHORT).show()
             }
+
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()
