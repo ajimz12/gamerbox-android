@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -35,7 +34,7 @@ class CreateProfileActivity : ComponentActivity() {
                 imageUri = it
                 Glide.with(this)
                     .load(it)
-                    .apply(RequestOptions.circleCropTransform())
+                    .circleCrop()
                     .into(selectedImageView)
             }
         }
@@ -93,38 +92,46 @@ class CreateProfileActivity : ComponentActivity() {
         val email = intent.getStringExtra("email") ?: ""
         val password = intent.getStringExtra("password") ?: ""
 
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val userId = auth.currentUser?.uid
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val userId = auth.currentUser?.uid
 
-                    val user = hashMapOf(
-                        "username" to username,
-                        "email" to email,
-                        "password" to password
-                    )
+                        val user = hashMapOf(
+                            "username" to username,
+                            "email" to email
+                        )
 
-                    userId?.let { uid ->
-                        imageUri?.let { uri ->
-                            val storageRef = FirebaseStorage.getInstance().reference.child("profile_images").child("$uid.jpg")
-                            storageRef.putFile(uri)
-                                .addOnSuccessListener {
-                                    storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                                        user["imageUrl"] = downloadUri.toString()
-                                        saveUserDataToFirestore(userId, user)
+                        userId?.let { uid ->
+                            imageUri?.let { uri ->
+                                val storageRef = FirebaseStorage.getInstance().reference.child("profile_images/$uid")
+                                storageRef.putFile(uri).addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                                            user["imageUrl"] = downloadUri.toString()
+                                            saveUserDataToFirestore(uid, user)
+                                        }
+                                    } else {
+                                        saveUserDataToFirestore(uid, user)
                                     }
+                                }.addOnFailureListener {
+                                    saveUserDataToFirestore(uid, user)
                                 }
-                                .addOnFailureListener {
-                                    saveUserDataToFirestore(userId, user)
-                                }
-                        } ?: run {
-                            saveUserDataToFirestore(userId, user)
+                            } ?: run {
+                                saveUserDataToFirestore(uid, user)
+                            }
                         }
+                    } else {
+                        errorTextView.text = task.exception?.message
                     }
-                } else {
-                    errorTextView.text = task.exception?.message
                 }
-            }
+                .addOnFailureListener { e ->
+                    errorTextView.text = e.message
+                }
+        } else {
+            errorTextView.text = getString(R.string.auth_error)
+        }
     }
 
     private fun saveUserDataToFirestore(userId: String, userData: Map<String, Any>) {

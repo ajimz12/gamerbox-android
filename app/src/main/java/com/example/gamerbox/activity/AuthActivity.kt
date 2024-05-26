@@ -13,75 +13,63 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import com.example.gamerbox.R
 import com.google.firebase.auth.FirebaseAuth
-import org.mindrot.jbcrypt.BCrypt
 
 class AuthActivity : ComponentActivity() {
 
-    lateinit var loginButton: Button
-    lateinit var registerButton: Button
-    lateinit var emailEditText: EditText
-    lateinit var passwordEditText: EditText
-    lateinit var passwordErrorTextView: TextView
-
-    // Instancia de FirebaseAuth
+    private lateinit var loginButton: Button
+    private lateinit var registerButton: Button
+    private lateinit var emailEditText: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var passwordErrorTextView: TextView
     private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
-            // Si hay un usuario autenticado, ir directamente a MainActivity
             val homeIntent = Intent(this, MainActivity::class.java)
             startActivity(homeIntent)
-
-            // Finalizar la actividad actual
             finish()
             return
         }
 
         setContentView(R.layout.activity_auth)
-
-        // Inicializar vistas después de que la actividad haya sido inflada
         loginButton = findViewById(R.id.loginButton)
         registerButton = findViewById(R.id.registerbutton)
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         passwordErrorTextView = findViewById(R.id.passwordErrorTextView)
         setUp()
-
     }
 
-    // Setup
     private fun setUp() {
-
         registerButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
             if (isEmailValid(email) && password.isNotEmpty()) {
-                // Intentar iniciar sesión para verificar si el usuario ya existe
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            showAlert()
+                auth.fetchSignInMethodsForEmail(email).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val signInMethods = task.result.signInMethods
+                        if (signInMethods != null && signInMethods.isNotEmpty()) {
+                            showEmailAlreadyExistsAlert()
                         } else {
-                            // Encriptar contraseña
-                            val encryptedPassword = encryptPassword(password)
                             val intent = Intent(this, CreateProfileActivity::class.java).apply {
                                 putExtra("email", email)
-                                putExtra("password", encryptedPassword)
+                                putExtra("password", password)
                             }
                             startActivity(intent)
                         }
+                    } else {
+                        showAlert(getString(R.string.auth_error))
                     }
+                }
             } else {
                 showInvalidEmailAlert()
             }
         }
-
-
 
         loginButton.setOnClickListener {
             if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
@@ -93,31 +81,23 @@ class AuthActivity : ComponentActivity() {
                         if (task.isSuccessful) {
                             showHome()
                         } else {
-                            showAlert()
+                            showAlert(task.exception?.message ?: getString(R.string.auth_error))
                         }
                     }
             }
         }
 
         passwordEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
                 val password = s.toString()
                 if (password.length < 6) {
-                    // Mostrar el mensaje de error
                     passwordErrorTextView.visibility = View.VISIBLE
-                    passwordErrorTextView.text =
-                        getString(R.string.password_limit_text)
+                    passwordErrorTextView.text = getString(R.string.password_limit_text)
                 } else {
-                    // Ocultar el mensaje de error
                     passwordErrorTextView.visibility = View.GONE
                 }
             }
@@ -137,11 +117,19 @@ class AuthActivity : ComponentActivity() {
         dialog.show()
     }
 
+    private fun showEmailAlreadyExistsAlert() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.incorrect_email_header)
+        builder.setMessage(R.string.incorrect_email_message)
+        builder.setPositiveButton(R.string.accept_text, null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
 
-    private fun showAlert() {
+    private fun showAlert(message: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Ups!")
-        builder.setMessage(R.string.auth_error)
+        builder.setMessage(message)
         builder.setPositiveButton(R.string.accept_text, null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
@@ -152,9 +140,4 @@ class AuthActivity : ComponentActivity() {
         startActivity(homeIntent)
         finish()
     }
-
-    private fun encryptPassword(password: String): String {
-        return BCrypt.hashpw(password, BCrypt.gensalt())
-    }
 }
-
