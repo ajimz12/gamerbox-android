@@ -115,7 +115,7 @@ class AuthActivity : ComponentActivity() {
                     // Mostrar el mensaje de error
                     passwordErrorTextView.visibility = View.VISIBLE
                     passwordErrorTextView.text =
-                        "La contraseña debe tener al menos 6 caracteres"
+                        getString(R.string.password_limit_text)
                 } else {
                     // Ocultar el mensaje de error
                     passwordErrorTextView.visibility = View.GONE
@@ -130,9 +130,9 @@ class AuthActivity : ComponentActivity() {
 
     private fun showInvalidEmailAlert() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("¿Y ese correo?")
-        builder.setMessage("Por favor, introduce un correo electrónico válido.")
-        builder.setPositiveButton("Aceptar", null)
+        builder.setTitle(R.string.incorrect_email_header)
+        builder.setMessage(R.string.incorrect_email_message)
+        builder.setPositiveButton(R.string.accept_text, null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
@@ -141,8 +141,8 @@ class AuthActivity : ComponentActivity() {
     private fun showAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Ups!")
-        builder.setMessage("Se ha producido un error autenticando al usuario")
-        builder.setPositiveButton("Aceptar", null)
+        builder.setMessage(R.string.auth_error)
+        builder.setPositiveButton(R.string.accept_text, null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
@@ -153,7 +153,7 @@ class AuthActivity : ComponentActivity() {
         finish()
     }
 
-    fun encryptPassword(password: String): String {
+    private fun encryptPassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt())
     }
 }

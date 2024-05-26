@@ -4,12 +4,10 @@
     <string name="login_text">Iniciar sesión</string>
     <string name="password_text">Contraseña</string>
     <string name="register_text">Registrarse</string>
-    <string name="profile">Profile</string>
-    <string name="search">Search</string>
-    <string name="home">Home</string>
     <string name="edit_profile">Editar perfil</string>
     <string name="sign_out">Cerrar sesión</string>
     <string name="continue_btn">Continuar</string>
+    <string name="accept_text">Aceptar</string>
     <string name="welcome_text">¡Bienvenido!</string>
     <string name="username_text">Nombre de usuario</string>
     <string name="select_image">Selecciona una imagen</string>
@@ -29,4 +27,10 @@
     <string name="favorite_games_text">Favoritos</string>
     <string name="edit_favorite_games">Tus Juegos Favoritos</string>
     <string name="edit_favorites_text">Editar Favoritos</string>
+    <string name="password_limit_text">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="incorrect_email_header">¿Y ese correo?</string>
+    <string name="incorrect_email_message">Por favor, introduce un correo electrónico válido.</string>
+    <string name="auth_error">Se ha producido un error autenticando al usuario</string>
+    <string name="empty_username_error">El nombre de usuario no puede estar vacío.</string>
+    <string name="usermame_already_exists_error">El nombre de usuario ya existe.</string>
 </resources>

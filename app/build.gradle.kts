@@ -87,7 +87,6 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.11.0")
     implementation ("androidx.navigation:navigation-fragment-ktx:2.7.7")
 
-
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation("com.google.firebase:firebase-analytics")
