@@ -5,20 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gamerbox.R
-import com.example.gamerbox.models.Game
 import com.example.gamerbox.adapter.GameAdapter
 import com.example.gamerbox.network.RawgRepository
-import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.gamerbox.viewmodel.HomeViewModel
+import com.example.gamerbox.viewmodel.HomeViewModelFactory
 
 class HomeFragment : Fragment() {
 
@@ -26,10 +25,14 @@ class HomeFragment : Fragment() {
     private lateinit var recentGamesRecyclerView: RecyclerView
     private lateinit var gamesAdapter: GameAdapter
     private lateinit var recentGamesAdapter: GameAdapter
-    private val popularGamesList = mutableListOf<Game>()
-    private val recentGamesList = mutableListOf<Game>()
-    private lateinit var rawgRepository: RawgRepository
+    private lateinit var progressBar: ProgressBar
 
+    private val homeViewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory(rawgRepository)
+    }
+
+    private val rawgService = RetrofitService.create()
+    private val rawgRepository = RawgRepository(rawgService)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,19 +43,15 @@ class HomeFragment : Fragment() {
 
         popularGamesRecyclerView = view.findViewById(R.id.popularGamesRecyclerView)
         recentGamesRecyclerView = view.findViewById(R.id.recentGamesRecyclerView)
+        progressBar = view.findViewById(R.id.progressBar)
 
         gamesAdapter = GameAdapter { game ->
             navigateToGameFragment(game.id)
-        }.apply {
-            submitList(popularGamesList)
         }
 
         recentGamesAdapter = GameAdapter { game ->
             navigateToGameFragment(game.id)
-        }.apply {
-            submitList(recentGamesList)
         }
-
 
         popularGamesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recentGamesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -67,29 +66,20 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val rawgService = RetrofitService.create()
-        rawgRepository = RawgRepository(rawgService)
+        homeViewModel.fetchGames(Constants.API_KEY)
 
-        lifecycleScope.launch {
-            try {
-                // Obtener juegos populares
-                val popularGames = withContext(Dispatchers.IO) {
-                    rawgRepository.getPopularGames(Constants.API_KEY)
-                }
-                popularGamesList.clear()
-                popularGames?.let { popularGamesList.addAll(it) }
-                gamesAdapter.notifyDataSetChanged()
+        homeViewModel.popularGames.observe(viewLifecycleOwner) { popularGames ->
+            gamesAdapter.submitList(popularGames)
+            gamesAdapter.notifyDataSetChanged()
+        }
 
-                // Obtener juegos recientes
-                val recentGames = withContext(Dispatchers.IO) {
-                    rawgRepository.getRecentPopularGames(Constants.API_KEY)
-                }
-                recentGamesList.clear()
-                recentGames?.let { recentGamesList.addAll(it) }
-                recentGamesAdapter.notifyDataSetChanged()
-            } catch (e: Exception) {
-                println(e.message)
-            }
+        homeViewModel.recentGames.observe(viewLifecycleOwner) { recentGames ->
+            recentGamesAdapter.submitList(recentGames)
+            recentGamesAdapter.notifyDataSetChanged()
+        }
+
+        homeViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
     }
 
@@ -97,8 +87,6 @@ class HomeFragment : Fragment() {
         val bundle = Bundle().apply {
             putInt("gameId", gameId)
         }
-
-        // Navegar al GameFragment
         findNavController().navigate(R.id.action_home_to_game, bundle)
     }
 }

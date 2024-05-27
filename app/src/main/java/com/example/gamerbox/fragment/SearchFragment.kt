@@ -16,7 +16,6 @@ import com.example.gamerbox.R
 import com.example.gamerbox.models.Game
 import com.example.gamerbox.adapter.GameAdapter
 import com.example.gamerbox.network.RawgRepository
-import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

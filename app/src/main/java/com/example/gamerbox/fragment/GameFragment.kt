@@ -20,7 +20,6 @@ import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.GameDetails
 import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
-import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -33,6 +34,7 @@ class EditProfileFragment : Fragment() {
     private lateinit var chooseImageButton: Button
 
     private var imageUri: Uri? = null
+    private var currentUsername: String? = null
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
@@ -76,11 +78,11 @@ class EditProfileFragment : Fragment() {
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        val username = document.getString("username")
+                        currentUsername = document.getString("username")
                         val email = document.getString("email")
                         val imageUrl = document.getString("imageUrl")
 
-                        usernameEditText.setText(username)
+                        usernameEditText.setText(currentUsername)
                         emailEditText.setText(email)
 
                         imageUrl?.let {
@@ -106,24 +108,72 @@ class EditProfileFragment : Fragment() {
         val newUsername = usernameEditText.text.toString().trim()
 
         if (userId != null) {
-            val userData = mutableMapOf<String, Any>("username" to newUsername)
+            // Check if the new username is different from the current one
+            if (newUsername == currentUsername) {
+                // Update only the image or other data if the username has not changed
+                val userData = mutableMapOf<String, Any>("username" to newUsername)
 
-            imageUri?.let { uri ->
-                val imageRef = storage.reference.child("profile_images").child("$userId.jpg")
-                imageRef.putFile(uri)
-                    .addOnSuccessListener {
-                        imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                            userData["imageUrl"] = downloadUri.toString()
+                imageUri?.let { uri ->
+                    val imageRef = storage.reference.child("profile_images").child("$userId.jpg")
+                    imageRef.putFile(uri)
+                        .addOnSuccessListener {
+                            imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                                userData["imageUrl"] = downloadUri.toString()
+                                updateUserProfile(userId, userData)
+                            }
+                        }
+                        .addOnFailureListener { e ->
+                            println(e.message)
+                        }
+                } ?: run {
+                    updateUserProfile(userId, userData)
+                }
+            } else {
+                // Check if the new username already exists
+                checkIfUsernameExists(newUsername) { exists ->
+                    if (exists) {
+                        Toast.makeText(requireContext(), "El nombre de usuario ya existe", Toast.LENGTH_SHORT).show()
+                    } else if (usernameEditText.text.isBlank()) {
+                        Toast.makeText(requireContext(), "El nombre de usuario no puede estar vacío", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val userData = mutableMapOf<String, Any>("username" to newUsername)
+
+                        imageUri?.let { uri ->
+                            val imageRef = storage.reference.child("profile_images").child("$userId.jpg")
+                            imageRef.putFile(uri)
+                                .addOnSuccessListener {
+                                    imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                                        userData["imageUrl"] = downloadUri.toString()
+                                        updateUserProfile(userId, userData)
+                                    }
+                                }
+                                .addOnFailureListener { e ->
+                                    println(e.message)
+                                }
+                        } ?: run {
                             updateUserProfile(userId, userData)
                         }
                     }
-                    .addOnFailureListener { e ->
-                        Log.e("EditProfileFragment", "Error uploading image", e)
-                    }
-            } ?: run {
-                updateUserProfile(userId, userData)
+                }
             }
         }
+    }
+
+    private fun checkIfUsernameExists(username: String, callback: (Boolean) -> Unit) {
+        db.collection("users")
+            .whereEqualTo("username", username)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    callback(false)
+                } else {
+                    callback(true)
+                }
+            }
+            .addOnFailureListener { e ->
+                println(e.message)
+                callback(false)
+            }
     }
 
     private fun updateUserProfile(userId: String, userData: Map<String, Any>) {
@@ -131,7 +181,6 @@ class EditProfileFragment : Fragment() {
             .update(userData)
             .addOnSuccessListener {
                 Log.d("EditProfileFragment", "User profile updated successfully")
-                // Navigate back to ProfileFragment
                 findNavController().popBackStack()
             }
             .addOnFailureListener { e ->

@@ -22,7 +22,6 @@ import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.Game
 import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
-import com.example.gamerbox.network.RetrofitService
 import com.example.gamerbox.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
