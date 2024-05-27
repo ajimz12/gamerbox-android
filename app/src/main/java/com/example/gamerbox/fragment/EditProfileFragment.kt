@@ -94,7 +94,7 @@ class EditProfileFragment : Fragment() {
                     }
                 }
                 .addOnFailureListener { e ->
-                    Log.e("EditProfileFragment", "Error loading user data", e)
+                    println(e.message)
                 }
         }
     }
@@ -108,9 +108,7 @@ class EditProfileFragment : Fragment() {
         val newUsername = usernameEditText.text.toString().trim()
 
         if (userId != null) {
-            // Check if the new username is different from the current one
             if (newUsername == currentUsername) {
-                // Update only the image or other data if the username has not changed
                 val userData = mutableMapOf<String, Any>("username" to newUsername)
 
                 imageUri?.let { uri ->
@@ -129,7 +127,6 @@ class EditProfileFragment : Fragment() {
                     updateUserProfile(userId, userData)
                 }
             } else {
-                // Check if the new username already exists
                 checkIfUsernameExists(newUsername) { exists ->
                     if (exists) {
                         Toast.makeText(requireContext(), "El nombre de usuario ya existe", Toast.LENGTH_SHORT).show()
@@ -180,11 +177,10 @@ class EditProfileFragment : Fragment() {
         db.collection("users").document(userId)
             .update(userData)
             .addOnSuccessListener {
-                Log.d("EditProfileFragment", "User profile updated successfully")
                 findNavController().popBackStack()
             }
             .addOnFailureListener { e ->
-                Log.e("EditProfileFragment", "Error updating user profile", e)
+                println(e.message)
             }
     }
 }

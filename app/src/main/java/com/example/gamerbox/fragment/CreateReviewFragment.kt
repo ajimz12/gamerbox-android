@@ -51,6 +51,7 @@ class CreateReviewFragment : Fragment() {
         if (gameId == -1) {
             requireActivity().onBackPressed()
         } else {
+
             // Verificar si el usuario ya ha revisado este juego
             val currentUser = FirebaseAuth.getInstance().currentUser
             currentUser?.uid?.let { userId ->

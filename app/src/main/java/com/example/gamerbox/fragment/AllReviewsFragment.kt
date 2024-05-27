@@ -68,9 +68,7 @@ class AllReviewsFragment : Fragment() {
                     val review = document.toObject(Review::class.java).copy(id = document.id)
                     reviewList.add(review)
                 }
-                reviewAdapter = ReviewAdapter(reviewList, "GameFragment") { review ->
-                    onLikeClicked(review)
-                }
+                reviewAdapter.updateData(reviewList)
             }
             .addOnFailureListener { exception ->
                 println("Error al recibir documentos de BD: $exception")
