@@ -30,7 +30,6 @@ class HomeViewModel(private val rawgRepository: RawgRepository) : ViewModel() {
                 _recentGames.value = recentGames ?: emptyList()
 
             } catch (e: Exception) {
-
                 println(e.message)
 
             } finally {

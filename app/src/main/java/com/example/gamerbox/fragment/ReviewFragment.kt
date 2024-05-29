@@ -115,6 +115,14 @@ class ReviewFragment : Fragment() {
                     } else {
                         userProfileImageView.setImageResource(R.drawable.ic_profile)
                     }
+
+                    userNameTextView.setOnClickListener {
+                        navigateToUserProfile(it)
+                    }
+
+                    userProfileImageView.setOnClickListener {
+                        navigateToUserProfile(it)
+                    }
                 }
             }
         }
@@ -158,6 +166,14 @@ class ReviewFragment : Fragment() {
         reviewLikeButton.setOnClickListener {
             updateLikeStatus()
         }
+    }
+
+    private fun navigateToUserProfile(view: View) {
+        val userId = arguments?.getString("userId")
+        val bundle = Bundle().apply {
+            putString("userId", userId)
+        }
+        findNavController().navigate(R.id.action_reviewFragment_to_profileFragment, bundle)
     }
 
     private fun updateLikeStatus() {

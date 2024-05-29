@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_game_to_review"
             app:destination="@id/reviewFragment" />
+        <action
+            android:id="@+id/action_game_to_userProfile"
+            app:destination="@id/userProfileFragment" />
     </fragment>
 
     <!-- AllReviewsFragment -->
@@ -48,6 +51,9 @@
         <action
             android:id="@+id/action_allReviewsFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
+        <action
+            android:id="@+id/action_allReviewsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
 
     <!-- ReviewFragment -->
@@ -55,7 +61,11 @@
         android:id="@+id/reviewFragment"
         android:name="com.example.gamerbox.fragment.ReviewFragment"
         android:label="ReviewFragment"
-        tools:layout="@layout/fragment_review" />
+        tools:layout="@layout/fragment_review">
+    <action
+        android:id="@+id/action_reviewFragment_to_profileFragment"
+        app:destination="@id/userProfileFragment" />
+    </fragment>
 
     <!-- CreateReviewFragment -->
     <fragment
@@ -93,6 +103,9 @@
         <action
             android:id="@+id/action_profile_to_favorite"
             app:destination="@id/favoriteGamesFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
 
     <!-- EditProfileFragment -->
@@ -111,6 +124,17 @@
         <action
             android:id="@+id/action_userReviewsFragment_to_reviewFragment"
             app:destination="@id/reviewFragment" />
+        <action
+            android:id="@+id/action_userReviewsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+
+    <!-- UserProfileFragment -->
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.example.gamerbox.fragment.UserProfileFragment"
+        android:label="UserProfileFragment"
+        tools:layout="@layout/fragment_user_profile">
     </fragment>
 
     <!-- FavoriteGamesFragment -->

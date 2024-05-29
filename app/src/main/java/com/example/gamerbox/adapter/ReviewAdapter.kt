@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
-import com.example.gamerbox.models.Game
 import com.example.gamerbox.models.Review
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -82,11 +81,25 @@ class ReviewAdapter(
                         .load(userProfileImageUrl)
                         .apply(RequestOptions.bitmapTransform(CircleCrop()))
                         .into(holder.userProfileImageView)
+
+                    holder.userNameTextView.setOnClickListener {
+                        navigateToUserProfile(it, userId, userProfileImageUrl)
+                    }
+                    holder.userProfileImageView.setOnClickListener {
+                        navigateToUserProfile(it, userId, userProfileImageUrl)
+                    }
                 } else {
                     Glide.with(holder.userProfileImageView.context)
                         .load(R.drawable.ic_profile)
                         .apply(RequestOptions.bitmapTransform(CircleCrop()))
                         .into(holder.userProfileImageView)
+
+                    holder.userNameTextView.setOnClickListener {
+                        navigateToUserProfile(it, userId, null)
+                    }
+                    holder.userProfileImageView.setOnClickListener {
+                        navigateToUserProfile(it, userId, null)
+                    }
                 }
             }
         }
@@ -101,7 +114,23 @@ class ReviewAdapter(
         holder.likeButton.setOnClickListener {
             onLikeClicked(review)
         }
+    }
 
+    private fun navigateToUserProfile(view: View, userId: String, userProfileImageUrl: String?) {
+        val bundle = Bundle().apply {
+            putString("userId", userId)
+            putString("imageUrl", userProfileImageUrl)
+        }
+        when (fromFragment) {
+            "GameFragment" -> view.findNavController()
+                .navigate(R.id.action_game_to_userProfile, bundle)
+            "AllReviewsFragment" -> view.findNavController()
+                .navigate(R.id.action_allReviewsFragment_to_userProfileFragment, bundle)
+            "ProfileFragment" -> view.findNavController()
+                .navigate(R.id.action_profileFragment_to_userProfileFragment, bundle)
+            "UserReviewsFragment" -> view.findNavController()
+                .navigate(R.id.action_userReviewsFragment_to_userProfileFragment, bundle)
+        }
     }
 
     override fun getItemCount(): Int {
