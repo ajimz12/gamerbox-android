@@ -83,10 +83,10 @@ class ReviewAdapter(
                         .into(holder.userProfileImageView)
 
                     holder.userNameTextView.setOnClickListener {
-                        navigateToUserProfile(it, userId, userProfileImageUrl)
+                        navigateToUserProfile(it, userId, userProfileImageUrl, userName)
                     }
                     holder.userProfileImageView.setOnClickListener {
-                        navigateToUserProfile(it, userId, userProfileImageUrl)
+                        navigateToUserProfile(it, userId, userProfileImageUrl, userName)
                     }
                 } else {
                     Glide.with(holder.userProfileImageView.context)
@@ -95,10 +95,10 @@ class ReviewAdapter(
                         .into(holder.userProfileImageView)
 
                     holder.userNameTextView.setOnClickListener {
-                        navigateToUserProfile(it, userId, null)
+                        navigateToUserProfile(it, userId, null, userName)
                     }
                     holder.userProfileImageView.setOnClickListener {
-                        navigateToUserProfile(it, userId, null)
+                        navigateToUserProfile(it, userId, null, userName)
                     }
                 }
             }
@@ -116,10 +116,11 @@ class ReviewAdapter(
         }
     }
 
-    private fun navigateToUserProfile(view: View, userId: String, userProfileImageUrl: String?) {
+    private fun navigateToUserProfile(view: View, userId: String, userProfileImageUrl: String?, userName: String?) {
         val bundle = Bundle().apply {
             putString("userId", userId)
             putString("imageUrl", userProfileImageUrl)
+            putString("username", userName)
         }
         when (fromFragment) {
             "GameFragment" -> view.findNavController()
@@ -133,19 +134,16 @@ class ReviewAdapter(
         }
     }
 
+
     override fun getItemCount(): Int {
         return reviewList.size
     }
 
     private fun truncateText(text: String, maxLength: Int): String {
-        return if (text.length > maxLength) {
-            "${text.substring(0, maxLength)}..."
-        } else {
-            text
-        }
+        return if (text.length > maxLength) text.substring(0, maxLength) + "..." else text
     }
 
-    fun updateReview(updatedReview: Review) {
+fun updateReview(updatedReview: Review) {
         val index = reviewList.indexOfFirst { it.id == updatedReview.id }
         if (index != -1) {
             reviewList = reviewList.toMutableList().apply {
@@ -160,3 +158,4 @@ class ReviewAdapter(
         notifyDataSetChanged()
     }
 }
+

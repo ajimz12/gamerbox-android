@@ -7,9 +7,12 @@
 
     <ImageView
         android:id="@+id/userProfileImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:padding="8dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_profile" />
 
@@ -17,13 +20,25 @@
         android:id="@+id/usernameProfileTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_gravity="center"
+        android:layout_marginBottom="50dp"
+        android:fontFamily="@font/montserratregular"
+        android:textSize="25sp" />
 
     <TextView
-        android:id="@+id/bioTextView"
+        android:id="@+id/favoriteGamesTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Favoritos"
+        android:textSize="18sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favoriteGamesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:layout_weight="1" />
+
 </LinearLayout>

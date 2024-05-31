@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.gamerbox.fragment.HomeFragment"
-        android:label="HomeFragment"
+        android:label="Home"
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_home_to_game"
@@ -26,7 +26,7 @@
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.example.gamerbox.fragment.GameFragment"
-        android:label="GameFragment"
+        android:label="Game"
         tools:layout="@layout/fragment_game">
         <action
             android:id="@+id/action_game_to_createReview"
@@ -46,7 +46,7 @@
     <fragment
         android:id="@+id/allReviewsFragment"
         android:name="com.example.gamerbox.fragment.AllReviewsFragment"
-        android:label="AllReviewsFragment"
+        android:label="All Reviews"
         tools:layout="@layout/fragment_all_reviews">
         <action
             android:id="@+id/action_allReviewsFragment_to_reviewFragment"
@@ -60,10 +60,10 @@
     <fragment
         android:id="@+id/reviewFragment"
         android:name="com.example.gamerbox.fragment.ReviewFragment"
-        android:label="ReviewFragment"
+        android:label="Review"
         tools:layout="@layout/fragment_review">
     <action
-        android:id="@+id/action_reviewFragment_to_profileFragment"
+        android:id="@+id/action_reviewFragment_to_userProfileFragment"
         app:destination="@id/userProfileFragment" />
     </fragment>
 
@@ -71,7 +71,7 @@
     <fragment
         android:id="@+id/createReviewFragment"
         android:name="com.example.gamerbox.fragment.CreateReviewFragment"
-        android:label="CreateReviewFragment"
+        android:label="Create Review"
         tools:layout="@layout/fragment_create_review" />
 
     <!-- SearchFragment -->
@@ -89,7 +89,7 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.gamerbox.fragment.ProfileFragment"
-        android:label="ProfileFragment"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profile_to_edit_profile"
@@ -112,7 +112,7 @@
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.gamerbox.fragment.EditProfileFragment"
-        android:label="EditProfileFragment"
+        android:label="Edit Profile"
         tools:layout="@layout/fragment_editprofile" />
 
     <!-- UserReviewFragment -->
@@ -133,15 +133,17 @@
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.example.gamerbox.fragment.UserProfileFragment"
-        android:label="UserProfileFragment"
-        tools:layout="@layout/fragment_user_profile">
+        android:label="User Profile">
     </fragment>
+
+
+
 
     <!-- FavoriteGamesFragment -->
     <fragment
         android:id="@+id/favoriteGamesFragment"
         android:name="com.example.gamerbox.fragment.FavoriteGamesFragment"
-        android:label="FavoriteGamesFragment"
+        android:label="Favorite Games"
         tools:layout="@layout/fragment_favorite_games">
         <action
             android:id="@+id/action_favorite_to_search"

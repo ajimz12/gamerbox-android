@@ -99,14 +99,14 @@ class ReviewFragment : Fragment() {
         }
 
         // Cargar datos del usuario desde Firestore
-        userId?.let {
+        userId?.let { it ->
             val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(it)
             userProfileRef.get().addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     val userName = documentSnapshot.getString("username")
-                    userNameTextView.text = userName
-
                     val userProfileImageUrl = documentSnapshot.getString("imageUrl")
+
+                    userNameTextView.text = userName
                     if (!userProfileImageUrl.isNullOrEmpty()) {
                         Glide.with(userProfileImageView.context)
                             .load(userProfileImageUrl)
@@ -117,11 +117,11 @@ class ReviewFragment : Fragment() {
                     }
 
                     userNameTextView.setOnClickListener {
-                        navigateToUserProfile(it)
+                        navigateToUserProfile(userId, userName, userProfileImageUrl)
                     }
 
                     userProfileImageView.setOnClickListener {
-                        navigateToUserProfile(it)
+                        navigateToUserProfile(userId, userName, userProfileImageUrl)
                     }
                 }
             }
@@ -142,7 +142,6 @@ class ReviewFragment : Fragment() {
             }
         }
 
-        // Cargar datos de me gusta desde Firestore
         db.collection("reviews").document(reviewId)
             .addSnapshotListener { documentSnapshot, e ->
                 if (e != null) {
@@ -162,18 +161,18 @@ class ReviewFragment : Fragment() {
                 }
             }
 
-        // Agregar listener de me gusta
         reviewLikeButton.setOnClickListener {
             updateLikeStatus()
         }
     }
 
-    private fun navigateToUserProfile(view: View) {
-        val userId = arguments?.getString("userId")
+    private fun navigateToUserProfile(userId: String, userName: String?, userProfileImageUrl: String?) {
         val bundle = Bundle().apply {
             putString("userId", userId)
+            putString("username", userName)
+            putString("imageUrl", userProfileImageUrl)
         }
-        findNavController().navigate(R.id.action_reviewFragment_to_profileFragment, bundle)
+        findNavController().navigate(R.id.action_reviewFragment_to_userProfileFragment, bundle)
     }
 
     private fun updateLikeStatus() {
@@ -209,10 +208,8 @@ class ReviewFragment : Fragment() {
     }
 
     private fun updateUI(gameDetails: GameDetails) {
-        // Actualizar la interfaz con los detalles del juego
         gameNameTextView.text = gameDetails.name
 
-        // Cargar la imagen del juego
         Glide.with(requireContext())
             .load(gameDetails.backgroundImageUrl)
             .into(gameImageView)
