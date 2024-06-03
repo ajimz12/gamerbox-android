@@ -6,24 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
-import com.example.gamerbox.adapter.FavoriteGamesAdapter
 import com.example.gamerbox.models.Game
+import com.example.gamerbox.network.RawgRepository
+import com.example.gamerbox.utils.Constants
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserProfileFragment : Fragment() {
 
     private lateinit var userProfileImageView: ImageView
     private lateinit var userNameTextView: TextView
-    private lateinit var favoriteGamesRecyclerView: RecyclerView
-    private lateinit var favoriteGamesAdapter: FavoriteGamesAdapter
-    private lateinit var favoriteGames: MutableList<Game>
+    private lateinit var favoriteGameSlot1: ImageView
+    private lateinit var favoriteGameSlot2: ImageView
+    private lateinit var favoriteGameSlot3: ImageView
+    private lateinit var favoriteGameSlot4: ImageView
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,12 +42,12 @@ class UserProfileFragment : Fragment() {
 
         userProfileImageView = view.findViewById(R.id.userProfileImage)
         userNameTextView = view.findViewById(R.id.usernameProfileTextView)
-        favoriteGamesRecyclerView = view.findViewById(R.id.favoriteGamesRecyclerView)
+        favoriteGameSlot1 = view.findViewById(R.id.favoriteUserGameSlot1)
+        favoriteGameSlot2 = view.findViewById(R.id.favoriteUserGameSlot2)
+        favoriteGameSlot3 = view.findViewById(R.id.favoriteUserGameSlot3)
+        favoriteGameSlot4 = view.findViewById(R.id.favoriteUserGameSlot4)
+        db = FirebaseFirestore.getInstance()
 
-        favoriteGames = mutableListOf()
-        favoriteGamesAdapter = FavoriteGamesAdapter(favoriteGames)
-        favoriteGamesRecyclerView.layoutManager = LinearLayoutManager(context)
-        favoriteGamesRecyclerView.adapter = favoriteGamesAdapter
 
         val userId = arguments?.getString("userId")
         val userProfileImageUrl = arguments?.getString("imageUrl")
@@ -55,24 +60,61 @@ class UserProfileFragment : Fragment() {
         userProfileImageUrl?.let { imageUrl ->
             Glide.with(userProfileImageView.context)
                 .load(imageUrl)
-                .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                .apply(RequestOptions.circleCropTransform())
                 .into(userProfileImageView)
         } ?: run {
             userProfileImageView.setImageResource(R.drawable.ic_profile)
         }
 
         userId?.let {
-            FirebaseFirestore.getInstance().collection("users").document(it)
-                .collection("favoriteGames")
-                .get()
-                .addOnSuccessListener { querySnapshot ->
-                    for (document in querySnapshot) {
-                        val game = document.toObject(Game::class.java)
-                        favoriteGames.add(game)
-                        println(game.id)
+            loadFavoriteGames(it)
+        }
+    }
+
+    private fun loadFavoriteGames(userId: String) {
+        db.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val favoriteGamesIds = document.get("favoriteGames") as? List<Int> ?: emptyList()
+                    if (favoriteGamesIds.isNotEmpty()) {
+                        lifecycleScope.launch {
+                            val favoriteGames = favoriteGamesIds.mapNotNull { findGameById(it) }
+                            withContext(Dispatchers.Main) {
+                                setFavoriteGameSlots(favoriteGames)
+                            }
+                        }
                     }
-                    favoriteGamesAdapter.notifyDataSetChanged()
                 }
+            }
+            .addOnFailureListener { e ->
+                println(e.message)
+            }
+    }
+
+    private fun setFavoriteGameSlots(favoriteGames: List<Game>) {
+        val slots = listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
+
+        favoriteGames.forEachIndexed { index, game ->
+            if (index < slots.size) {
+                Glide.with(this)
+                    .load(game.backgroundImageUrl)
+                    .into(slots[index])
+            }
+        }
+    }
+
+    private suspend fun findGameById(gameId: Int): Game? {
+        val rawgService = RetrofitService.create()
+        val rawgRepository = RawgRepository(rawgService)
+        val gameDetails = rawgRepository.getGameDetails(gameId, Constants.API_KEY)
+        return gameDetails?.let {
+            Game(
+                id = it.id,
+                name = it.name,
+                backgroundImageUrl = it.backgroundImageUrl,
+                releaseDate = it.releaseDate
+            )
         }
     }
 }

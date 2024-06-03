@@ -37,7 +37,7 @@ interface RawgService {
     ): Response<GameList>
 
     companion object {
-        fun getDatesForLasYear(): String {
+        fun getDatesForLastYear(): String {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val calendar = Calendar.getInstance()
             calendar.add(Calendar.DAY_OF_YEAR, -365)
