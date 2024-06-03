@@ -67,6 +67,9 @@ class ReviewAdapter(
 
                 "UserReviewsFragment" -> holder.itemView.findNavController()
                     .navigate(R.id.action_userReviewsFragment_to_reviewFragment, bundle)
+
+                "UserProfileFragment" -> holder.itemView.findNavController()
+                    .navigate(R.id.action_userProfile_to_reviewFragment, bundle)
             }
         }
 

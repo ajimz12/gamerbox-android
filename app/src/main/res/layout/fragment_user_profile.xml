@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <ImageButton
+        android:id="@+id/userProfileBackArrowImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_back"
+        app:tint="@color/white" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -91,6 +101,38 @@
                     android:background="@drawable/game_controller"
                     android:scaleType="centerCrop" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/reviewsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/montserratregular"
+                android:text="@string/reviews_text"
+                android:textSize="20sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/userProfileReviewRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foreground="@drawable/gradient_image_bottom"
+                tools:listitem="@layout/item_review" />
+
+            <TextView
+                android:id="@+id/moreUserReviewsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="90dp"
+                android:clickable="true"
+                android:fontFamily="@font/montserratsemibold"
+                android:text="@string/more_reviews_text"
+                android:textAlignment="center"
+                android:visibility="gone" />
 
         </LinearLayout>
 

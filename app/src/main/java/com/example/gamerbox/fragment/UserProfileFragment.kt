@@ -4,17 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
+import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.Game
+import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.utils.Constants
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,13 +30,22 @@ import kotlinx.coroutines.withContext
 
 class UserProfileFragment : Fragment() {
 
+    private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
+
     private lateinit var userProfileImageView: ImageView
     private lateinit var userNameTextView: TextView
     private lateinit var favoriteGameSlot1: ImageView
     private lateinit var favoriteGameSlot2: ImageView
     private lateinit var favoriteGameSlot3: ImageView
     private lateinit var favoriteGameSlot4: ImageView
-    private lateinit var db: FirebaseFirestore
+
+    private lateinit var userProfileReviewRecyclerView: RecyclerView
+    private lateinit var reviewAdapter: ReviewAdapter
+    private lateinit var moreUserReviewsTextView: TextView
+
+    private lateinit var userProfileBackArrow: ImageButton
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +63,9 @@ class UserProfileFragment : Fragment() {
         favoriteGameSlot2 = view.findViewById(R.id.favoriteUserGameSlot2)
         favoriteGameSlot3 = view.findViewById(R.id.favoriteUserGameSlot3)
         favoriteGameSlot4 = view.findViewById(R.id.favoriteUserGameSlot4)
+        userProfileBackArrow = view.findViewById(R.id.userProfileBackArrowImage)
         db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
 
         val userId = arguments?.getString("userId")
@@ -69,6 +88,17 @@ class UserProfileFragment : Fragment() {
         userId?.let {
             loadFavoriteGames(it)
         }
+
+        userProfileBackArrow.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        if (userId == auth.currentUser?.uid) {
+            navigateToProfileFragment()
+        }
+
+        setupReviewsRecyclerView(view)
+        loadUserReviews()
     }
 
     private fun loadFavoriteGames(userId: String) {
@@ -104,6 +134,63 @@ class UserProfileFragment : Fragment() {
         }
     }
 
+    private fun setupReviewsRecyclerView(view: View) {
+        userProfileReviewRecyclerView = view.findViewById(R.id.userProfileReviewRecyclerView)
+        reviewAdapter = ReviewAdapter(emptyList(), "UserProfileFragment") { review ->
+            onLikeClicked(review)
+        }
+        userProfileReviewRecyclerView.adapter = reviewAdapter
+        userProfileReviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        moreUserReviewsTextView = view.findViewById(R.id.moreUserReviewsTextView)
+        moreUserReviewsTextView.setOnClickListener {
+            findNavController().navigate(R.id.action_userProfile_to_userReviews)
+        }
+    }
+
+    private fun loadUserReviews() {
+        val userId = arguments?.getString("userId") ?: return
+
+        FirebaseFirestore.getInstance().collection("reviews")
+            .whereEqualTo("userId", userId)
+            .orderBy("date", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                val reviewList = mutableListOf<Review>()
+                for (document in documents) {
+                    val review = document.toObject(Review::class.java).copy(id = document.id)
+                    reviewList.add(review)
+                }
+                if (reviewList.size > 3) {
+                    reviewAdapter.updateData(reviewList.take(3))
+                    moreUserReviewsTextView.visibility = View.VISIBLE
+                } else {
+                    reviewAdapter.updateData(reviewList)
+                    moreUserReviewsTextView.visibility = View.GONE
+                }
+            }
+    }
+
+    private fun onLikeClicked(review: Review) {
+        val currentUserId = auth.currentUser?.uid ?: return
+
+        val reviewRef = db.collection("reviews").document(review.id)
+
+        if (currentUserId in review.likes) {
+            review.likes.remove(currentUserId)
+        } else {
+            review.likes.add(currentUserId)
+        }
+
+        reviewRef.update("likes", review.likes)
+            .addOnSuccessListener {
+                reviewAdapter.updateReview(review)
+            }
+            .addOnFailureListener { e ->
+                println(e.message)
+            }
+    }
+
     private suspend fun findGameById(gameId: Int): Game? {
         val rawgService = RetrofitService.create()
         val rawgRepository = RawgRepository(rawgService)
@@ -116,5 +203,9 @@ class UserProfileFragment : Fragment() {
                 releaseDate = it.releaseDate
             )
         }
+    }
+
+    private fun navigateToProfileFragment() {
+        findNavController().navigate(R.id.action_userProfile_to_profileFragment)
     }
 }
