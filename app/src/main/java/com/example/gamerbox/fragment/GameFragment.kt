@@ -124,12 +124,6 @@ class GameFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        // Limpiar el RecyclerView
-        reviewRecyclerView.adapter = null
-    }
-
     @SuppressLint("SimpleDateFormat")
     private fun updateUI(gameDetails: GameDetails) {
         // Actualizar la interfaz con los detalles del juego

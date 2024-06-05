@@ -1,5 +1,6 @@
 package com.example.gamerbox.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -41,6 +43,7 @@ class ReviewFragment : Fragment() {
     private lateinit var gameImageView: ImageView
     private lateinit var gameNameTextView: TextView
     private lateinit var backArrowImage: ImageView
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var reviewLikeButton: ImageView
     private lateinit var reviewLikeCountTextView: TextView
 
@@ -70,6 +73,7 @@ class ReviewFragment : Fragment() {
         gameImageView = view.findViewById(R.id.gameImageView)
         gameNameTextView = view.findViewById(R.id.gameTitleTextView)
         backArrowImage = view.findViewById(R.id.reviewBackArrowImage)
+        toolbar = view.findViewById(R.id.reviewToolbar)
         reviewLikeButton = view.findViewById(R.id.reviewLikeButton)
         reviewLikeCountTextView = view.findViewById(R.id.reviewLikeCountTextView)
 
@@ -80,9 +84,10 @@ class ReviewFragment : Fragment() {
         gameId = arguments?.getInt("gameId") ?: -1
         reviewId = arguments?.getString("reviewId") ?: ""
 
-        if (reviewId.isEmpty()) {
-            findNavController().popBackStack()
-            return
+        if (FirebaseAuth.getInstance().currentUser?.uid == arguments?.getString("userId")) {
+            toolbar.visibility = View.VISIBLE
+        } else {
+            toolbar.visibility = View.GONE
         }
 
         reviewTextView.text = reviewText
@@ -98,7 +103,28 @@ class ReviewFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        // Cargar datos del usuario desde Firestore
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_delete_review -> {
+                    showDeleteConfirmationDialog()
+                    true
+                }
+
+                R.id.action_edit_review -> {
+
+                    if (gameId != -1) {
+                        findNavController().navigate(R.id.action_reviewFragment_to_createReviewFragment, Bundle().apply {
+                            putInt("gameId", gameId)
+                        })
+                    }
+
+                    true
+                }
+
+                else -> false
+            }
+        }
+
         userId?.let { it ->
             val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(it)
             userProfileRef.get().addOnSuccessListener { documentSnapshot ->
@@ -166,7 +192,11 @@ class ReviewFragment : Fragment() {
         }
     }
 
-    private fun navigateToUserProfile(userId: String, userName: String?, userProfileImageUrl: String?) {
+    private fun navigateToUserProfile(
+        userId: String,
+        userName: String?,
+        userProfileImageUrl: String?
+    ) {
         val bundle = Bundle().apply {
             putString("userId", userId)
             putString("username", userName)
@@ -195,7 +225,8 @@ class ReviewFragment : Fragment() {
                 transaction.update(reviewRef, "likes", newLikes)
                 !userHasLiked
             }.addOnSuccessListener { hasLiked ->
-                reviewLikeCountTextView.text = (reviewLikeCountTextView.text.toString().toInt() + if (hasLiked) 1 else -1).toString()
+                reviewLikeCountTextView.text = (reviewLikeCountTextView.text.toString()
+                    .toInt() + if (hasLiked) 1 else -1).toString()
                 if (hasLiked) {
                     reviewLikeButton.setImageResource(R.drawable.ic_heart_selected)
                 } else {
@@ -214,4 +245,32 @@ class ReviewFragment : Fragment() {
             .load(gameDetails.backgroundImageUrl)
             .into(gameImageView)
     }
+
+    private fun deleteReview() {
+        val reviewRef = db.collection("reviews").document(reviewId)
+
+        reviewRef.delete()
+            .addOnSuccessListener {
+                findNavController().popBackStack()
+            }
+            .addOnFailureListener { e ->
+                println(e.message)
+            }
+    }
+
+    private fun showDeleteConfirmationDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.apply {
+            setTitle("Eliminar reseña")
+            setMessage("¿Estás seguro de que deseas eliminar tu reseña?")
+            setPositiveButton("Confirmar") { _, _ ->
+                deleteReview()
+            }
+            setNegativeButton("Cancelar") { dialog, _ ->
+                dialog.dismiss()
+            }
+            show()
+        }
+    }
+
 }

@@ -11,8 +11,10 @@ data class User (
     val password: String,
     val email: String,
     val imageUrl: String,
+    val followers: MutableList<String>,
+    val following: MutableList<String>,
     val favoriteGames: MutableList<Int>
 )
 {
-    constructor() : this("","","","","", mutableListOf())
+    constructor() : this("","","","","", mutableListOf(), mutableListOf(),  mutableListOf())
 }

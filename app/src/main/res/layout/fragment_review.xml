@@ -19,6 +19,20 @@
             android:scaleType="centerCrop"
             android:src="@drawable/game_image" />
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/reviewToolbar"
+            android:layout_width="42dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="right"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:menu="@menu/review_options"
+            tools:ignore="RtlHardcoded" />
+
         <ImageButton
             android:id="@+id/reviewBackArrowImage"
             android:layout_width="wrap_content"

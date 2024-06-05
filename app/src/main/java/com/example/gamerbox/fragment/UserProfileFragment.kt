@@ -1,9 +1,12 @@
 package com.example.gamerbox.fragment
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -23,6 +26,7 @@ import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,7 +50,6 @@ class UserProfileFragment : Fragment() {
 
     private lateinit var userProfileBackArrow: ImageButton
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,7 +69,6 @@ class UserProfileFragment : Fragment() {
         userProfileBackArrow = view.findViewById(R.id.userProfileBackArrowImage)
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-
 
         val userId = arguments?.getString("userId")
         val userProfileImageUrl = arguments?.getString("imageUrl")
@@ -106,7 +108,8 @@ class UserProfileFragment : Fragment() {
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val favoriteGamesIds = document.get("favoriteGames") as? List<Int> ?: emptyList()
+                    val favoriteGamesIds =
+                        document.get("favoriteGames") as? List<Int> ?: emptyList()
                     if (favoriteGamesIds.isNotEmpty()) {
                         lifecycleScope.launch {
                             val favoriteGames = favoriteGamesIds.mapNotNull { findGameById(it) }
@@ -123,7 +126,8 @@ class UserProfileFragment : Fragment() {
     }
 
     private fun setFavoriteGameSlots(favoriteGames: List<Game>) {
-        val slots = listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
+        val slots =
+            listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
 
         favoriteGames.forEachIndexed { index, game ->
             if (index < slots.size) {

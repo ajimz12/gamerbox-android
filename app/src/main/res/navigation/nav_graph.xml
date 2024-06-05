@@ -62,9 +62,12 @@
         android:name="com.example.gamerbox.fragment.ReviewFragment"
         android:label="Review"
         tools:layout="@layout/fragment_review">
-    <action
-        android:id="@+id/action_reviewFragment_to_userProfileFragment"
-        app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_reviewFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+        <action
+            android:id="@+id/action_reviewFragment_to_createReviewFragment"
+            app:destination="@id/createReviewFragment" />
     </fragment>
 
     <!-- CreateReviewFragment -->
