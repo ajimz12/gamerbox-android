@@ -63,10 +63,12 @@ class ProfileFragment : Fragment() {
                     findNavController().navigate(R.id.action_profile_to_edit_profile)
                     true
                 }
+
                 R.id.action_logout -> {
                     showLogoutConfirmationDialog()
                     true
                 }
+
                 else -> false
             }
         }
@@ -164,7 +166,7 @@ class ProfileFragment : Fragment() {
     private fun loadUserReviews() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
-        FirebaseFirestore.getInstance().collection("reviews")
+        db.collection("reviews")
             .whereEqualTo("userId", userId)
             .orderBy("date", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .get()
@@ -186,8 +188,8 @@ class ProfileFragment : Fragment() {
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                println("Error al recibir documentos de BD: $exception")
+            .addOnFailureListener { e ->
+                println(e.message)
             }
     }
 
@@ -198,7 +200,8 @@ class ProfileFragment : Fragment() {
             .get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val favoriteGamesIds = document.get("favoriteGames") as? List<Int> ?: emptyList()
+                    val favoriteGamesIds =
+                        document.get("favoriteGames") as? List<Int> ?: emptyList()
                     if (favoriteGamesIds.isNotEmpty()) {
                         lifecycleScope.launch {
                             val favoriteGames = favoriteGamesIds.mapNotNull { findGameById(it) }
@@ -215,7 +218,8 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setFavoriteGameSlots(favoriteGames: List<Game>) {
-        val slots = listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
+        val slots =
+            listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
 
         favoriteGames.forEachIndexed { index, game ->
             if (index < slots.size) {
