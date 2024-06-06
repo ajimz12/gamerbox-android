@@ -119,7 +119,12 @@ class ReviewAdapter(
         }
     }
 
-    private fun navigateToUserProfile(view: View, userId: String, userProfileImageUrl: String?, userName: String?) {
+    private fun navigateToUserProfile(
+        view: View,
+        userId: String,
+        userProfileImageUrl: String?,
+        userName: String?
+    ) {
         val bundle = Bundle().apply {
             putString("userId", userId)
             putString("imageUrl", userProfileImageUrl)
@@ -128,10 +133,13 @@ class ReviewAdapter(
         when (fromFragment) {
             "GameFragment" -> view.findNavController()
                 .navigate(R.id.action_game_to_userProfile, bundle)
+
             "AllReviewsFragment" -> view.findNavController()
                 .navigate(R.id.action_allReviewsFragment_to_userProfileFragment, bundle)
+
             "ProfileFragment" -> view.findNavController()
                 .navigate(R.id.action_profileFragment_to_userProfileFragment, bundle)
+
             "UserReviewsFragment" -> view.findNavController()
                 .navigate(R.id.action_userReviewsFragment_to_userProfileFragment, bundle)
         }
@@ -146,7 +154,7 @@ class ReviewAdapter(
         return if (text.length > maxLength) text.substring(0, maxLength) + "..." else text
     }
 
-fun updateReview(updatedReview: Review) {
+    fun updateReview(updatedReview: Review) {
         val index = reviewList.indexOfFirst { it.id == updatedReview.id }
         if (index != -1) {
             reviewList = reviewList.toMutableList().apply {

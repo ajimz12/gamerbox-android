@@ -10,13 +10,16 @@ import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
+import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.GameDetails
+import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -25,8 +28,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -55,15 +60,14 @@ class ReviewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        auth = FirebaseAuth.getInstance()
-        db = Firebase.firestore
-
         return inflater.inflate(R.layout.fragment_review, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        auth = FirebaseAuth.getInstance()
+        db = Firebase.firestore
 
         userNameTextView = view.findViewById(R.id.userNameTextView)
         userProfileImageView = view.findViewById(R.id.userImageView)
@@ -90,6 +94,13 @@ class ReviewFragment : Fragment() {
             toolbar.visibility = View.GONE
         }
 
+        setFragmentResultListener("reviewUpdated") { requestKey, bundle ->
+            val updatedReviewId = bundle.getString("reviewId")
+            if (updatedReviewId == reviewId) {
+                loadReviewData()
+            }
+        }
+
         reviewTextView.text = reviewText
         ratingBar.rating = rating ?: 0f
 
@@ -109,23 +120,21 @@ class ReviewFragment : Fragment() {
                     showDeleteConfirmationDialog()
                     true
                 }
-
                 R.id.action_edit_review -> {
-
                     if (gameId != -1) {
                         findNavController().navigate(R.id.action_reviewFragment_to_createReviewFragment, Bundle().apply {
                             putInt("gameId", gameId)
+                            putString("reviewId", reviewId)
                         })
                     }
-
                     true
                 }
-
                 else -> false
             }
         }
 
-        userId?.let { it ->
+
+        userId?.let {
             val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(it)
             userProfileRef.get().addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot != null && documentSnapshot.exists()) {
@@ -188,7 +197,7 @@ class ReviewFragment : Fragment() {
             }
 
         reviewLikeButton.setOnClickListener {
-            updateLikeStatus()
+            onLikeClicked()
         }
     }
 
@@ -205,7 +214,7 @@ class ReviewFragment : Fragment() {
         findNavController().navigate(R.id.action_reviewFragment_to_userProfileFragment, bundle)
     }
 
-    private fun updateLikeStatus() {
+    private fun onLikeClicked() {
         val reviewRef = db.collection("reviews").document(reviewId)
         val currentUserId = auth.currentUser?.uid
 
@@ -244,6 +253,33 @@ class ReviewFragment : Fragment() {
         Glide.with(requireContext())
             .load(gameDetails.backgroundImageUrl)
             .into(gameImageView)
+    }
+
+    private fun loadReviewData() {
+        lifecycleScope.launch {
+            val review = getReviewById(reviewId)
+            if (review != null) {
+                updateReviewUI(review)
+            }
+        }
+    }
+
+    private suspend fun getReviewById(reviewId: String): Review? {
+        return withContext(Dispatchers.IO) {
+            val documentSnapshot = db.collection("reviews").document(reviewId).get().await()
+            documentSnapshot.toObject(Review::class.java)?.apply {
+                this.id = documentSnapshot.id
+            }
+        }
+    }
+
+    private fun updateReviewUI(review: Review) {
+        reviewTextView.text = review.reviewText
+        ratingBar.rating = review.rating
+        val calendar = Calendar.getInstance().apply { time = review.date }
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+        reviewDateTextView.text = dateFormat.format(calendar.time)
+        reviewLikeCountTextView.text = review.likes.size.toString()
     }
 
     private fun deleteReview() {

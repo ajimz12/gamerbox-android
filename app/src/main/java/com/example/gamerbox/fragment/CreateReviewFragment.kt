@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import com.example.gamerbox.R
 import com.example.gamerbox.models.Review
@@ -29,7 +31,6 @@ class CreateReviewFragment : Fragment() {
     private var gameId: Int = -1
     private var reviewId: String? = null
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,9 +49,6 @@ class CreateReviewFragment : Fragment() {
         btnSendReview = view.findViewById(R.id.btnSendReview)
 
         gameId = arguments?.getInt("gameId") ?: -1
-        if (gameId == -1) {
-            requireActivity().onBackPressed()
-        } else {
 
             // Verificar si el usuario ya ha revisado este juego
             val currentUser = FirebaseAuth.getInstance().currentUser
@@ -74,7 +72,6 @@ class CreateReviewFragment : Fragment() {
                     }
                 }
             }
-        }
 
         imageViewFavorite.setOnClickListener {
             isFavorite = !isFavorite
@@ -94,11 +91,18 @@ class CreateReviewFragment : Fragment() {
                 return@setOnClickListener
             }
 
+            if (rating < 1) {
+                Toast.makeText(requireContext(), "Selecciona al menos una estrella", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             if (reviewId != null) {
                 lifecycleScope.launch {
                     try {
                         updateReview(reviewId!!, reviewText, rating, date, isFavorite)
                         Toast.makeText(requireContext(), "Reseña actualizada", Toast.LENGTH_SHORT).show()
+                        // Enviar el resultado de la edición
+                        setFragmentResult("reviewUpdated", bundleOf("reviewId" to reviewId))
                         requireActivity().onBackPressed()
                     } catch (e: Exception) {
                         Toast.makeText(
@@ -128,8 +132,6 @@ class CreateReviewFragment : Fragment() {
         }
     }
 
-
-
     private fun saveReview() {
         val reviewText = editTextReview.text.toString()
         val rating = ratingBar.rating
@@ -140,6 +142,11 @@ class CreateReviewFragment : Fragment() {
 
         if (reviewText.isBlank()) {
             Toast.makeText(requireContext(), "Introduce una reseña", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (rating < 1) {
+            Toast.makeText(requireContext(), "Selecciona al menos una estrella", Toast.LENGTH_SHORT).show()
             return
         }
 
