@@ -36,4 +36,5 @@
     <string name="follow_text">Seguir</string>
     <string name="unfollow_text">Dejar de seguir</string>
     <string name="delete_review">Eliminar Reseña</string>
+    <string name="delete_account">Eliminar cuenta</string>
 </resources>

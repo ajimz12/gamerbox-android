@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:padding="16dp">
 
     <ImageView
@@ -12,24 +14,15 @@
         android:layout_height="120dp"
         android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_profile" />
 
     <Button
         android:id="@+id/chooseImageButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="88dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/montserratmedium"
-        android:text="@string/select_image_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileImageView" />
+        android:text="@string/select_image_btn" />
 
     <EditText
         android:id="@+id/usernameEditText"
@@ -39,28 +32,7 @@
         android:layout_marginTop="60dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="@font/montserratregular"
-        android:hint="@string/username_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.875"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chooseImageButton" />
-
-    <EditText
-        android:id="@+id/emailEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="32dp"
-        android:fontFamily="@font/montserratregular"
-        android:hint="@string/email_text"
-        android:editable="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.218"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/usernameEditText"
-        tools:ignore="TextFields" />
-
+        android:hint="@string/username_text" />
 
     <Button
         android:id="@+id/updateButton"
@@ -70,10 +42,16 @@
         android:layout_marginTop="148dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="@font/montserratmedium"
-        android:text="@string/confirm_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.812"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailEditText" />
+        android:text="@string/confirm_text" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/deleteAccountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/montserratregular"
+        android:text="@string/delete_account"
+        android:textColor="@color/lightRed"
+        android:textSize="16sp" />
+
+</LinearLayout>
