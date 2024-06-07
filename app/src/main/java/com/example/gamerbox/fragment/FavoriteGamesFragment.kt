@@ -106,7 +106,7 @@ class FavoriteGamesFragment : Fragment() {
                     .into(slot)
                 slot.setOnClickListener { showOptionsDialog(game) }
             } else {
-                slot.setImageResource(R.drawable.game_controller)
+                slot.setImageResource(R.drawable.game_image)
                 slot.setOnClickListener { onFavoriteSlotClick(slot) }
             }
         }

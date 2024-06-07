@@ -33,6 +33,7 @@
     <string name="auth_error">Se ha producido un error autenticando al usuario</string>
     <string name="empty_username_error">El nombre de usuario no puede estar vacío.</string>
     <string name="usermame_already_exists_error">El nombre de usuario ya existe.</string>
+    <string name="user_already_exists_error">El usuario con ese correo ya existe</string>
     <string name="follow_text">Seguir</string>
     <string name="unfollow_text">Dejar de seguir</string>
     <string name="delete_review">Eliminar Reseña</string>

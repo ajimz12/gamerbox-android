@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.gamerbox.R
 import com.example.gamerbox.models.Review
 import com.google.firebase.auth.FirebaseAuth
@@ -23,10 +24,9 @@ class CreateReviewFragment : Fragment() {
 
     private lateinit var editTextReview: EditText
     private lateinit var ratingBar: RatingBar
-    private lateinit var imageViewFavorite: ImageView
     private lateinit var datePicker: DatePicker
     private lateinit var btnSendReview: Button
-    private var isFavorite: Boolean = false
+    private lateinit var backArrowImage: ImageButton
     private var likes: MutableList<String> = mutableListOf()
     private var gameId: Int = -1
     private var reviewId: String? = null
@@ -44,9 +44,13 @@ class CreateReviewFragment : Fragment() {
 
         editTextReview = view.findViewById(R.id.editTextReview)
         ratingBar = view.findViewById(R.id.ratingBar)
-        imageViewFavorite = view.findViewById(R.id.imageViewFavorite)
         datePicker = view.findViewById(R.id.datePicker1)
         btnSendReview = view.findViewById(R.id.btnSendReview)
+        backArrowImage = view.findViewById(R.id.createReviewBackArrow)
+
+        backArrowImage.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         gameId = arguments?.getInt("gameId") ?: -1
 
@@ -67,16 +71,9 @@ class CreateReviewFragment : Fragment() {
                             calendar.get(Calendar.MONTH),
                             calendar.get(Calendar.DAY_OF_MONTH)
                         )
-                        isFavorite = review.isFavorite
-                        imageViewFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart_selected else R.drawable.ic_heart)
                     }
                 }
             }
-
-        imageViewFavorite.setOnClickListener {
-            isFavorite = !isFavorite
-            imageViewFavorite.setImageResource(if (isFavorite) R.drawable.ic_heart_selected else R.drawable.ic_heart)
-        }
 
         btnSendReview.setOnClickListener {
             val reviewText = editTextReview.text.toString()
@@ -99,7 +96,7 @@ class CreateReviewFragment : Fragment() {
             if (reviewId != null) {
                 lifecycleScope.launch {
                     try {
-                        updateReview(reviewId!!, reviewText, rating, date, isFavorite)
+                        updateReview(reviewId!!, reviewText, rating, date)
                         Toast.makeText(requireContext(), "Reseña actualizada", Toast.LENGTH_SHORT).show()
                         // Enviar el resultado de la edición
                         setFragmentResult("reviewUpdated", bundleOf("reviewId" to reviewId))
@@ -119,13 +116,12 @@ class CreateReviewFragment : Fragment() {
 
     }
 
-    private suspend fun updateReview(reviewId: String, reviewText: String, rating: Float, date: Date, isFavorite: Boolean) {
+    private suspend fun updateReview(reviewId: String, reviewText: String, rating: Float, date: Date) {
         val reviewRef = FirebaseFirestore.getInstance().collection("reviews").document(reviewId)
         val data = hashMapOf(
             "reviewText" to reviewText,
             "rating" to rating,
             "date" to date,
-            "isFavorite" to isFavorite
         )
         withContext(Dispatchers.IO) {
             reviewRef.update(data as Map<String, Any>).await()
@@ -157,7 +153,6 @@ class CreateReviewFragment : Fragment() {
             "reviewText" to reviewText,
             "rating" to rating,
             "date" to date,
-            "isFavorite" to isFavorite,
             "likes" to likes,
             "userId" to currentUser?.uid,
             "userEmail" to currentUser?.email

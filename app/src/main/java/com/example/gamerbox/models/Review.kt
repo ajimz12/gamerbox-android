@@ -14,12 +14,11 @@ data class Review(
     val reviewText: String,
     val rating: Float,
     val date: Date,
-    val isFavorite: Boolean,
     var likes: MutableList<String>,
     val userId: String,
     val gameId: Int
     ) : Parcelable {
-    constructor() : this("","", 0.0f, Date(), false, mutableListOf(), "", 0)
+    constructor() : this("","", 0.0f, Date(), mutableListOf(), "", 0)
 }
 
 

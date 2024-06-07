@@ -2,35 +2,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
+
+    <ImageButton
+        android:id="@+id/createReviewBackArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_back"
+        app:tint="@color/white" />
 
     <EditText
         android:id="@+id/editTextReview"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginBottom="46dp"
+        android:autofillHints=""
+        android:fontFamily="@font/montserratregular"
         android:hint="@string/review_user_text"
         android:inputType="textMultiLine"
-        android:maxLength="5000"
-        android:autofillHints="" />
+        android:maxLength="5000" />
 
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="56dp"
+        android:layout_marginBottom="40dp"
         android:numStars="5"
         android:rating="0"
         android:stepSize="1" />
-
-    <ImageView
-        android:id="@+id/imageViewFavorite"
-        android:layout_width="63dp"
-        android:layout_height="47dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_heart" />
 
     <DatePicker
         android:id="@+id/datePicker1"
@@ -38,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="50dp"
         android:calendarViewShown="false"
         android:datePickerMode="spinner" />
 
@@ -47,6 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:fontFamily="@font/montserratbold"
         android:padding="20dp"
         android:text="@string/confirm_text" />
 

@@ -1,6 +1,5 @@
 package com.example.gamerbox.fragment
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -87,7 +86,6 @@ class EditProfileFragment : Fragment() {
                 .addOnSuccessListener { document ->
                     if (document != null) {
                         currentUsername = document.getString("username")
-                        val email = document.getString("email")
                         val imageUrl = document.getString("imageUrl")
 
                         usernameEditText.setText(currentUsername)

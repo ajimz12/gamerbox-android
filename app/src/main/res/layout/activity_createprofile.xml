@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/createprofileimage"
+    android:background="@drawable/editprofile"
     android:padding="16dp">
 
     <TextView
@@ -13,7 +13,7 @@
         android:layout_marginBottom="80dp"
         android:fontFamily="@font/montserratbold"
         android:text="@string/welcome_text"
-        android:textColor="@color/white"
+        android:textColor="@color/blue"
         android:textSize="32sp"
         android:textStyle="bold" />
 
@@ -23,12 +23,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/titleTextView"
         android:layout_marginBottom="2dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/darkBlue"
         android:hint="@string/username_text"
-        android:fontFamily="@font/montserratregular"
+        android:fontFamily="@font/montserratmedium"
         android:inputType="text"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:textColor="@color/darkBlue"
+        android:textColorHint="@color/darkBlue" />
 
     <TextView
         android:id="@+id/errorTextView"

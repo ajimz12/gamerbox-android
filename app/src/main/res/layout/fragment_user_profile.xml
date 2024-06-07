@@ -71,7 +71,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
                     android:layout_weight="1"
-                    android:background="@drawable/game_controller"
+                    android:background="@drawable/game_image"
                     android:scaleType="centerCrop" />
 
                 <ImageView
@@ -80,7 +80,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
                     android:layout_weight="1"
-                    android:background="@drawable/game_controller"
+                    android:background="@drawable/game_image"
                     android:scaleType="centerCrop" />
 
                 <ImageView
@@ -89,7 +89,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
                     android:layout_weight="1"
-                    android:background="@drawable/game_controller"
+                    android:background="@drawable/game_image"
                     android:scaleType="centerCrop" />
 
                 <ImageView
@@ -98,7 +98,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="3dp"
                     android:layout_weight="1"
-                    android:background="@drawable/game_controller"
+                    android:background="@drawable/game_image"
                     android:scaleType="centerCrop" />
             </LinearLayout>
 

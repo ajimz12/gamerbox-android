@@ -19,7 +19,7 @@
                 android:layout_height="200dp"
                 android:foreground="@drawable/gradient_image_bottom"
                 android:scaleType="centerCrop"
-                android:src="@drawable/game_controller" />
+                android:src="@drawable/game_image" />
 
             <ImageButton
                 android:id="@+id/gameBackArrowImage"
@@ -49,7 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/game_controller" />
+                    android:src="@drawable/game_image" />
 
             </androidx.cardview.widget.CardView>
 

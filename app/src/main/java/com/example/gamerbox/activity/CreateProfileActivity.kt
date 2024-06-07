@@ -127,7 +127,7 @@ class CreateProfileActivity : ComponentActivity() {
                     }
                 }
                 .addOnFailureListener { e ->
-                    errorTextView.text = e.message
+                    errorTextView.text = getString(R.string.user_already_exists_error)
                 }
         } else {
             errorTextView.text = getString(R.string.auth_error)
