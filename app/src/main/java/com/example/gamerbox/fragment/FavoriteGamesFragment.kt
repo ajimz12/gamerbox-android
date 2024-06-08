@@ -205,8 +205,8 @@ class FavoriteGamesFragment : Fragment() {
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                println("Error al recibir documentos de BD: $exception")
+            .addOnFailureListener { e ->
+                println(e.message)
             }
     }
 }

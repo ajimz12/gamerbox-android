@@ -123,12 +123,25 @@
             </com.example.gamerbox.view.NestedScrollView>
 
 
+            <TextView
+                android:id="@+id/reviewsTitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/descriptionScrollView"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/montserratbold"
+                android:text="@string/reviews_text"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reviewsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/gameDetailsDatetextView"
-                android:layout_marginTop="300dp"
+                android:layout_marginTop="310dp"
                 tools:listitem="@layout/item_review" />
 
             <TextView
@@ -137,13 +150,12 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/gameDetailsDatetextView"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="300dp"
+                android:layout_marginTop="350dp"
                 android:fontFamily="@font/montserratbold"
                 android:text="@string/no_reviews_text"
                 android:textSize="15sp"
                 android:visibility="gone" />
 
-            <!-- New Button for more reviews -->
             <Button
                 android:id="@+id/moreReviewsButton"
                 android:layout_width="wrap_content"
@@ -151,8 +163,9 @@
                 android:layout_below="@id/reviewsRecyclerView"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:visibility="gone"
-                android:text="@string/more_reviews_text" />
+                android:fontFamily="@font/montserratregular"
+                android:text="@string/more_reviews_text"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

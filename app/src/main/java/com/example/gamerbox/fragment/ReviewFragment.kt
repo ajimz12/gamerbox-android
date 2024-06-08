@@ -67,7 +67,6 @@ class ReviewFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         db = Firebase.firestore
 
-
         userNameTextView = view.findViewById(R.id.userNameTextView)
         userProfileImageView = view.findViewById(R.id.userImageView)
         reviewDateTextView = view.findViewById(R.id.reviewDateTextView)
@@ -83,14 +82,16 @@ class ReviewFragment : Fragment() {
         val reviewText = arguments?.getString("reviewText")
         val rating = arguments?.getFloat("rating")
         val date = arguments?.getLong("date")
-        val userId = arguments?.getString("userId")
+        val userId = arguments?.getString("userId") ?: ""
         gameId = arguments?.getInt("gameId") ?: -1
         reviewId = arguments?.getString("reviewId") ?: ""
 
-        if (FirebaseAuth.getInstance().currentUser?.uid == arguments?.getString("userId")) {
-            toolbar.visibility = View.VISIBLE
-        } else {
-            toolbar.visibility = View.GONE
+        checkIfUserIsAdmin(userId) { isAdmin ->
+            if (isAdmin || FirebaseAuth.getInstance().currentUser?.uid == userId) {
+                toolbar.visibility = View.VISIBLE
+            } else {
+                toolbar.visibility = View.GONE
+            }
         }
 
         setFragmentResultListener("reviewUpdated") { _, bundle ->
@@ -133,7 +134,7 @@ class ReviewFragment : Fragment() {
         }
 
 
-        userId?.let {
+        userId.let {
             val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(it)
             userProfileRef.get().addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot != null && documentSnapshot.exists()) {
@@ -308,5 +309,16 @@ class ReviewFragment : Fragment() {
             show()
         }
     }
-
+    private fun checkIfUserIsAdmin(userId: String, callback: (Boolean) -> Unit) {
+        db.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val isAdmin = document.getBoolean("root") ?: false
+                    callback(isAdmin)
+                } else {
+                    callback(false)
+                }
+            }
+    }
 }

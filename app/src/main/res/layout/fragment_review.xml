@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:padding="0dp">
 
-        <!-- Game Info -->
         <ImageView
             android:id="@+id/gameImageView"
             android:layout_width="match_parent"

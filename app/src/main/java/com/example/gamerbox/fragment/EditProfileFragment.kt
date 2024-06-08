@@ -233,18 +233,6 @@ class EditProfileFragment : Fragment() {
                                     ).show()
                                     showLogin()
                                 }
-                                ?.addOnFailureListener { e ->
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Error al eliminar la cuenta",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    Log.e(
-                                        "DeleteAccount",
-                                        "Error al eliminar la cuenta de autenticación",
-                                        e
-                                    )
-                                }
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(
@@ -252,7 +240,6 @@ class EditProfileFragment : Fragment() {
                                 "Error al eliminar las reseñas",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            Log.e("DeleteAccount", "Error al eliminar las reseñas", e)
                         }
                 }
                 .addOnFailureListener { e ->
@@ -261,7 +248,6 @@ class EditProfileFragment : Fragment() {
                         "Error al eliminar el documento del usuario",
                         Toast.LENGTH_SHORT
                     ).show()
-                    Log.e("DeleteAccount", "Error al eliminar el documento del usuario", e)
                 }
         }
     }

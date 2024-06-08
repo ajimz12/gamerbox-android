@@ -1,19 +1,17 @@
 package com.example.gamerbox.fragment
 
-import android.content.ContentValues.TAG
+import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +24,6 @@ import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,7 +46,7 @@ class UserProfileFragment : Fragment() {
     private lateinit var moreUserReviewsTextView: TextView
 
     private lateinit var userProfileBackArrow: ImageButton
-
+    private lateinit var toolbar: Toolbar
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,8 +64,12 @@ class UserProfileFragment : Fragment() {
         favoriteGameSlot3 = view.findViewById(R.id.favoriteUserGameSlot3)
         favoriteGameSlot4 = view.findViewById(R.id.favoriteUserGameSlot4)
         userProfileBackArrow = view.findViewById(R.id.userProfileBackArrowImage)
+        toolbar = view.findViewById(R.id.userProfileToolbar)
+
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+
+        val currentUser = auth.currentUser
 
         val userId = arguments?.getString("userId")
         val userProfileImageUrl = arguments?.getString("imageUrl")
@@ -95,12 +96,31 @@ class UserProfileFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        if (userId == auth.currentUser?.uid) {
+        if (userId == currentUser?.uid) {
             navigateToProfileFragment()
         }
 
         setupReviewsRecyclerView(view)
         loadUserReviews()
+
+        if (currentUser != null) {
+            checkIfUserIsAdmin(currentUser.uid) { isAdmin ->
+                if (isAdmin) {
+                    toolbar.setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.action_delete_user_admin -> {
+                                userId?.let {
+                                    deleteUser(it)
+                                }
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun loadFavoriteGames(userId: String) {
@@ -209,6 +229,50 @@ class UserProfileFragment : Fragment() {
         }
     }
 
+    private fun checkIfUserIsAdmin(userId: String, callback: (Boolean) -> Unit) {
+        db.collection("users").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val isAdmin = document.getBoolean("root") ?: false
+                    callback(isAdmin)
+                } else {
+                    callback(false)
+                }
+            }
+    }
+    private fun deleteUser(userId: String) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Confirmar Eliminación")
+        builder.setMessage("¿Estás seguro de que deseas eliminar la cuenta de este usuario? Esta acción no se puede deshacer.")
+
+        builder.setPositiveButton("Sí") { _, _ ->
+            db.collection("users").document(userId)
+                .delete()
+                .addOnSuccessListener {
+                    db.collection("reviews").whereEqualTo("userId", userId)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            for (document in documents) {
+                                db.collection("reviews").document(document.id).delete()
+                            }
+                            Toast.makeText(
+                                requireContext(),
+                                "Cuenta del usuario eliminada con éxito",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            findNavController().popBackStack()
+                        }
+                }
+        }
+
+        builder.setNegativeButton("No") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
     private fun navigateToProfileFragment() {
         findNavController().navigate(R.id.action_userProfile_to_profileFragment)
     }
