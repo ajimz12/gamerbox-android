@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +16,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.gamerbox.R
-import com.example.gamerbox.adapter.ReviewAdapter
 import com.example.gamerbox.models.GameDetails
 import com.example.gamerbox.models.Review
 import com.example.gamerbox.network.RawgRepository
@@ -69,6 +67,7 @@ class ReviewFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         db = Firebase.firestore
 
+
         userNameTextView = view.findViewById(R.id.userNameTextView)
         userProfileImageView = view.findViewById(R.id.userImageView)
         reviewDateTextView = view.findViewById(R.id.reviewDateTextView)
@@ -94,7 +93,7 @@ class ReviewFragment : Fragment() {
             toolbar.visibility = View.GONE
         }
 
-        setFragmentResultListener("reviewUpdated") { requestKey, bundle ->
+        setFragmentResultListener("reviewUpdated") { _, bundle ->
             val updatedReviewId = bundle.getString("reviewId")
             if (updatedReviewId == reviewId) {
                 loadReviewData()
@@ -105,7 +104,7 @@ class ReviewFragment : Fragment() {
         ratingBar.rating = rating ?: 0f
 
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        reviewDateTextView.text = date?.let { dateFormat.format(Date(it)) } ?: ""
+        reviewDateTextView.text = date?.let { "Terminado el ${dateFormat.format(Date(it))}" } ?: ""
 
         val rawgService = RetrofitService.create()
         rawgRepository = RawgRepository(rawgService)
@@ -278,9 +277,10 @@ class ReviewFragment : Fragment() {
         ratingBar.rating = review.rating
         val calendar = Calendar.getInstance().apply { time = review.date }
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        reviewDateTextView.text = dateFormat.format(calendar.time)
+        reviewDateTextView.text = "Terminado el ${dateFormat.format(calendar.time)}"
         reviewLikeCountTextView.text = review.likes.size.toString()
     }
+
 
     private fun deleteReview() {
         val reviewRef = db.collection("reviews").document(reviewId)

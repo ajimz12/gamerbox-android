@@ -56,7 +56,6 @@
             android:textSize="23sp"
             android:textStyle="bold" />
 
-        <!-- User Info -->
         <ImageView
             android:id="@+id/userImageView"
             android:layout_width="64dp"
@@ -80,16 +79,16 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- Review Info -->
         <TextView
             android:id="@+id/reviewDateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/userNameTextView"
+            android:layout_marginBottom="5dp"
             android:layout_toEndOf="@id/userImageView"
             android:fontFamily="@font/montserratregular"
             android:textColor="@android:color/darker_gray"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <RatingBar
             android:id="@+id/reviewRatingBar"

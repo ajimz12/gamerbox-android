@@ -47,7 +47,6 @@ class FavoriteGamesFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        // Inicializar los ImageView
         favoriteGameSlot1 = view.findViewById(R.id.favoriteGameSlot1)
         favoriteGameSlot2 = view.findViewById(R.id.favoriteGameSlot2)
         favoriteGameSlot3 = view.findViewById(R.id.favoriteGameSlot3)
@@ -106,7 +105,7 @@ class FavoriteGamesFragment : Fragment() {
                     .into(slot)
                 slot.setOnClickListener { showOptionsDialog(game) }
             } else {
-                slot.setImageResource(R.drawable.game_image)
+                slot.setImageResource(R.drawable.add_favorite_image)
                 slot.setOnClickListener { onFavoriteSlotClick(slot) }
             }
         }
@@ -115,7 +114,7 @@ class FavoriteGamesFragment : Fragment() {
     private fun showOptionsDialog(game: Game) {
         AlertDialog.Builder(requireContext())
             .setTitle("Opciones del juego favorito")
-            .setItems(arrayOf("Eliminar")) { dialog, which ->
+            .setItems(arrayOf("Eliminar")) { _, which ->
                 when (which) {
                     0 -> removeFavoriteGame(game)
                 }
@@ -131,7 +130,6 @@ class FavoriteGamesFragment : Fragment() {
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Juego eliminado de favoritos", Toast.LENGTH_SHORT)
                     .show()
-                // Actualizar la lista de juegos favoritos y la interfaz de usuario
                 val index = favoriteGames.indexOf(game)
                 if (index != -1) {
                     favoriteGames[index] = null
@@ -151,7 +149,7 @@ class FavoriteGamesFragment : Fragment() {
                 .into(slot)
             saveFavoriteGameToFirestore(game)
             slot.setOnClickListener { showOptionsDialog(game) }
-            selectedSlot = null // Despejar el slot seleccionado después de la actualización
+            selectedSlot = null
         }
     }
 
@@ -162,11 +160,9 @@ class FavoriteGamesFragment : Fragment() {
         db.collection("users").document(userId)
             .update("favoriteGames", FieldValue.arrayUnion(game.id))
             .addOnSuccessListener {
-                // Juego añadido
                 Toast.makeText(requireContext(), "Juego añadido a favoritos", Toast.LENGTH_SHORT)
                     .show()
 
-                // Llamar a la función para cargar y actualizar los juegos favoritos
                 loadFavoriteGames()
             }
             .addOnFailureListener { e ->

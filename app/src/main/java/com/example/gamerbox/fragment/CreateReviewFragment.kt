@@ -98,7 +98,6 @@ class CreateReviewFragment : Fragment() {
                     try {
                         updateReview(reviewId!!, reviewText, rating, date)
                         Toast.makeText(requireContext(), "Reseña actualizada", Toast.LENGTH_SHORT).show()
-                        // Enviar el resultado de la edición
                         setFragmentResult("reviewUpdated", bundleOf("reviewId" to reviewId))
                         requireActivity().onBackPressed()
                     } catch (e: Exception) {

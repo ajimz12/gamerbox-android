@@ -218,17 +218,24 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setFavoriteGameSlots(favoriteGames: List<Game>) {
-        val slots =
-            listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
+        val slots = listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
 
         favoriteGames.forEachIndexed { index, game ->
             if (index < slots.size) {
                 Glide.with(this)
                     .load(game.backgroundImageUrl)
                     .into(slots[index])
+
+                slots[index].setOnClickListener {
+                    val bundle = Bundle().apply {
+                        putInt("gameId", game.id)
+                    }
+                    findNavController().navigate(R.id.action_profileFragment_to_gameFragment, bundle)
+                }
             }
         }
     }
+
 
     private suspend fun findGameById(gameId: Int): Game? {
         val rawgService = RetrofitService.create()

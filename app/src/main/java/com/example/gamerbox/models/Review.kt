@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-@Parcelize
 @Entity(tableName = "reviews")
 data class Review(
     @PrimaryKey(autoGenerate = true)
@@ -17,7 +16,7 @@ data class Review(
     var likes: MutableList<String>,
     val userId: String,
     val gameId: Int
-    ) : Parcelable {
+    )  {
     constructor() : this("","", 0.0f, Date(), mutableListOf(), "", 0)
 }
 

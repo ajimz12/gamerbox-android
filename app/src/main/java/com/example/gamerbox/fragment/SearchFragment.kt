@@ -48,7 +48,6 @@ class SearchFragment : Fragment() {
         gameAdapter = GameAdapter { game -> onGameClick(game) }
         gamesRecyclerView.adapter = gameAdapter
 
-        // Inicializar el repositorio
         val rawgService = RetrofitService.create()
         rawgRepository = RawgRepository(rawgService)
 
@@ -63,8 +62,6 @@ class SearchFragment : Fragment() {
             }
         })
 
-        // Recibir el argumento
-        isSelectingFavorite = arguments?.getBoolean("isSelectingFavorite") ?: false
     }
 
     private fun searchGames(query: String) {
@@ -80,12 +77,10 @@ class SearchFragment : Fragment() {
 
     private fun onGameClick(game: Game) {
         if (isSelectingFavorite) {
-            // Volver al ProfileFragment con el gameId del juego seleccionado
             val navController = findNavController()
             navController.previousBackStackEntry?.savedStateHandle?.set("selectedGameId", game.id)
             navController.popBackStack()
         } else {
-            // Navegar al GameFragment
             val bundle = Bundle()
             bundle.putInt("gameId", game.id)
             findNavController().navigate(R.id.gameFragment, bundle)

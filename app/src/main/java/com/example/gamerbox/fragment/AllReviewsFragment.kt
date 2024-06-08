@@ -68,10 +68,12 @@ class AllReviewsFragment : Fragment() {
                     val review = document.toObject(Review::class.java).copy(id = document.id)
                     reviewList.add(review)
                 }
+                reviewList.sortByDescending { it.likes.size }
+
                 reviewAdapter.updateData(reviewList)
             }
-            .addOnFailureListener { exception ->
-                println("Error al recibir documentos de BD: $exception")
+            .addOnFailureListener { e ->
+                println(e.message)
             }
     }
 

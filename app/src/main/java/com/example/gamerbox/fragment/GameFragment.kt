@@ -85,14 +85,11 @@ class GameFragment : Fragment() {
 
         gameId = arguments?.getInt("gameId") ?: -1
         if (gameId != -1) {
-            // Inicializar el servicio y repositorio
             val rawgService = RetrofitService.create()
             rawgRepository = RawgRepository(rawgService)
 
-            // Configurar el RecyclerView para mostrar las reseñas
             reviewRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-            // Obtener los detalles del juego desde la API
             lifecycleScope.launch {
                 try {
                     val gameDetails = withContext(Dispatchers.IO) {
@@ -126,13 +123,11 @@ class GameFragment : Fragment() {
 
     @SuppressLint("SimpleDateFormat")
     private fun updateUI(gameDetails: GameDetails) {
-        // Actualizar la interfaz con los detalles del juego
         gameTitleTextView.text = gameDetails.name
 
         val description = Html.fromHtml(gameDetails.description, 0).toString()
         gameDescriptionTextView.text = description
 
-        // Pasar fecha de API a solo el año
         val releaseDate = gameDetails.releaseDate
         val inputFormat = SimpleDateFormat("yyyy-MM-dd")
         val outputFormat = SimpleDateFormat("yyyy")
@@ -151,7 +146,6 @@ class GameFragment : Fragment() {
             else -> gamemetacriticTextView.setBackgroundResource(R.color.green)
         }
 
-        // Cargar la imagen del juego
         Glide.with(requireContext())
             .load(gameDetails.backgroundImageUrl)
             .into(gameAdditionalImageView)
@@ -171,6 +165,8 @@ class GameFragment : Fragment() {
                     val review = document.toObject(Review::class.java).copy(id = document.id)
                     reviewList.add(review)
                 }
+                reviewList.sortByDescending { it.likes.size }
+
                 if (reviewList.isEmpty()) {
                     noReviewsTextView.visibility = View.VISIBLE
                     reviewRecyclerView.visibility = View.GONE
@@ -207,7 +203,6 @@ class GameFragment : Fragment() {
             transaction.update(reviewRef, "likes", likes)
             likes
         }.addOnSuccessListener { likes ->
-            // Actualizar el objeto review con los nuevos likes
             review.likes = likes
             reviewAdapter.updateReview(review)
         }.addOnFailureListener { exception ->
