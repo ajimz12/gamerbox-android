@@ -147,13 +147,13 @@ class ProfileFragment : Fragment() {
 
     private fun showLogoutConfirmationDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Cerrar sesión")
-        builder.setMessage("¿Estás seguro de que quieres cerrar sesión?")
-        builder.setPositiveButton("Aceptar") { _, _ ->
+        builder.setTitle(R.string.log_out)
+        builder.setMessage(R.string.confirm_log_out)
+        builder.setPositiveButton(R.string.accept_text) { _, _ ->
             auth.signOut()
             showLogin()
         }
-        builder.setNegativeButton("Cancelar", null)
+        builder.setNegativeButton(R.string.cancel_text, null)
         val dialog = builder.create()
         dialog.show()
     }

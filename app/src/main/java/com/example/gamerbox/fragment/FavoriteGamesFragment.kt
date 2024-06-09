@@ -113,8 +113,8 @@ class FavoriteGamesFragment : Fragment() {
 
     private fun showOptionsDialog(game: Game) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Opciones del juego favorito")
-            .setItems(arrayOf("Eliminar")) { _, which ->
+            .setTitle(R.string.favorite_game_options)
+            .setItems(arrayOf(getString(R.string.delete_text))) { _, which ->
                 when (which) {
                     0 -> removeFavoriteGame(game)
                 }
@@ -128,16 +128,13 @@ class FavoriteGamesFragment : Fragment() {
         db.collection("users").document(userId)
             .update("favoriteGames", FieldValue.arrayRemove(game.id))
             .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Juego eliminado de favoritos", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), R.string.favorite_game_removed, Toast.LENGTH_SHORT)
                     .show()
                 val index = favoriteGames.indexOf(game)
                 if (index != -1) {
                     favoriteGames[index] = null
                     setFavoriteGameSlots(favoriteGames)
                 }
-            }
-            .addOnFailureListener { e ->
-                println("Error al eliminar el juego favorito: $e")
             }
     }
 
@@ -160,13 +157,14 @@ class FavoriteGamesFragment : Fragment() {
         db.collection("users").document(userId)
             .update("favoriteGames", FieldValue.arrayUnion(game.id))
             .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Juego añadido a favoritos", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    R.string.game_added_to_favorites,
+                    Toast.LENGTH_SHORT
+                )
                     .show()
 
                 loadFavoriteGames()
-            }
-            .addOnFailureListener { e ->
-                println("Error al añadir el juego favorito: $e")
             }
     }
 
@@ -204,9 +202,6 @@ class FavoriteGamesFragment : Fragment() {
                         }
                     }
                 }
-            }
-            .addOnFailureListener { e ->
-                println(e.message)
             }
     }
 }

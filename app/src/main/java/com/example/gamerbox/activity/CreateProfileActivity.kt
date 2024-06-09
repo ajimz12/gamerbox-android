@@ -82,10 +82,6 @@ class CreateProfileActivity : ComponentActivity() {
             .addOnSuccessListener { documents ->
                 callback(!documents.isEmpty)
             }
-            .addOnFailureListener { e ->
-                println(e.message)
-                callback(false)
-            }
     }
 
     private fun createUser(username: String) {
@@ -115,8 +111,6 @@ class CreateProfileActivity : ComponentActivity() {
                                     } else {
                                         saveUserDataToFirestore(uid, user)
                                     }
-                                }.addOnFailureListener {
-                                    saveUserDataToFirestore(uid, user)
                                 }
                             } ?: run {
                                 saveUserDataToFirestore(uid, user)

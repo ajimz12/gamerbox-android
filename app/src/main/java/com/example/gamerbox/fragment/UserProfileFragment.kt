@@ -243,8 +243,8 @@ class UserProfileFragment : Fragment() {
     }
     private fun deleteUser(userId: String) {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Confirmar Eliminación")
-        builder.setMessage("¿Estás seguro de que deseas eliminar la cuenta de este usuario? Esta acción no se puede deshacer.")
+        builder.setTitle(R.string.confirm_delete_header)
+        builder.setMessage(R.string.confirm_delete)
 
         builder.setPositiveButton("Sí") { _, _ ->
             db.collection("users").document(userId)
@@ -258,7 +258,7 @@ class UserProfileFragment : Fragment() {
                             }
                             Toast.makeText(
                                 requireContext(),
-                                "Cuenta del usuario eliminada con éxito",
+                                R.string.user_deleted_text,
                                 Toast.LENGTH_LONG
                             ).show()
                             findNavController().popBackStack()

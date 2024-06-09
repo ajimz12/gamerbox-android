@@ -97,7 +97,9 @@ class ReviewFragment : Fragment() {
         ratingBar.rating = rating ?: 0f
 
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        reviewDateTextView.text = date?.let { "Terminado el ${dateFormat.format(Date(it))}" } ?: ""
+        val reviewDate = date?.let { dateFormat.format(Date(it)) }
+        reviewDateTextView.text = reviewDate?.let { getString(R.string.date_finished_game, it) } ?: ""
+
 
         val rawgService = RetrofitService.create()
         rawgRepository = RawgRepository(rawgService)
@@ -289,7 +291,8 @@ class ReviewFragment : Fragment() {
         ratingBar.rating = review.rating
         val calendar = Calendar.getInstance().apply { time = review.date }
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        reviewDateTextView.text = "Terminado el ${dateFormat.format(calendar.time)}"
+        val reviewDate = dateFormat.format(calendar.time)
+        reviewDateTextView.text = getString(R.string.date_finished_game, reviewDate)
         reviewLikeCountTextView.text = review.likes.size.toString()
     }
 
@@ -309,12 +312,12 @@ class ReviewFragment : Fragment() {
     private fun showDeleteConfirmationDialog() {
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
         alertDialogBuilder.apply {
-            setTitle("Eliminar reseña")
-            setMessage("¿Estás seguro de que deseas eliminar tu reseña?")
-            setPositiveButton("Confirmar") { _, _ ->
+            setTitle(R.string.delete_review)
+            setMessage(R.string.confirm_delete_review)
+            setPositiveButton(R.string.accept_text) { _, _ ->
                 deleteReview()
             }
-            setNegativeButton("Cancelar") { dialog, _ ->
+            setNegativeButton(R.string.cancel_text) { dialog, _ ->
                 dialog.dismiss()
             }
             show()

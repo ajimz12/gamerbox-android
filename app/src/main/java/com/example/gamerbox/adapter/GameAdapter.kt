@@ -38,7 +38,6 @@ class GameAdapter(
             .load(game.backgroundImageUrl)
             .into(holder.imageViewCover)
 
-        // Navegación al hacer clic en un juego
         holder.itemView.setOnClickListener {
             onItemClick(game)
         }

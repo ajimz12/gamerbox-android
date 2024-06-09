@@ -68,9 +68,6 @@ class UserReviewsFragment : Fragment() {
                     userReviewsRecyclerView.adapter = reviewAdapter
                 }
             }
-            .addOnFailureListener { exception ->
-                println("Error al recibir documentos de BD: $exception")
-            }
     }
 
     private fun onLikeClicked(review: Review) {
@@ -87,9 +84,6 @@ class UserReviewsFragment : Fragment() {
         reviewRef.update("likes", review.likes)
             .addOnSuccessListener {
                 reviewAdapter.updateReview(review)
-            }
-            .addOnFailureListener { exception ->
-                println("Error al actualizar 'Me Gusta': $exception")
             }
     }
 }

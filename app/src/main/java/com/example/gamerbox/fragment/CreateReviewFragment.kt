@@ -54,26 +54,25 @@ class CreateReviewFragment : Fragment() {
 
         gameId = arguments?.getInt("gameId") ?: -1
 
-            // Verificar si el usuario ya ha revisado este juego
-            val currentUser = FirebaseAuth.getInstance().currentUser
-            currentUser?.uid?.let { userId ->
-                lifecycleScope.launch {
-                    val review = getReviewByUserAndGame(userId, gameId)
-                    if (review != null) {
-                        reviewId = review.id
-                        editTextReview.setText(review.reviewText)
-                        ratingBar.rating = review.rating
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        currentUser?.uid?.let { userId ->
+            lifecycleScope.launch {
+                val review = getReviewByUserAndGame(userId, gameId)
+                if (review != null) {
+                    reviewId = review.id
+                    editTextReview.setText(review.reviewText)
+                    ratingBar.rating = review.rating
 
-                        val calendar = Calendar.getInstance()
-                        calendar.time = review.date
-                        datePicker.updateDate(
-                            calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH)
-                        )
-                    }
+                    val calendar = Calendar.getInstance()
+                    calendar.time = review.date
+                    datePicker.updateDate(
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    )
                 }
             }
+        }
 
         btnSendReview.setOnClickListener {
             val reviewText = editTextReview.text.toString()
@@ -84,12 +83,14 @@ class CreateReviewFragment : Fragment() {
             val date = calendar.time
 
             if (reviewText.isBlank()) {
-                Toast.makeText(requireContext(), "Introduce una reseña", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.empty_review_text, Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
             if (rating < 1) {
-                Toast.makeText(requireContext(), "Selecciona al menos una estrella", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.no_stars_review, Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
@@ -97,15 +98,15 @@ class CreateReviewFragment : Fragment() {
                 lifecycleScope.launch {
                     try {
                         updateReview(reviewId!!, reviewText, rating, date)
-                        Toast.makeText(requireContext(), "Reseña actualizada", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.review_updated,
+                            Toast.LENGTH_SHORT
+                        ).show()
                         setFragmentResult("reviewUpdated", bundleOf("reviewId" to reviewId))
                         requireActivity().onBackPressed()
                     } catch (e: Exception) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Error al actualizar reseña: ${e.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        println(e.message)
                     }
                 }
             } else {
@@ -115,7 +116,12 @@ class CreateReviewFragment : Fragment() {
 
     }
 
-    private suspend fun updateReview(reviewId: String, reviewText: String, rating: Float, date: Date) {
+    private suspend fun updateReview(
+        reviewId: String,
+        reviewText: String,
+        rating: Float,
+        date: Date
+    ) {
         val reviewRef = FirebaseFirestore.getInstance().collection("reviews").document(reviewId)
         val data = hashMapOf(
             "reviewText" to reviewText,
@@ -136,12 +142,12 @@ class CreateReviewFragment : Fragment() {
         val date = calendar.time
 
         if (reviewText.isBlank()) {
-            Toast.makeText(requireContext(), "Introduce una reseña", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), R.string.empty_review_text, Toast.LENGTH_SHORT).show()
             return
         }
 
         if (rating < 1) {
-            Toast.makeText(requireContext(), "Selecciona al menos una estrella", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), R.string.no_stars_review, Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -162,14 +168,10 @@ class CreateReviewFragment : Fragment() {
                 withContext(Dispatchers.IO) {
                     FirebaseFirestore.getInstance().collection("reviews").add(review).await()
                 }
-                Toast.makeText(requireContext(), "Reseña enviada!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.review_sent, Toast.LENGTH_SHORT).show()
                 requireActivity().onBackPressed()
             } catch (e: Exception) {
-                Toast.makeText(
-                    requireContext(),
-                    "Error al guardar reseña",
-                    Toast.LENGTH_SHORT
-                ).show()
+                println(e.message)
             }
         }
     }

@@ -176,11 +176,9 @@ class GameFragment : Fragment() {
                     reviewRecyclerView.visibility = View.VISIBLE
                     reviewAdapter.updateData(reviewList.take(3))
                     reviewRecyclerView.adapter = reviewAdapter
-                    moreReviewsButton.visibility = if (reviewList.size > 3) View.VISIBLE else View.GONE
+                    moreReviewsButton.visibility =
+                        if (reviewList.size > 3) View.VISIBLE else View.GONE
                 }
-            }
-            .addOnFailureListener { exception ->
-                println("Error al recibir documentos de BD: $exception")
             }
     }
 
@@ -205,27 +203,24 @@ class GameFragment : Fragment() {
         }.addOnSuccessListener { likes ->
             review.likes = likes
             reviewAdapter.updateReview(review)
-        }.addOnFailureListener { exception ->
-            println("Error al actualizar 'Me Gusta': $exception")
         }
     }
+        private fun showBottomSheetMenu() {
+            val bottomSheetDialog = BottomSheetDialog(requireContext())
+            val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_menu, null)
+            bottomSheetDialog.setContentView(bottomSheetView)
 
-    private fun showBottomSheetMenu() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
-        val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_menu, null)
-        bottomSheetDialog.setContentView(bottomSheetView)
+            val reviewButton = bottomSheetView.findViewById<View>(R.id.menuReview)
 
-        val reviewButton = bottomSheetView.findViewById<View>(R.id.menuReview)
+            reviewButton.setOnClickListener {
+                if (gameId != -1) {
+                    findNavController().navigate(R.id.action_game_to_createReview, Bundle().apply {
+                        putInt("gameId", gameId)
+                    })
+                }
 
-        reviewButton.setOnClickListener {
-            if (gameId != -1) {
-                findNavController().navigate(R.id.action_game_to_createReview, Bundle().apply {
-                    putInt("gameId", gameId)
-                })
+                bottomSheetDialog.dismiss()
             }
-
-            bottomSheetDialog.dismiss()
+            bottomSheetDialog.show()
         }
-        bottomSheetDialog.show()
     }
-}

@@ -17,10 +17,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // NavController
         navController = findNavController(R.id.nav_host_fragment)
 
-        // BottomNavigationView
         bottomNav = findViewById(R.id.navigator)
         bottomNav.setOnItemSelectedListener  { item ->
             when (item.itemId) {
@@ -44,10 +42,10 @@ class MainActivity : AppCompatActivity() {
             if (destination.id == R.id.gameFragment || destination.id == R.id.allReviewsFragment ||
                 destination.id == R.id.reviewFragment || destination.id == R.id.userReviewsFragment ||
                 destination.id == R.id.userProfileFragment) {
-                // Ocultar el BottomNavigationView
+
                 bottomNav.visibility = View.GONE
+
             } else {
-                // Mostrar el BottomNavigationView
                 bottomNav.visibility = View.VISIBLE
             }
         }

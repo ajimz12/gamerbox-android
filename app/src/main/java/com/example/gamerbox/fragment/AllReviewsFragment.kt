@@ -92,8 +92,8 @@ class AllReviewsFragment : Fragment() {
             .addOnSuccessListener {
                 reviewAdapter.updateReview(review)
             }
-            .addOnFailureListener { exception ->
-                println("Error al actualizar 'Me Gusta': $exception")
+            .addOnFailureListener { e ->
+                println(e.message)
             }
     }
 }
