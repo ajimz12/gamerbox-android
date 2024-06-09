@@ -86,14 +86,6 @@ class ReviewFragment : Fragment() {
         gameId = arguments?.getInt("gameId") ?: -1
         reviewId = arguments?.getString("reviewId") ?: ""
 
-        checkIfUserIsAdmin(userId) { isAdmin ->
-            if (isAdmin || FirebaseAuth.getInstance().currentUser?.uid == userId) {
-                toolbar.visibility = View.VISIBLE
-            } else {
-                toolbar.visibility = View.GONE
-            }
-        }
-
         setFragmentResultListener("reviewUpdated") { _, bundle ->
             val updatedReviewId = bundle.getString("reviewId")
             if (updatedReviewId == reviewId) {
@@ -114,25 +106,43 @@ class ReviewFragment : Fragment() {
             findNavController().popBackStack()
         }
 
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val currentUserId = currentUser.uid
+            if (currentUserId == userId) {
+                toolbar.visibility = View.VISIBLE
+            } else {
+                checkIfUserIsAdmin(currentUserId) { isAdmin ->
+                    toolbar.visibility = if (isAdmin) View.VISIBLE else View.GONE
+                    R.id.action_edit_review = View.GONE
+                }
+            }
+        } else {
+            toolbar.visibility = View.GONE
+        }
+
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.action_delete_review -> {
                     showDeleteConfirmationDialog()
                     true
                 }
+
                 R.id.action_edit_review -> {
                     if (gameId != -1) {
-                        findNavController().navigate(R.id.action_reviewFragment_to_createReviewFragment, Bundle().apply {
-                            putInt("gameId", gameId)
-                            putString("reviewId", reviewId)
-                        })
+                        findNavController().navigate(
+                            R.id.action_reviewFragment_to_createReviewFragment,
+                            Bundle().apply {
+                                putInt("gameId", gameId)
+                                putString("reviewId", reviewId)
+                            })
                     }
                     true
                 }
+
                 else -> false
             }
         }
-
 
         userId.let {
             val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(it)
@@ -200,6 +210,7 @@ class ReviewFragment : Fragment() {
             onLikeClicked()
         }
     }
+
 
     private fun navigateToUserProfile(
         userId: String,
@@ -309,6 +320,7 @@ class ReviewFragment : Fragment() {
             show()
         }
     }
+
     private fun checkIfUserIsAdmin(userId: String, callback: (Boolean) -> Unit) {
         db.collection("users").document(userId)
             .get()

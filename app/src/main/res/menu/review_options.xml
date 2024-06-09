@@ -5,5 +5,5 @@
         android:title="@string/delete_review"/>
     <item
         android:id="@+id/action_edit_review"
-        android:title="Editar Reseña"/>
+        android:title="@string/edit_review"/>
 </menu>
