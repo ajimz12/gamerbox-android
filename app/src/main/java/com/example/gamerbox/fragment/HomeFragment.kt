@@ -73,12 +73,12 @@ class HomeFragment : Fragment() {
         homeViewModel.fetchGames(Constants.API_KEY)
 
         homeViewModel.popularGames.observe(viewLifecycleOwner) { popularGames ->
-            gamesAdapter.submitList(popularGames)
+            gamesAdapter.updateData(popularGames)
             gamesAdapter.notifyDataSetChanged()
         }
 
         homeViewModel.recentGames.observe(viewLifecycleOwner) { recentGames ->
-            recentGamesAdapter.submitList(recentGames)
+            recentGamesAdapter.updateData(recentGames)
             recentGamesAdapter.notifyDataSetChanged()
         }
 

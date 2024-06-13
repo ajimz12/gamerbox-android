@@ -10,16 +10,14 @@ import com.bumptech.glide.Glide
 import com.example.gamerbox.R
 import com.example.gamerbox.models.Game
 
+// Manejo en RecyclerViews
 class GameAdapter(
     private val onItemClick: (Game) -> Unit
 ) : RecyclerView.Adapter<GameAdapter.GameViewHolder>() {
 
     private var gamesList: List<Game> = emptyList()
 
-    fun submitList(games: List<Game>) {
-        gamesList = games
-    }
-
+    // ViewHolder que mantiene las referencias a los elementos de la vista de cada elemento del juego
     class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageViewCover: ImageView = itemView.findViewById(R.id.gameImageView)
         val textViewName: TextView = itemView.findViewById(R.id.gameTitleTextView)
@@ -31,6 +29,7 @@ class GameAdapter(
         return GameViewHolder(itemView)
     }
 
+    //  Vincula los datos de un objeto Game a los elementos de la interfaz de usuario
     override fun onBindViewHolder(holder: GameViewHolder, position: Int) {
         val game = gamesList[position]
         holder.textViewName.text = game.name
@@ -51,6 +50,5 @@ class GameAdapter(
         gamesList = newGamesList
         notifyDataSetChanged()
     }
-
 }
 
