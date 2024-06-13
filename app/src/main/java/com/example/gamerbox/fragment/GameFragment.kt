@@ -132,7 +132,7 @@ class GameFragment : Fragment() {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd")
         val outputFormat = SimpleDateFormat("yyyy")
         val date = inputFormat.parse(releaseDate)
-        val year = outputFormat.format(date)
+        val year = date?.let { outputFormat.format(it) }
 
         gameDateTextView.text = year
 
@@ -205,22 +205,23 @@ class GameFragment : Fragment() {
             reviewAdapter.updateReview(review)
         }
     }
-        private fun showBottomSheetMenu() {
-            val bottomSheetDialog = BottomSheetDialog(requireContext())
-            val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_menu, null)
-            bottomSheetDialog.setContentView(bottomSheetView)
 
-            val reviewButton = bottomSheetView.findViewById<View>(R.id.menuReview)
+    private fun showBottomSheetMenu() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_menu, null)
+        bottomSheetDialog.setContentView(bottomSheetView)
 
-            reviewButton.setOnClickListener {
-                if (gameId != -1) {
-                    findNavController().navigate(R.id.action_game_to_createReview, Bundle().apply {
-                        putInt("gameId", gameId)
-                    })
-                }
+        val reviewButton = bottomSheetView.findViewById<View>(R.id.menuReview)
 
-                bottomSheetDialog.dismiss()
+        reviewButton.setOnClickListener {
+            if (gameId != -1) {
+                findNavController().navigate(R.id.action_game_to_createReview, Bundle().apply {
+                    putInt("gameId", gameId)
+                })
             }
-            bottomSheetDialog.show()
+
+            bottomSheetDialog.dismiss()
         }
+        bottomSheetDialog.show()
     }
+}

@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity(tableName = "reviews")
 data class Review(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     var id: String,
     val reviewText: String,
     val rating: Float,

@@ -13,10 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gamerbox.R
 import com.example.gamerbox.adapter.GameAdapter
+import com.example.gamerbox.models.User
 import com.example.gamerbox.network.RawgRepository
 import com.example.gamerbox.utils.Constants
 import com.example.gamerbox.viewmodel.HomeViewModel
 import com.example.gamerbox.viewmodel.HomeViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeFragment : Fragment() {
 
@@ -52,8 +55,10 @@ class HomeFragment : Fragment() {
             navigateToGameFragment(game.id)
         }
 
-        popularGamesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        recentGamesRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        popularGamesRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recentGamesRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         popularGamesRecyclerView.adapter = gamesAdapter
         recentGamesRecyclerView.adapter = recentGamesAdapter

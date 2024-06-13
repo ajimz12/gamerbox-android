@@ -80,7 +80,7 @@ class AllReviewsFragment : Fragment() {
     private fun onLikeClicked(review: Review) {
         val currentUserId = auth.currentUser?.uid ?: return
 
-        val reviewRef = db.collection("reviews").document(review.id)
+        val reviewReference = db.collection("reviews").document(review.id)
 
         if (currentUserId in review.likes) {
             review.likes.remove(currentUserId)
@@ -88,7 +88,7 @@ class AllReviewsFragment : Fragment() {
             review.likes.add(currentUserId)
         }
 
-        reviewRef.update("likes", review.likes)
+        reviewReference.update("likes", review.likes)
             .addOnSuccessListener {
                 reviewAdapter.updateReview(review)
             }

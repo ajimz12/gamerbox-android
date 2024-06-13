@@ -26,7 +26,7 @@ class HomeViewModel(private val rawgRepository: RawgRepository) : ViewModel() {
                 val popularGames = rawgRepository.getPopularGames(apiKey)
                 _popularGames.value = popularGames ?: emptyList()
 
-                val recentGames = rawgRepository.getRecentPopularGames(apiKey)
+                val recentGames = rawgRepository.getPopularGamesForLastYear(apiKey)
                 _recentGames.value = recentGames ?: emptyList()
 
             } catch (e: Exception) {

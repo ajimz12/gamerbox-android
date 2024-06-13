@@ -62,6 +62,8 @@ class SearchFragment : Fragment() {
             }
         })
 
+        isSelectingFavorite = arguments?.getBoolean("isSelectingFavorite") ?: false
+
     }
 
     private fun searchGames(query: String) {

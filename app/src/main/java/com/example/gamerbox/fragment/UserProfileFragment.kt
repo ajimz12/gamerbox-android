@@ -104,21 +104,26 @@ class UserProfileFragment : Fragment() {
         loadUserReviews()
 
         if (currentUser != null) {
-            checkIfUserIsAdmin(currentUser.uid) { isAdmin ->
-                if (isAdmin) {
-                    toolbar.setOnMenuItemClickListener { item ->
-                        when (item.itemId) {
-                            R.id.action_delete_user_admin -> {
-                                userId?.let {
-                                    deleteUser(it)
-                                }
-                                true
-                            }
-
-                            else -> false
-                        }
-                    }
+            val currentUserId = currentUser.uid
+            if (currentUserId == userId) {
+                toolbar.visibility = View.VISIBLE
+            } else {
+                checkIfUserIsAdmin(currentUserId) { isAdmin ->
+                    toolbar.visibility = if (isAdmin) View.VISIBLE else View.GONE
                 }
+            }
+        } else {
+            toolbar.visibility = View.GONE
+        }
+
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_delete_user_admin -> {
+                    if(userId != null) deleteUser(userId)
+                    true
+                }
+
+                else -> false
             }
         }
     }
@@ -146,14 +151,20 @@ class UserProfileFragment : Fragment() {
     }
 
     private fun setFavoriteGameSlots(favoriteGames: List<Game>) {
-        val slots =
-            listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
+        val slots = listOf(favoriteGameSlot1, favoriteGameSlot2, favoriteGameSlot3, favoriteGameSlot4)
 
         favoriteGames.forEachIndexed { index, game ->
             if (index < slots.size) {
                 Glide.with(this)
                     .load(game.backgroundImageUrl)
                     .into(slots[index])
+
+                slots[index].setOnClickListener {
+                    val bundle = Bundle().apply {
+                        putInt("gameId", game.id)
+                    }
+                    findNavController().navigate(R.id.action_userProfileFragment_to_gameFragment, bundle)
+                }
             }
         }
     }

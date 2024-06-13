@@ -25,6 +25,8 @@ class AuthActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_auth)
+
         auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
 
@@ -32,19 +34,20 @@ class AuthActivity : ComponentActivity() {
             val homeIntent = Intent(this, MainActivity::class.java)
             startActivity(homeIntent)
             finish()
-            return
         }
 
-        setContentView(R.layout.activity_auth)
         loginButton = findViewById(R.id.loginButton)
         registerButton = findViewById(R.id.registerbutton)
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
         passwordErrorTextView = findViewById(R.id.passwordErrorTextView)
+
         setUp()
     }
 
     private fun setUp() {
+
+        // Boton de registro
         registerButton.setOnClickListener {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
@@ -53,7 +56,7 @@ class AuthActivity : ComponentActivity() {
                 auth.fetchSignInMethodsForEmail(email).addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val signInMethods = task.result.signInMethods
-                        if (signInMethods != null && signInMethods.isNotEmpty()) {
+                        if (!signInMethods.isNullOrEmpty()) {
                             showEmailAlreadyExistsAlert()
                         } else {
                             val intent = Intent(this, CreateProfileActivity::class.java).apply {
@@ -71,6 +74,7 @@ class AuthActivity : ComponentActivity() {
             }
         }
 
+        // Boton de inicio de sesion
         loginButton.setOnClickListener {
             if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
                 auth.signInWithEmailAndPassword(
@@ -87,6 +91,7 @@ class AuthActivity : ComponentActivity() {
             }
         }
 
+        // Control de tamaño de la contraseña
         passwordEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -120,7 +125,7 @@ class AuthActivity : ComponentActivity() {
     private fun showEmailAlreadyExistsAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.incorrect_email_header)
-        builder.setMessage(R.string.incorrect_email_message)
+        builder.setMessage(R.string.user_already_exists_error)
         builder.setPositiveButton(R.string.accept_text, null)
         val dialog: AlertDialog = builder.create()
         dialog.show()

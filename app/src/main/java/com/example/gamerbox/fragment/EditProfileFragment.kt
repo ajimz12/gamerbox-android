@@ -67,12 +67,10 @@ class EditProfileFragment : Fragment() {
         deleteAccountButton = view.findViewById(R.id.deleteAccountText)
 
         updateButton.setOnClickListener { updateProfile() }
+        chooseImageButton.setOnClickListener { pickImage() }
+        deleteAccountButton.setOnClickListener { showDeleteAccountConfirmationDialog() }
 
         loadUserData()
-
-        chooseImageButton.setOnClickListener { pickImage() }
-
-        deleteAccountButton.setOnClickListener { showDeleteAccountConfirmationDialog() }
 
         return view
     }
@@ -108,65 +106,48 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun updateProfile() {
-        val userId = auth.currentUser?.uid
+        val userId = auth.currentUser?.uid ?: return
         val newUsername = usernameEditText.text.toString().trim()
 
-        if (userId != null) {
-            if (newUsername == currentUsername) {
-                val userData = mutableMapOf<String, Any>("username" to newUsername)
-
-                imageUri?.let { uri ->
-                    val imageRef = storage.reference.child("profile_images").child("$userId.jpg")
-                    imageRef.putFile(uri)
-                        .addOnSuccessListener {
-                            imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                                userData["imageUrl"] = downloadUri.toString()
-                                updateUserProfile(userId, userData)
-                            }
-                        }
-                        .addOnFailureListener { e ->
-                            println(e.message)
-                        }
-                } ?: run {
-                    updateUserProfile(userId, userData)
-                }
+        if (newUsername == currentUsername) {
+            val userData = mutableMapOf<String, Any>("username" to newUsername)
+            handleProfileImageUpload(userId, userData)
+        } else {
+            if (newUsername.isBlank()) {
+                showToast(R.string.empty_username_error)
             } else {
                 checkIfUsernameExists(newUsername) { exists ->
                     if (exists) {
-                        Toast.makeText(
-                            requireContext(),
-                            "El nombre de usuario ya existe",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else if (usernameEditText.text.isBlank()) {
-                        Toast.makeText(
-                            requireContext(),
-                            "El nombre de usuario no puede estar vacío",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showToast(R.string.user_already_exists_error)
                     } else {
                         val userData = mutableMapOf<String, Any>("username" to newUsername)
-
-                        imageUri?.let { uri ->
-                            val imageRef =
-                                storage.reference.child("profile_images").child("$userId.jpg")
-                            imageRef.putFile(uri)
-                                .addOnSuccessListener {
-                                    imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                                        userData["imageUrl"] = downloadUri.toString()
-                                        updateUserProfile(userId, userData)
-                                    }
-                                }
-                                .addOnFailureListener { e ->
-                                    println(e.message)
-                                }
-                        } ?: run {
-                            updateUserProfile(userId, userData)
-                        }
+                        handleProfileImageUpload(userId, userData)
                     }
                 }
             }
         }
+    }
+
+    private fun handleProfileImageUpload(userId: String, userData: MutableMap<String, Any>) {
+        imageUri?.let { uri ->
+            val imageRef = storage.reference.child("profile_images").child("$userId.jpg")
+            imageRef.putFile(uri)
+                .addOnSuccessListener {
+                    imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                        userData["imageUrl"] = downloadUri.toString()
+                        updateUserProfile(userId, userData)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    println(e.message)
+                }
+        } ?: run {
+            updateUserProfile(userId, userData)
+        }
+    }
+
+    private fun showToast(messageResId: Int) {
+        Toast.makeText(requireContext(), messageResId, Toast.LENGTH_SHORT).show()
     }
 
     private fun checkIfUsernameExists(username: String, callback: (Boolean) -> Unit) {
@@ -199,13 +180,13 @@ class EditProfileFragment : Fragment() {
 
     private fun showDeleteAccountConfirmationDialog() {
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Eliminar cuenta")
-        builder.setMessage("¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.")
-        builder.setPositiveButton("Sí") { dialog, _ ->
+        builder.setTitle(R.string.delete_account)
+        builder.setMessage(R.string.confirm_delete_owner)
+        builder.setPositiveButton(R.string.confirm_text) { dialog, _ ->
             deleteAccount()
             dialog.dismiss()
         }
-        builder.setNegativeButton("No") { dialog, _ ->
+        builder.setNegativeButton(R.string.cancel_text) { dialog, _ ->
             dialog.dismiss()
         }
         builder.create().show()
@@ -227,13 +208,13 @@ class EditProfileFragment : Fragment() {
                                 ?.addOnSuccessListener {
                                     Toast.makeText(
                                         requireContext(),
-                                        "Cuenta eliminada con éxito",
+                                        R.string.user_deleted_text,
                                         Toast.LENGTH_SHORT
                                     ).show()
                                     showLogin()
                                 }
                         }
-                        .addOnFailureListener { e ->
+                        .addOnFailureListener { _ ->
                             Toast.makeText(
                                 requireContext(),
                                 "Error al eliminar las reseñas",
@@ -241,7 +222,7 @@ class EditProfileFragment : Fragment() {
                             ).show()
                         }
                 }
-                .addOnFailureListener { e ->
+                .addOnFailureListener { _ ->
                     Toast.makeText(
                         requireContext(),
                         "Error al eliminar el documento del usuario",

@@ -104,7 +104,7 @@ class CreateReviewFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                         setFragmentResult("reviewUpdated", bundleOf("reviewId" to reviewId))
-                        requireActivity().onBackPressed()
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
                     } catch (e: Exception) {
                         println(e.message)
                     }
@@ -122,14 +122,14 @@ class CreateReviewFragment : Fragment() {
         rating: Float,
         date: Date
     ) {
-        val reviewRef = FirebaseFirestore.getInstance().collection("reviews").document(reviewId)
+        val reviewReference = FirebaseFirestore.getInstance().collection("reviews").document(reviewId)
         val data = hashMapOf(
             "reviewText" to reviewText,
             "rating" to rating,
             "date" to date,
         )
         withContext(Dispatchers.IO) {
-            reviewRef.update(data as Map<String, Any>).await()
+            reviewReference.update(data as Map<String, Any>).await()
         }
     }
 
@@ -169,7 +169,7 @@ class CreateReviewFragment : Fragment() {
                     FirebaseFirestore.getInstance().collection("reviews").add(review).await()
                 }
                 Toast.makeText(requireContext(), R.string.review_sent, Toast.LENGTH_SHORT).show()
-                requireActivity().onBackPressed()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             } catch (e: Exception) {
                 println(e.message)
             }
@@ -186,9 +186,9 @@ class CreateReviewFragment : Fragment() {
                 .await()
 
             if (!querySnapshot.isEmpty) {
-                val documentSnapshot = querySnapshot.documents[0]
-                val review = documentSnapshot.toObject(Review::class.java)
-                review?.id = documentSnapshot.id
+                val document = querySnapshot.documents[0]
+                val review = document.toObject(Review::class.java)
+                review?.id = document.id
                 review
             } else {
                 null

@@ -9,7 +9,7 @@
     <string name="log_out">Cerrar sesión</string>
     <string name="continue_btn">Continuar</string>
     <string name="accept_text">Aceptar</string>
-    <string name="cancel_text">Cancel</string>
+    <string name="cancel_text">Cancelar</string>
     <string name="welcome_text">¡Bienvenido!</string>
     <string name="username_text">Nombre de usuario</string>
     <string name="select_image">Selecciona una imagen</string>
@@ -55,5 +55,7 @@
     <string name="game_added_to_favorites">Juego añadido a favoritos</string>
     <string name="confirm_delete_header">Confirmar Eliminación</string>
     <string name="confirm_delete">¿Estás seguro de que deseas eliminar la cuenta de este usuario? Esta acción no se puede deshacer.</string>
+    <string name="confirm_delete_owner">¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</string>
     <string name="user_deleted_text">Cuenta del usuario eliminada con éxito</string>
+    <string name="users_text">Usuarios</string>
 </resources>

@@ -44,7 +44,7 @@ class ReviewAdapter(
         holder.ratingBar.rating = review.rating
 
         val userId = review.userId
-        val userProfileRef = FirebaseFirestore.getInstance().collection("users").document(userId)
+        val userProfile = FirebaseFirestore.getInstance().collection("users").document(userId)
 
         holder.itemView.setOnClickListener {
             val bundle = Bundle().apply {
@@ -73,7 +73,7 @@ class ReviewAdapter(
             }
         }
 
-        userProfileRef.get().addOnSuccessListener { documentSnapshot ->
+        userProfile.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot != null && documentSnapshot.exists()) {
                 val userName = documentSnapshot.getString("username")
                 holder.userNameTextView.text = userName

@@ -98,7 +98,8 @@ class ReviewFragment : Fragment() {
 
         val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
         val reviewDate = date?.let { dateFormat.format(Date(it)) }
-        reviewDateTextView.text = reviewDate?.let { getString(R.string.date_finished_game, it) } ?: ""
+        reviewDateTextView.text =
+            reviewDate?.let { getString(R.string.date_finished_game, it) } ?: ""
 
 
         val rawgService = RetrofitService.create()
@@ -119,6 +120,7 @@ class ReviewFragment : Fragment() {
                     R.id.action_edit_review = View.GONE
                 }
             }
+
         } else {
             toolbar.visibility = View.GONE
         }

@@ -3,10 +3,10 @@ package com.example.gamerbox.network
 import com.example.gamerbox.models.Game
 import com.example.gamerbox.models.GameDetails
 
-class RawgRepository(private val rawgAPI: RawgService) {
+class RawgRepository(private val rawgService: RawgService) {
 
     suspend fun getPopularGames(apiKey: String): List<Game>? {
-        val response = rawgAPI.getPopularGames(apiKey)
+        val response = rawgService.getPopularGames(apiKey)
 
         return if (response.isSuccessful) {
             response.body()?.results
@@ -15,10 +15,10 @@ class RawgRepository(private val rawgAPI: RawgService) {
         }
     }
 
-    suspend fun getRecentPopularGames(apiKey: String): List<Game>? {
+    suspend fun getPopularGamesForLastYear(apiKey: String): List<Game>? {
         val dates = RawgService.getDatesForLastYear()
         val ordering = "-added"
-        val response = rawgAPI.getPopularRecentGames(dates, ordering, apiKey)
+        val response = rawgService.getPopularRecentGames(dates, ordering, apiKey)
 
         return if (response.isSuccessful) {
             response.body()?.results
@@ -28,7 +28,7 @@ class RawgRepository(private val rawgAPI: RawgService) {
     }
 
     suspend fun getGameDetails(gameId: Int, apiKey: String): GameDetails? {
-        val response = rawgAPI.getGameDetails(gameId, apiKey)
+        val response = rawgService.getGameDetails(gameId, apiKey)
         return if (response.isSuccessful) {
             response.body()
         } else {
@@ -37,7 +37,7 @@ class RawgRepository(private val rawgAPI: RawgService) {
     }
 
     suspend fun searchGamesByTitle(title: String, apiKey: String): List<Game>? {
-        val response = rawgAPI.searchGamesByTitle(title, apiKey)
+        val response = rawgService.searchGamesByTitle(title, apiKey)
         return if (response.isSuccessful) {
             response.body()?.results
         } else {

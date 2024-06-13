@@ -8,7 +8,7 @@
         android:id="@+id/popularGamesTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/lightBlue"
+        android:background="#202020"
         android:fontFamily="@font/montserratbold"
         android:padding="15dp"
         android:text="@string/popular_games"
@@ -19,9 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/popularGamesTextView"
-        android:background="@color/lightBlue"
-        android:paddingBottom="20dp"
+        android:background="#202020"
         android:orientation="horizontal"
+        android:paddingBottom="20dp"
         tools:listitem="@layout/item_game" />
 
     <TextView
@@ -29,7 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/popularGamesRecyclerView"
-        android:background="@color/blue"
         android:fontFamily="@font/montserratbold"
         android:padding="15dp"
         android:text="@string/new_games"
@@ -40,9 +39,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/newGamesTextView"
-        android:background="@color/blue"
-        android:paddingBottom="20dp"
         android:orientation="horizontal"
+        android:paddingBottom="20dp"
         tools:listitem="@layout/item_game" />
 
 

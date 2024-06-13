@@ -101,10 +101,10 @@ class CreateProfileActivity : ComponentActivity() {
 
                         userId?.let { uid ->
                             imageUri?.let { uri ->
-                                val storageRef = FirebaseStorage.getInstance().reference.child("profile_images/$uid")
-                                storageRef.putFile(uri).addOnCompleteListener { task ->
+                                val storage = FirebaseStorage.getInstance().reference.child("profile_images/$uid")
+                                storage.putFile(uri).addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        storageRef.downloadUrl.addOnSuccessListener { downloadUri ->
+                                        storage.downloadUrl.addOnSuccessListener { downloadUri ->
                                             user["imageUrl"] = downloadUri.toString()
                                             saveUserDataToFirestore(uid, user)
                                         }
@@ -120,7 +120,7 @@ class CreateProfileActivity : ComponentActivity() {
                         errorTextView.text = task.exception?.message
                     }
                 }
-                .addOnFailureListener { e ->
+                .addOnFailureListener { _ ->
                     errorTextView.text = getString(R.string.user_already_exists_error)
                 }
         } else {
