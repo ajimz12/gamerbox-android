@@ -11,8 +11,6 @@ Exploración de Juegos: Los usuarios pueden explorar una amplia variedad de jueg
 
 Reseñas y Calificaciones: Los usuarios pueden escribir reseñas detalladas sobre los juegos que han jugado, así como calificarlos para compartir sus opiniones con la comunidad.
 
-Seguimiento de Amigos: Los usuarios pueden conectarse con amigos y seguir sus actividades de juego, incluyendo nuevas reseñas, puntuaciones y juegos jugados recientemente.
-
 <h1>Tecnologías Utilizadas:</h1>
 
 Kotlin: Lenguaje de programación principal utilizado para el desarrollo de la aplicación.
